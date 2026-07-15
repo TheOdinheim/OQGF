@@ -16,6 +16,8 @@ The base document is an integrated deliverable: a formal specification (Part A),
 | [AMD-005-resolution-homeostasis.md](AMD-005-resolution-homeostasis.md) | The Resolution Requirement: Active Return to Baseline and the Bound on Chronic Escalation |
 | [AMD-006-accountable-risk-acceptance.md](AMD-006-accountable-risk-acceptance.md) | The Accountable Risk Acceptance Requirement: Recorded, Non-Suppressing Acceptance of a Deterministic-Gate Finding |
 | [AMD-007-barrier-data-custody.md](AMD-007-barrier-data-custody.md) | The Barrier Requirement: Selective Boundary Control and Data Custody Across Trust Compartments |
+| [AMD-008-risk-surveillance.md](AMD-008-risk-surveillance.md) | The Risk Surveillance Requirement: Continuous Identification, Assessment, and Disposition of Risk |
+| [AMD-009-personal-data-lifecycle.md](AMD-009-personal-data-lifecycle.md) | The Personal Data Requirement: Lifecycle Obligations for Personal Data as a Governed Classification |
 
 ## Design principles
 
