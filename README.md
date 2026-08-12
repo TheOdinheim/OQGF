@@ -18,6 +18,7 @@ The base document is an integrated deliverable: a formal specification (Part A),
 | [AMD-007-barrier-data-custody.md](AMD-007-barrier-data-custody.md) | The Barrier Requirement: Selective Boundary Control and Data Custody Across Trust Compartments |
 | [AMD-008-risk-surveillance.md](AMD-008-risk-surveillance.md) | The Risk Surveillance Requirement: Continuous Identification, Assessment, and Disposition of Risk |
 | [AMD-009-personal-data-lifecycle.md](AMD-009-personal-data-lifecycle.md) | The Personal Data Requirement: Lifecycle Obligations for Personal Data as a Governed Classification |
+| [AMD-010-explanation-validity.md](AMD-010-explanation-validity.md) | The Explanation Validity Requirement: Bounded Scope, Null Explanations, and Channel Attestation for Quantum-Appropriate Explainability at Scale |
 
 ## Design principles
 
