@@ -21,6 +21,7 @@ The base document is an integrated deliverable: a formal specification (Part A),
 | [AMD-010-explanation-validity.md](AMD-010-explanation-validity.md) | The Explanation Validity Requirement: Bounded Scope, Null Explanations, and Channel Attestation for Quantum-Appropriate Explainability at Scale |
 | [AMD-011-capability-triggered-assurance.md](AMD-011-capability-triggered-assurance.md) | The Capability-Triggered Assurance Requirement: Dual-Axis Determination and Containment Governance for Autonomous Agent Systems |
 | [AMD-012-recursive-risk-propagation.md](AMD-012-recursive-risk-propagation.md) | The Recursive Risk-Propagation Requirement: Governing Residual, Induced, and Downstream Risk in Machine-Speed AI Systems |
+| [AMD-013-recursive-inferential-privacy.md](AMD-013-recursive-inferential-privacy.md) | The Recursive Inferential Privacy Requirement: Governing Knowledge Created by Authorized Disclosure |
 
 ## Design principles
 
