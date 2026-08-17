@@ -22,6 +22,7 @@ The base document is an integrated deliverable: a formal specification (Part A),
 | [AMD-011-capability-triggered-assurance.md](AMD-011-capability-triggered-assurance.md) | The Capability-Triggered Assurance Requirement: Dual-Axis Determination and Containment Governance for Autonomous Agent Systems |
 | [AMD-012-recursive-risk-propagation.md](AMD-012-recursive-risk-propagation.md) | The Recursive Risk-Propagation Requirement: Governing Residual, Induced, and Downstream Risk in Machine-Speed AI Systems |
 | [AMD-013-recursive-inferential-privacy.md](AMD-013-recursive-inferential-privacy.md) | The Recursive Inferential Privacy Requirement: Governing Knowledge Created by Authorized Disclosure |
+| [AMD-014-adaptive-containment.md](AMD-014-adaptive-containment.md) | The Adaptive Containment Requirement: Monotonic Capability Contraction for Autonomous Systems Under Boundary Pressure |
 
 ## Design principles
 
