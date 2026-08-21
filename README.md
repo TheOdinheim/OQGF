@@ -24,6 +24,8 @@ The base document is an integrated deliverable: a formal specification (Part A),
 | [AMD-013-recursive-inferential-privacy.md](AMD-013-recursive-inferential-privacy.md) | The Recursive Inferential Privacy Requirement: Governing Knowledge Created by Authorized Disclosure |
 | [AMD-014-adaptive-containment.md](AMD-014-adaptive-containment.md) | The Adaptive Containment Requirement: Monotonic Capability Contraction for Autonomous Systems Under Boundary Pressure |
 | [AMD-015-cognitive-integrity.md](AMD-015-cognitive-integrity.md) | The Cognitive Integrity Requirement: Provenance-Bound Semantic Authority and Instruction/Data Separation |
+| [AMD-016-threat-model-assurance.md](AMD-016-threat-model-assurance.md) | The Threat-Model Assurance Requirement: Provenance, Freshness, Coverage, and Continuous Adversarial Reconciliation |
+| [AMD-017-model-lifecycle-assurance.md](AMD-017-model-lifecycle-assurance.md) | The Model Lifecycle Assurance Requirement: Training Provenance, Alignment Integrity, and Weight-to-Serving Attestation |
 
 ## Design principles
 
