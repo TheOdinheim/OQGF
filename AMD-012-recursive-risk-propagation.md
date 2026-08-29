@@ -1,7 +1,7 @@
-# OQGF-1.0 — NORMATIVE AMENDMENT 012
+# OQGF-1.0 — NORMATIVE AMENDMENT 012.1
 ## The Recursive Risk-Propagation Requirement: Governing Residual, Induced, and Downstream Risk in Machine-Speed AI Systems
 
-**Amendment ID:** OQGF-AMD-2026-012
+**Amendment ID:** OQGF-AMD-2026-012.1
 **Amends:** OQGF-1.0, Section A.P (Physiology Layer). Adds a new requirement, OQGF-P-13.
 Does **not** modify OQGF-P-10 (AMD-008), OQGF-P-12 (AMD-011), or any prior amendment; it governs
 the cross-cutting causal, temporal, and topological relationships among the risks those amendments
@@ -54,11 +54,14 @@ one child. Real-world risk propagation is not a list. It is a graph:
 - **A feedback loop returns to an earlier state.** A response can amplify the condition that
   triggered it. AMD-004's cascade bounds govern the signal loop; nothing governs the *risk
   topology* of the loop.
-- **Propagation can outrun human response.** Knight Capital lost $460 million in 45 minutes. The
-  July 2026 agent incidents ran for days before detection. When the time to an irreversible
-  consequence is shorter than the time a human needs to detect, decide, and act, human oversight
-  is not a real-time control — it is after-the-fact accountability. That distinction must be
-  governed.
+- **Propagation can outrun human response.** Knight Capital lost more than $460 million in
+  approximately 45 minutes (SEC Exchange Act Release No. 70694, Rule 15c3-5 violation). Recent
+  autonomous-agent incidents demonstrate both prolonged activity that remained undiscovered until
+  later review and cases in which monitoring enabled materially faster containment; the governance
+  implication is that detection and response latency are first-class risk variables. When the time
+  to an irreversible consequence is shorter than the time a human needs to detect, decide, and
+  act, human oversight is not a real-time control — it is after-the-fact accountability. That
+  distinction must be governed.
 
 AMD-001 governs authority and intent across hops. AMD-004 governs authenticated defensive-signal
 cascades and bounds their loops. AMD-011 governs capability, containment, sub-agent attenuation,
@@ -110,24 +113,29 @@ cascades to be rate-limited and loop-bounded; OQGF-P-8 governs resolution rather
 that escalation ends itself.
 
 What the framework does not yet encode is the **topology of the cascade as a governed object**.
-The complement cascade is a directed graph with amplification loops: C3 convertase cleaves C3 into
-C3a and C3b; C3b feeds back to form more C3 convertase (positive feedback); regulatory proteins
-(Factor H, Factor I, C1-inhibitor) are embedded checkpoints at every amplification node, not
-afterthoughts bolted on at the end. The coagulation cascade is the same shape: thrombin activates
-more prothrombin (positive feedback), while antithrombin and protein C provide structurally
-embedded negative feedback. In both systems, the *topology* — which nodes amplify, which
-attenuate, where feedback returns, and how fast each transition fires — is the thing the body
-governs, not just the individual molecules.
+The structural analogy is strong but bounded. Complement and coagulation contain amplification,
+attenuation, feedback, timing-dependent responses, and regulatory checkpoints. In the complement
+cascade, C3 convertase cleaves C3 into C3a and C3b; C3b feeds back to form more C3 convertase
+(positive feedback). Properdin supports amplification of the alternative complement pathway by
+stabilizing the C3bBb convertase (extending its half-life approximately 5- to 10-fold; Zhang et
+al., *eLife* 2020;9:e60908), while Factor H and Factor I provide negative regulation by
+accelerating decay and inactivation of C3b respectively. In coagulation, thrombin activates
+factors V, VIII, and XI, producing positive feedback that amplifies further thrombin generation
+via the tenase and prothrombinase complexes, while anticoagulant pathways (antithrombin, protein
+C) provide counter-regulation. OQGF's RRPG is an engineering construction inspired by these
+structural properties; biology does not itself implement the RRPG. In both biological systems,
+the *topology* — which nodes amplify, which attenuate, where feedback returns, and how fast each
+transition fires — is the thing the body governs, not just the individual molecules.
 
 And critically, the body governs the **time** of the cascade. The complement system activates in
 seconds, far faster than the adaptive immune system can mount a response. The body does not
 pretend that adaptive immunity (which takes days) is a real-time control for complement (which
 takes seconds). It places **innate, pre-positioned, fast-acting controls** at the amplification
-nodes — properdin, Factor H, C4b-binding protein — that act at the speed of the cascade, not at
+nodes — Factor H, Factor I, C4b-binding protein — that act at the speed of the cascade, not at
 the speed of deliberation. The adaptive system provides the intelligent, targeted, retrospective
 response; the innate controls provide the *in-time* containment.
 
-The translation is exact. A risk propagation graph in an AI system has amplification loops
+The structural analogy translates to governance. A risk propagation graph in an AI system has amplification loops
 (a response that worsens the condition), attenuation points (controls that reduce risk),
 convergence (compound failures from multiple causes), and feedback (a downstream state that
 re-creates an upstream condition). The topology must be governed as a structure, not flattened
@@ -171,6 +179,11 @@ tolerance.
 - **Compound Risk Node** — a risk whose materialization depends on, or is materially worsened by,
   the convergence of two or more predecessor paths. A compound node preserves all material
   incoming lineage rather than selecting one convenient cause.
+- **Compound Trigger Logic** — the governed causal-composition rule defining how two or more
+  predecessor conditions contribute to materialization of a Compound Risk Node. Supported forms
+  SHALL include, at minimum, ANY, ALL, K-OF-N, or a declared logical/threshold expression.
+  Unknown composition SHALL be represented as unknown rather than silently treated as independent
+  or additive.
 - **Systemic Risk Node** — a downstream risk whose scope extends beyond the originating component
   or organization because of common dependencies, correlated behavior, interconnected systems,
   or repeated use of a common model or control.
@@ -289,12 +302,21 @@ and the accountable approver of the assertion. Observed causation, modeled causa
 hypothesis SHALL be distinguishable epistemic states. Correlation alone SHALL NOT be labeled
 causation; where a shared cause is suspected, that uncertainty SHALL be represented explicitly.
 An edge MAY be uncertain; uncertainty SHALL be recorded and SHALL NOT be converted into false
-certainty.
+certainty. A material Causal Edge SHALL carry a transition-likelihood assessment commensurate
+with available evidence: a quantitative probability, a bounded probability interval, a calibrated
+ordinal band, or Unknown. Where numerical estimation is unsupported, a bounded qualitative state
+or Unknown SHALL be recorded. Lack of quantitative evidence SHALL NOT be represented as zero
+likelihood. Independence among predecessor risks SHALL NOT be presumed absent supporting
+evidence.
 
 **OQGF-P-13.4 (Branch, Convergence, and Feedback Governance).** The RRPG SHALL preserve all
 material outgoing branches, all material incoming paths to Compound Risk Nodes, and all detected
 Feedback Components. A representation that duplicates or discards a shared descendant, selects
 only one cause for a compound risk, or silently breaks a cycle does not satisfy this requirement.
+Compound Risk Nodes SHALL record Compound Trigger Logic (ANY, ALL, K-OF-N, or a declared
+logical/threshold expression) so that A ∧ B → C remains distinguishable from A ∨ B → C.
+Independence among predecessor risks SHALL NOT be presumed merely because they are separately
+registered; common-cause, correlated, and shared-dependency relationships SHALL be representable.
 Feedback Components SHALL carry a declared amplification or attenuation assessment, a loop bound
 where one can be enforced, and a linked OQGF-P-5 response-storm condition when the feedback may
 threaten host or ecosystem availability. This requirement links the risk topology to the existing
@@ -322,18 +344,29 @@ confidence are recorded and are commensurate with the governing tier.
 containment action, recovery action, and governance decision SHALL be assessed for risk that it
 creates, displaces, concentrates, delays, or amplifies. A material control-induced risk SHALL be
 recorded as an Induced Risk Node and linked both to the controlled node and to the control or
-decision that produced it. A control SHALL NOT be credited solely on the reduction it produces at
-one node when its downstream effect increases total risk elsewhere beyond tolerance. This is the
-iatrogenic-injury principle: the treatment itself is a risk source, and ignoring it is not
+decision that produced it. A control SHALL NOT be credited solely on the reduction it produces at one node where the
+treatment creates, displaces, concentrates, delays, or materially increases another governed risk
+beyond its applicable tolerance. Cross-domain risks (privacy, safety, financial, availability)
+SHALL NOT be collapsed into a single aggregate risk quantity unless the organization declares and
+evidences the aggregation method, units, weighting assumptions, and decision semantics. This is
+the iatrogenic-injury principle: the treatment itself is a risk source, and ignoring it is not
 honesty.
 
 **OQGF-P-13.7 (Temporal Governance and Intervention Margin).** Every path capable of abrupt,
 irreversible, safety-critical, rights-affecting, externally consequential, or systemic effect
-SHALL carry a defensible estimate or range for Propagation Latency, Response Budget, Time to
-Irreversibility, and Intervention Margin. Where the Intervention Margin is zero, negative, or too
-uncertain to establish timely human action, the system SHALL use pre-authorized deterministic
-controls external to the model to prevent, rate-limit, isolate, pause, or terminate the relevant
-effect. Independent termination SHALL reuse OQGF-P-12.5 (AMD-011) where applicable. Human
+SHALL carry a defensible estimate or range for Propagation Latency, Detection Latency, Decision
+Latency, Control Activation Latency, Control Effect Latency, Time to Irreversibility, and
+Intervention Margin. The Intervention Margin SHALL be computed as M = T_irrev − (T_detect +
+T_decide + T_activate + T_effect), where T_effect is the time required for the control to
+actually produce the required restriction or protection — not merely the time to invoke it. For
+high-impact paths with uncertain timing, the conservative margin M_safe = T_irrev^low −
+(T_detect^high + T_decide^high + T_activate^high + T_effect^high) SHALL govern. Where the
+Intervention Margin is zero, negative, or too uncertain to establish timely human action, the
+system SHALL use pre-authorized deterministic controls external to the model to prevent,
+rate-limit, isolate, pause, or terminate the relevant effect. A pre-authorized control credited
+against a negative or insufficient Intervention Margin SHALL itself have an evidenced
+response-time bound demonstrating that the control can become effective within the required
+window. Independent termination SHALL reuse OQGF-P-12.5 (AMD-011) where applicable. Human
 approval SHALL NOT be credited as the primary real-time control when the timing record shows a
 human cannot reliably intervene before irreversibility. Human oversight remains the accountable
 governance authority; this requirement governs whether it is also the *in-time* prevention
@@ -472,8 +505,13 @@ An auditor SHALL:
 - **NIST SP 800-37 and SP 800-30:** the identify–assess–respond–monitor cycle and the likelihood,
   impact, uncertainty, and risk-response foundation already used by AMD-008. This amendment adds
   recursive topology and temporal machine-speed controls to the OQGF expression of that cycle.
-- **NIST SP 800-221:** informative support for enterprise roll-up, interconnected risk, emergent
-  effects, and risk created by responses. Cited as lineage, not as a mandate for the RRPG.
+- **NIST SP 800-221 (Enterprise Impact of ICT Risk):** principal external risk-management basis
+  for recursive, cascading, and response-induced risk. Section 3.2.2 (p. 24) explicitly requires
+  considering combinations, cascading risks where "one primary risk event may trigger a secondary
+  and even a tertiary event," and first-, second-, and third-order risks. The Executive Summary
+  (p. 2) and Section 2.4.1 (p. 14) independently establish that fault-tolerance and resilience
+  measures "can introduce fragility and increase attack surface" — the control-induced-risk
+  principle of OQGF-P-13.6.
 - **NIST SP 800-231:** informative support for causal chains, convergence, and chaining in its
   cybersecurity scope. This amendment generalizes the topology to risk governance.
 - **ISO/IEC 42001:** Clause 6 (AI risk assessment and treatment), Clause 8 (operational control),
@@ -540,7 +578,7 @@ pub enum RiskNodeKind {
     Residual   { treatment_ref: TreatmentRef },   // P-13.2 successor
     Induced    { control_ref: ControlRef },        // P-13.6 iatrogenic
     Propagated { boundary: BoundaryRef },          // cross-boundary downstream
-    Compound   { predecessors: BTreeSet<RiskId> }, // P-13.4 convergence
+    Compound   { predecessors: BTreeSet<RiskId>, trigger: CompoundTriggerLogic }, // P-13.4 Rev 1.1
     Systemic   { scope: SystemicScope },           // beyond originating component
 }
 
@@ -558,9 +596,19 @@ pub struct CausalEdge {
     pub confidence: ConfidenceAssessment,
     pub epistemic_state: EpistemicState,         // Observed | Modeled | Hypothesized | Refuted
     pub boundary_crossed: Option<BoundaryRef>,
+    pub transition_likelihood: TransitionLikelihood, // Rev 1.1: Unknown ≠ zero
     pub supporting_evidence: Vec<EvidenceRef>,
     pub contradicting_evidence: Vec<EvidenceRef>,
     pub approved_by: DesignatedAccountableParty, // DAP-accountable assertion
+}
+
+/// Rev 1.1: Conditional transition assessment (OQGF-P-13.3). Unknown SHALL NOT
+/// be treated as zero. Lack of evidence is not evidence of zero probability.
+pub enum TransitionLikelihood {
+    Quantitative(f64),                   // point estimate where evidence supports it
+    BoundedInterval { low: f64, high: f64 },
+    OrdinalBand(OrdinalLikelihood),      // High | Medium | Low | Negligible
+    Unknown,                             // explicitly recorded, never silent
 }
 
 pub enum PropagationEffect {
@@ -582,15 +630,31 @@ pub struct TemporalEnvelope {
     pub detection_time: EstimateRange,
     pub decision_time: EstimateRange,
     pub control_activation_time: EstimateRange,
+    pub control_effect_time: EstimateRange,    // Rev 1.1: time for control to TAKE EFFECT
     pub time_to_irreversibility: EstimateRange,
 }
 
 impl TemporalEnvelope {
-    /// Conservative margin: slow response, fast harm.
+    /// Rev 1.1: Conservative margin includes control-effect latency.
+    /// A control being triggered is not the same as the control having
+    /// successfully taken effect. M_safe = T_irrev^low - (T_detect^high +
+    /// T_decide^high + T_activate^high + T_effect^high).
     pub fn conservative_intervention_margin(&self) -> DurationRange {
         self.time_to_irreversibility
-            - (self.detection_time + self.decision_time + self.control_activation_time)
+            - (self.detection_time + self.decision_time
+               + self.control_activation_time + self.control_effect_time)
     }
+}
+
+/// Rev 1.1: Compound trigger semantics (OQGF-P-13.4). ANY ≠ ALL ≠ K-OF-N.
+/// Unknown composition SHALL be represented as Unknown rather than silently
+/// treated as independent or additive.
+pub enum CompoundTriggerLogic {
+    Any,                              // A ∨ B → C
+    All,                              // A ∧ B → C
+    KOfN { k: usize, n: usize },     // k-of-n threshold
+    DeclaredExpression(String),       // custom boolean/threshold
+    Unknown,                          // composition not yet established
 }
 
 /// Where analysis stopped without a valid termination condition (OQGF-P-13.11).
@@ -749,4 +813,27 @@ named rather than claimed eliminated — unknown unknowns, causal-inference erro
 precision, adversarial graph scale, conflicting controls, organizational-boundary obstruction,
 and the necessity of human governance — each mapped to the shape of a prior amendment's residual.
 
-— End of OQGF Amendment 012.
+v1.1 — 29 August 2026. Hardening revision; architecture, placement, and relationship to all other
+amendments unchanged. Seven changes, each strengthening an existing property without rewriting it:
+
+(1) Core thesis refined: "successor state, not a presumed terminus" — a residual risk CAN
+legitimately terminate if evidence satisfies a valid Graph Termination Condition; what is
+prohibited is assuming termination merely because treatment occurred. (2) Compound Trigger Logic
+added to P-13.4: ANY, ALL, K-OF-N, or declared expressions, so A ∧ B → C remains distinguishable
+from A ∨ B → C; independence among predecessors SHALL NOT be presumed merely because they are
+separately registered. (3) Conditional Transition Assessment added to P-13.3: probability,
+bounded interval, ordinal band, or Unknown — lack of evidence SHALL NOT be represented as zero
+likelihood. (4) Intervention Margin in P-13.7 hardened: now includes control-effect latency
+(T_effect), not merely activation latency; a pre-authorized control SHALL have an evidenced
+response-time bound. (5) P-13.6 "total risk" replaced with risk-specific tolerance language;
+cross-domain risks SHALL NOT be collapsed without declared aggregation method. (6) Biological
+basis corrected: properdin is a positive regulator (stabilizes C3bBb); thrombin activates factors
+V, VIII, and XI (not "more prothrombin"); categorical "the translation is exact" replaced with
+bounded structural analogy language. (7) Incident language corrected: the broad "ran for days
+before detection" replaced with bounded description acknowledging both prolonged and promptly
+detected cases; Knight Capital pin-cited to SEC Exchange Act Release No. 70694. External basis
+elevated: NIST SP 800-221 promoted from informative to principal mapping for recursive/cascading
+and response-induced risk (§3.2.2, p. 24; Executive Summary p. 2; §2.4.1, p. 14). All seven
+changes verified against primary sources before adoption.
+
+— End of OQGF Amendment 012.1.
