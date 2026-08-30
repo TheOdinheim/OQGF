@@ -26,6 +26,7 @@ The base document is an integrated deliverable: a formal specification (Part A),
 | [AMD-015-cognitive-integrity.md](AMD-015-cognitive-integrity.md) | The Cognitive Integrity Requirement: Provenance-Bound Semantic Authority and Instruction/Data Separation |
 | [AMD-016-threat-model-assurance.md](AMD-016-threat-model-assurance.md) | The Threat-Model Assurance Requirement: Provenance, Freshness, Coverage, and Continuous Adversarial Reconciliation |
 | [AMD-017-model-lifecycle-assurance.md](AMD-017-model-lifecycle-assurance.md) | The Model Lifecycle Assurance Requirement: Training Provenance, Alignment Integrity, and Weight-to-Serving Attestation |
+| [OQGF-organ5-evidence-capture-hardening-patch.md](OQGF-organ5-evidence-capture-hardening-patch.md) | Patch — OQGF Organ 5 Evidence-Capture Hardening |
 
 ## Design principles
 

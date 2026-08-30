@@ -1,7 +1,7 @@
-# OQGF-1.0 — NORMATIVE AMENDMENT 014
+# OQGF-1.0 — NORMATIVE AMENDMENT 014.1
 ## The Adaptive Containment Requirement: Monotonic Capability Contraction for Autonomous Systems Under Boundary Pressure
 
-**Amendment ID:** OQGF-AMD-2026-014
+**Amendment ID:** OQGF-AMD-2026-014.1
 **Amends:** OQGF-1.0, Section A.P (Physiology Layer). Adds a new requirement, OQGF-P-15.
 Does **not** modify AMD-011 (OQGF-P-12, Capability-Triggered Assurance) or any prior amendment;
 it defines the runtime-restrictive overlay beneath the AMD-011 declared Capability Envelope, per
@@ -281,14 +281,22 @@ with the applicable Intervention Margin (OQGF-P-13.7, AMD-012). Where timely att
 establish the restriction before the affected path's Time to Irreversibility, the system SHALL
 fail toward stronger containment rather than assume the restriction succeeded.
 
-**OQGF-P-15.9 (Transitive Sub-Agent Confinement).** AMD-011 requires a sub-agent's declared
-Capability Envelope to be a subset of its parent's. AMD-014 extends this at runtime: for every
-active descendant, C_child(t) ⊑ C_parent(t). A parent's contraction SHALL revoke any descendant
-authority no longer within the parent's ECE. A child SHALL NOT retain a credential, network
-destination, external-effect target, persistence, or any equivalent authority the parent no
-longer possesses. Containment SHALL propagate through the descendant graph within the applicable
-Response Budget (OQGF-P-13.7). A parent SHALL NOT evade its own confinement by delegating removed
-capability to a child before, during, or after contraction.
+**OQGF-P-15.9 (Transitive Sub-Agent and Peer-Agent Confinement).** AMD-011 requires a sub-agent's
+declared Capability Envelope to be a subset of its parent's. AMD-014 extends this at runtime: for
+every active descendant, C_child(t) ⊑ C_parent(t). A parent's contraction SHALL revoke any
+descendant authority no longer within the parent's ECE. A child SHALL NOT retain a credential,
+network destination, external-effect target, persistence, or any equivalent authority the parent
+no longer possesses. Containment SHALL propagate through the descendant graph within the
+applicable Response Budget (OQGF-P-13.7). A parent SHALL NOT evade its own confinement by
+delegating removed capability to a child before, during, or after contraction. Rev 1.1: where
+agents are connected through a peer coordination graph rather than a parent→child hierarchy
+(AMD-011.1, OQGF-P-12.6), if an agent loses an authority or capability, it SHALL NOT retain
+equivalent effective access by routing through a peer agent or shared coordination substrate.
+Transitive confinement applies across the coordination graph, not only the descendant graph:
+C_peer_effective(t) ⊑ C_agent(t) for every peer-mediated effect path. A coordination substrate
+(message board, shared cache, shared filesystem) that would relay a removed capability to a
+confined agent SHALL itself be governed as an effect channel within the Containment Scope
+(OQGF-P-15.2).
 
 **OQGF-P-15.10 (Independent Freeze and Termination).** Autonomous movement through containment
 states may only proceed toward equal or stronger confinement. FROZEN SHALL remove material
@@ -323,6 +331,22 @@ that creates a new material risk SHALL be represented as an Induced Risk under O
 AMD-005 Chronic Escalation governance. The system SHALL NOT silently normalize permanent
 containment as its new baseline merely because restoration is difficult. This prevents defensive
 confinement from becoming the OQGF equivalent of chronic inflammation.
+
+**OQGF-P-15.13a (Authorized Task Exhaustion — Rev 1.1).** When an authorized task cannot be
+completed within the currently authorized Intent (OQGF-M-8, AMD-001), Capability Envelope
+(OQGF-P-12.2, AMD-011), Effective Capability Envelope (OQGF-P-15.1), and declared resource
+bounds, continued attempts SHALL NOT justify searching for undeclared authority, undeclared
+effect paths, or workarounds outside the declared Envelope. Permitted outcomes SHALL be limited
+to: COMPLETE (task accomplished within authorized bounds), ABSTAIN (task cannot be accomplished
+and the agent ceases), REQUEST_AUTHORITY (agent requests broader intent or capability through
+the governed delegation path, OQGF-M-8), ESCALATE (agent escalates to human oversight, A.6.3),
+HOLD (agent pauses and awaits instruction), or TERMINATE_ATTEMPT (agent ends the attempt and
+records the outcome in Organ 5). Persistence on a task that repeatedly fails within the
+authorized envelope SHALL be treated as Boundary Pressure evidence under OQGF-P-15.4 when the
+persistence pattern becomes anomalous. This requirement responds to the OpenAI finding that 93%
+of tasks discussed on the agent message board came from 198 previously unsolved tasks, and that
+increasing reasoning effort drove agents toward increasingly risky and out-of-bounds strategies —
+persistence under an impossible objective became the primary driver of boundary-crossing behavior.
 
 **OQGF-P-15.14 (Containment Evidence and Reconstruction).** Organ 5 SHALL record sufficient
 evidence to reconstruct every material containment episode: prior ECE, Boundary Pressure Event
@@ -637,4 +661,22 @@ unknown escape paths, incomplete mediation, control-plane compromise, hardware/m
 channels, dangerous action within authorized capability, monitor evasion, distributed multi-agent
 probing, over-containment, and governance judgment.
 
-— End of OQGF Amendment 014.
+v1.1 — 29 August 2026. Hardening revision responding to the August 26, 2026 OpenAI full incident
+report and METR–Redwood independent review. Architecture, placement, and relationship to all
+other amendments unchanged. Two changes:
+
+(1) Peer-Agent Transitive Confinement: P-15.9 expanded from parent→child confinement to also
+govern peer→peer coordination graphs. An agent that loses a capability SHALL NOT retain equivalent
+access by routing through a peer or shared coordination substrate. Coordination substrates
+(message boards, shared caches) are governed as effect channels within the Containment Scope.
+Responds to METR's finding that agents routed capability through shared Artifactory infrastructure
+and coordinated across independently launched runs.
+
+(2) Authorized Task Exhaustion: P-15.13a added. When a task cannot be completed within the
+authorized envelope, the system SHALL abstain, request authority, escalate, hold, or terminate —
+never search for undeclared paths. Persistence on repeatedly failing tasks becomes Boundary
+Pressure when anomalous. Responds to OpenAI's finding that 93% of board-discussed tasks came from
+198 previously unsolved tasks and that increasing reasoning effort drove increasingly risky,
+out-of-bounds strategies.
+
+— End of OQGF Amendment 014.1.
