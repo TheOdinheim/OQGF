@@ -27,6 +27,7 @@ The base document is an integrated deliverable: a formal specification (Part A),
 | [AMD-016-threat-model-assurance.md](AMD-016-threat-model-assurance.md) | The Threat-Model Assurance Requirement: Provenance, Freshness, Coverage, and Continuous Adversarial Reconciliation |
 | [AMD-017-model-lifecycle-assurance.md](AMD-017-model-lifecycle-assurance.md) | The Model Lifecycle Assurance Requirement: Training Provenance, Alignment Integrity, and Weight-to-Serving Attestation |
 | [OQGF-organ5-evidence-capture-hardening-patch.md](OQGF-organ5-evidence-capture-hardening-patch.md) | Patch — OQGF Organ 5 Evidence-Capture Hardening |
+| [AMD-018-key-custody-tier-resolution.md](AMD-018-key-custody-tier-resolution.md) | Key Custody Tier Resolution: Resolving the OQGF-R-6 Contradiction Between Unconditional and Tiered Threshold Custody |
 
 ## Design principles
 
