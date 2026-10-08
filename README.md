@@ -4,7 +4,7 @@ OQGF is an AI security and governance framework modeled on the human immune syst
 
 Start with [OQGF-1_0.md](OQGF-1_0.md). It contains the five organs, the shared Physiology Layer, and the integrated requirements, tier criteria, and assessments from all eighteen amendment documents and the Organ 5 evidence-capture patch. The separate amendment files remain in place for their rationale, research, source assumptions, and change history. You do not need to apply them separately to reconstruct the current normative reading.
 
-The framework remains a public draft. [Known source wording issues](OQGF-1_0.md#synchronization-review) are visible; integration does not silently resolve them or establish implementation conformance. [The integration map](OQGF-1_0.md#integration-map) records the revisions used, including AMD-011.1, 012.1, 014.1, 017.1, AMD-006 v2, and AMD-002 editorial v1.1.
+The framework remains a public draft. The **8 October 2026 consistency revision** resolves the identified wording conflicts across requirements, tiers, assessments, amendments, and architecture notes. The [resolution record](OQGF-1_0.md#synchronization-review) explains 24 issue groups and their effect; the [common rules](OQGF-1_0.md#a09-common-interpretation-signature-profiles-and-assessment-limits) define precedence, signature roles, retention, and assessment limits. No implementation conformance is claimed. [The integration map](OQGF-1_0.md#integration-map) records the revisions used, including AMD-011.1, 012.1, 014.1, 017.1, AMD-006 v2, and AMD-002 editorial v1.1.
 
 ## Read by organ
 
@@ -46,7 +46,7 @@ For each future amendment, update its source file and the corresponding framewor
 
 ## Design principles
 
-**Fail-safe asymmetry.** Deterministic gates are non-suppressible by construction. Autonomous signals can only raise security posture, never lower it. De-escalation above baseline requires named human confirmation, signed and recorded.
+**Fail-safe asymmetry.** Deterministic gates retain findings and fail closed without valid evidence and authorization. P-9 permits only scoped, policy-eligible accepted-risk outcomes; these are not clean conformance results. Raw autonomous Signals only raise posture. Resolution follows P-8; P-15 containment restoration requires DAP authorization wherever it applies.
 
 **The model is never in the trust path.** For any blocking, licensing, or posture-changing decision, the machine-learning component is advisory only. A deterministic spine makes the binding calls.
 
@@ -54,7 +54,7 @@ For each future amendment, update its source file and the corresponding framewor
 
 ## Status
 
-Public draft for NIST, sector regulators, and practitioners. Amendments carry their own IDs, dates, and normative-dependency statements.
+Public draft for NIST, sector regulators, and practitioners. Amendments retain their IDs and dated history and carry the current maintenance date. This repository contains 21 documentation files, not the proposed Rust/Python implementation, assessor accreditation, or deployment certifications. CNSA mappings do not authorize the civilian dual-family profile for National Security Systems; the explicit compatibility boundary is in A.0.9. No new amendment number is introduced by this consistency revision.
 
 ## Author
 

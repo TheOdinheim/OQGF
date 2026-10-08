@@ -2,6 +2,9 @@
 
 The Adaptation Requirement: Affinity Maturation for Incident-Driven Detection Amendment ID: OQGF-AMD-2026-003 Amends: OQGF-1.0, Section A.P (Physiology Layer). Supersedes the deferred OQGF-P-6 obligation introduced as a stub in AMD-002 with full normative content (OQGF-P-6.1 through OQGF-P-6.6). The AMD-002 P-6 stub SHALL be annotated as superseded by this amendment. Author: Jeremy Rose, CEO — Odin’s LLC, Wasilla, Alaska Date: 8 June 2026 Status: Public draft for NIST, sector regulators, and the Odin’s engineering team Normative dependencies: OQGF-A (Organ 5, Memory), OQGF-I (Organ 2, Inflammation), OQGF-P-1 and OQGF-P-3 (AMD-002, self-tolerance); interacts with AMD-001.
 
+
+**Consistency revision — 8 October 2026:** current requirements, tier summaries, and assessments are synchronized with the integrated framework. The [common conformance/signature/retention rules](OQGF-1_0.md#a09-common-interpretation-signature-profiles-and-assessment-limits) apply to this amendment. See the [resolution record](OQGF-1_0.md#synchronization-review). Original IDs and dated decisions are preserved; this is a public-draft maintenance revision, not a new AMD or an implementation pass.
+
 ## AMD.0 Front matter
 
 ### AMD.0.1 Purpose of this amendment
@@ -48,7 +51,7 @@ Evaluation Corpus — an independent set of attack and known-good samples
 clonal-selection arena.
 Detector Provenance — the signed lineage of a Refined Detector: its seeding
 incident, the evaluation corpus version, its self-tolerance screening result, and the
-approving DAP.
+responsible DAP and activation authorization.
 Maturation Pipeline — the governed process from seeding incident to selected,
 screened, approved, activated Refined Detector.
 
@@ -89,25 +92,25 @@ the cost of self-tolerance. This is the germinal-center tolerance checkpoint and
 binding link to AMD-002.
 OQGF-P-6.4 (Detector Provenance). Every Refined Detector SHALL carry signed
 Detector Provenance — the Seeding Incident identifier, the Evaluation Corpus version,
-the self-tolerance screening result, and the approving DAP — recorded in Organ 5
+the self-tolerance screening result, and the responsible DAP plus activation-authorization reference — recorded in Organ 5
 (OQGF-A). A detector whose provenance cannot be reconstructed SHALL NOT be
 active.
 OQGF-P-6.5 (Reversibility). Every activated Refined Detector SHALL be versioned
 and reversible. A rollback SHALL be a recorded event in Organ 5 carrying its justification
-and the acting DAP. The system SHALL be able to return to any prior detector
-generation.
+and the acting DAP. Prior detector generations SHALL remain identifiable for the applicable retention
+period. Reactivation SHALL use P-6.2/P-6.3/P-6.6 and current policy; an unsafe, revoked,
+or out-of-policy generation SHALL NOT be restored solely because rollback is available.
 OQGF-P-6.6 (No Autonomous Activation above Baseline). At Enhanced assurance
 and above, activation of a Refined Detector SHALL require DAP approval. Autonomous
 generation and autonomous selection are permitted; autonomous activation is not. At
-Baseline, autonomous activation is permitted only for detectors that have passed OQGF-P-6.2 and OQGF-P-6.3 and whose provenance is recorded per OQGF-P-6.4.
+Baseline, autonomous activation is permitted only for detectors that have passed OQGF-P-6.2 and OQGF-P-6.3 and whose provenance is recorded per OQGF-P-6.4, identifying the DAP-approved activation policy. Enhanced and High-Assurance require approval of the individual activation; Baseline may use that prior policy authorization.
 
 ## AMD.2 Conformance criteria per level
 
-Baseline (OQGF-B): Refinement seeded only by confirmed incidents (OQGF-P-6.1);
-selection on an independent corpus (OQGF-P-6.2); tolerance-gated activation (OQGF-P-6.3); recorded provenance (OQGF-P-6.4). Autonomous activation permitted only
-under those gates.
-Enhanced (OQGF-E): All Baseline criteria, plus mandatory reversibility with recorded
-rollback (OQGF-P-6.5); DAP-approved activation, no autonomous activation (OQGF-P-6.6).
+**Baseline (OQGF-B):** P-6.1–P-6.5 apply: DAP-confirmed seeding incidents, independent selection evidence, tolerance screening, signed provenance, and versioned, governed rollback. Autonomous activation is permitted only under the Baseline conditions in P-6.6.
+
+**Enhanced (OQGF-E):** All Baseline criteria, plus individual DAP approval before activation under P-6.6; autonomous activation is prohibited.
+
 High-Assurance (OQGF-H): All Enhanced criteria, plus dual-PQC-family signatures on
 Detector Provenance (ML-DSA + SLH-DSA, consistent with OQGF-M-2); a second-DAP
 review of every activated Refined Detector; and periodic re-screening of active learned
@@ -124,7 +127,7 @@ the selection stage disqualifies it (OQGF-P-6.2).
 it is discarded, not activated (OQGF-P-6.3). This is the load-bearing test:
 improvement never overrides self-tolerance.
 4. Select an active Refined Detector and reconstruct its full provenance from Organ 5 —
-seeding incident, corpus version, screening result, approving DAP (OQGF-P-6.4).
+seeding incident, corpus version, screening result, responsible DAP and activation authorization (OQGF-P-6.4).
 5. Roll back an active Refined Detector and confirm the prior generation is restored and
 the rollback is recorded (OQGF-P-6.5).
 6. At Enhanced and above, confirm no path exists to activate a Refined Detector
@@ -142,7 +145,11 @@ per OQGF-M-2.
 Cross-discipline lineage: consistent with MLOps model-registry and canary-promotion practice (a new detector is a model change, versioned and promoted
 under gates) and with data-poisoning-resistant continual learning.
 
+**Mapping boundary:** CNSA references do not make SLH-DSA an NSS-approved algorithm. The dual-family rule is an additional OQGF profile requirement; A.0.9 governs compatibility, algorithm parameters, and evidence roles. A mapping is not external certification.
+
 ## AMD.5 Technical architecture (implementation hooks)
+
+**Implementation status:** the following interfaces and dependency names are design sketches. They are not compiled code delivered by this repository. Historical references to an external implementation report the source author's context, not a fresh verification of that implementation. Apply the current normative text and A.0.9; an omitted field, enum variant, verifier check, or backend is not a conformance exemption.
 
 The Maturation Pipeline lives in a dedicated surface ( oqgf-adapt , or a module within
 oqgf-inflammation ), drawing seeding incidents from oqgf-memory , screening through
@@ -223,4 +230,4 @@ gating learning.
 — End of OQGF Amendment 003.
 
 <!-- source-sync:navigation -->
-**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-6). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-6). Its identity and historical entries are retained; current text includes the dated consistency corrections. See the [integration map](OQGF-1_0.md#integration-map) and [resolution record](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

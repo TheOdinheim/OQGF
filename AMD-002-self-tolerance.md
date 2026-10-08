@@ -2,6 +2,9 @@
 
 The Self-Tolerance Requirement: The Physiology Layer and the Bound on Host Harm Amendment ID: OQGF-AMD-2026-002 Amends: OQGF-1.0, Part A — adds a new cross-cutting section, A.P (Systemic Properties / Physiology Layer). This amendment does not modify a single organ; it states properties that all five organs SHALL collectively exhibit and individually conform to. Author: Jeremy Rose, CEO — Odin’s LLC, Wasilla, Alaska Date: 8 June 2026 Status: Public draft for NIST, sector regulators, and the Odin’s engineering team Normative dependencies: all five organs — OQGF-G (Organ 1), OQGF-I (Organ 2), OQGF-M (Organ 3), OQGF-R (Organ 4), OQGF-A (Organ 5); interacts with AMD-001.
 
+
+**Consistency revision — 8 October 2026:** current requirements, tier summaries, and assessments are synchronized with the integrated framework. The [common conformance/signature/retention rules](OQGF-1_0.md#a09-common-interpretation-signature-profiles-and-assessment-limits) apply to this amendment. See the [resolution record](OQGF-1_0.md#synchronization-review). Original IDs and dated decisions are preserved; this is a public-draft maintenance revision, not a new AMD or an implementation pass.
+
 ## AMD.0 Front matter
 
 ### AMD.0.1 Purpose of this amendment
@@ -66,9 +69,9 @@ and conformant with declared policy. Host harm is the governance analog of self-
 Self Set — the declared, versioned corpus of known-good operations and baselines
 that represents “self.” Detectors are screened against it before deployment.
 Deterministic Gate (Non-Suppressible) — a fail-closed safety control that fires on
-a conserved danger pattern: the Genetic Layer crypto/SBOM gate (OQGF-G-4) and
-MHC attestation verification (OQGF-M-1). The innate-layer analog. Tolerance SHALL
-NOT apply to it.
+a declared authorization policy: G-4, M-1, I-10, P-12.4, and other controls explicitly
+designated Deterministic Gates. Tolerance SHALL NOT apply; permitted risk acceptance
+is governed separately by P-9 and does not remove the finding or create missing authority.
 Heuristic Response (Tolerable) — a graded, behavioral, or statistical detection
 (Organ 2 sentinels, cross-hop behavioral reconciliation, anomaly scoring). The
 adaptive-layer analog. Tolerance MAY apply to it.
@@ -100,15 +103,11 @@ product, it does so to illustrate satisfiability, never to mandate a vendor.
 
 These requirements establish Section A.P. They use a new cross-cutting namespace,
 OQGF-P-*, because they belong to no single organ. Requirements OQGF-P-1 through
-OQGF-P-5 specify self-tolerance in full. Requirements OQGF-P-6 through OQGF-P-8
-establish three further physiology properties as binding obligations whose detailed
-normative content is deferred to a future revision; the obligation itself is in force now.
-Editorial note (v1.1, 8 June 2026). The “future revision” referenced above has
-been issued. OQGF-P-6, P-7, and P-8 are now fully specified in Amendments 003
-(Adaptation), 004 (Coordinated Signaling), and 005 (Resolution) respectively. The
-deferred stubs below are retained, struck through, and cross-referenced per the
-OQGF annotation convention; the operative normative content for these three
-properties is the respective amendment.
+OQGF-P-5 specify self-tolerance in full. Requirements OQGF-P-6 through OQGF-P-8 are fully specified in Amendments 003
+(Adaptation), 004 (Coordinated Signaling), and 005 (Resolution). The original deferred
+stubs below are retained only as struck-through history under the v1.1 annotation
+convention; the respective amendments supply the operative requirements.
+
 OQGF-P-1 (Host-Harm Bound / Non-Maleficence). A conforming system SHALL
 define host harm per AMD.0.3, SHALL continuously measure its host-harm rate, and
 SHALL keep that rate within a declared, documented bound. Disruption of a legitimate
@@ -117,14 +116,19 @@ tracked, reported, and reviewed with the same rigor applied to a false negative.
 system that measures only what it blocks, and not what it wrongly blocks, does not
 satisfy this requirement.
 OQGF-P-2 (Tolerance Scope — the innate/adaptive boundary). Self-tolerance
-SHALL apply only to Heuristic Responses. It SHALL NOT apply to Deterministic Gates.
-No tolerance mechanism, suppression, exception, or operator action defined anywhere
-in OQGF SHALL cause a quantum- vulnerable artifact to pass the Genetic Layer gate
-(OQGF-G-4), nor an unattested actor to be admitted past MHC verification (OQGF-M-1).
-Deterministic Gates SHALL remain fail-closed and non-suppressible. Tolerance reduces
-false alarms on the trained layer; it never opens a confirmed hole on the conserved-pattern layer. This requirement is the safety constraint on which every other
-requirement in this amendment depends, and it SHALL be enforced structurally — a
-request to suppress a Deterministic Gate SHALL be refused, not honored silently.
+SHALL apply only to Heuristic Responses and SHALL NOT apply to Deterministic Gates.
+Detection, evidence validation, and the final authorization decision SHALL remain
+deterministic, fail-closed, and non-suppressible. A Tolerance Grant SHALL NOT remove
+or hide a gate finding. A scoped P-9 Risk-Acceptance Entry MAY authorize proceeding
+past a policy finding only where the governing exception policy and applicable external
+authority permit it; the finding and distinct accepted-risk verdict SHALL remain visible.
+Acceptance SHALL NOT supply a missing or invalid signature, identity attestation,
+intent delegation, evidence record, or legal authority, and SHALL NOT substitute for
+P-8/P-15 Resolution. Absent all required evidence and a valid authorization, the gate
+SHALL deny. This rule applies to G-4, M-1, I-10, P-12.4, and other controls explicitly
+designated Deterministic Gates. Proceeding with accepted risk is not a clean conformance
+verdict. Attempts to suppress a Deterministic Gate SHALL be refused and recorded.
+
 OQGF-P-3 (Central Tolerance — pre-deployment self-screening). Before
 activation, every Heuristic Response detector SHALL be screened against the declared
 Self Set and SHALL NOT be deployed if its host-harm rate against that baseline exceeds
@@ -187,17 +191,14 @@ criteria and proof of return-to-baseline — is deferred; the obligation is in f
 
 ## AMD.2 Conformance criteria per level
 
-Baseline (OQGF-B): Host harm defined and measured (OQGF-P-1). Tolerance scope
-enforced — Deterministic Gates demonstrably non-suppressible (OQGF-P-2). Peripheral
-tolerance via signed, scoped, expiring Tolerance Grants recorded in Organ 5 (OQGF-P-4). Single-PQC-family grant signatures acceptable.
-Enhanced (OQGF-E): All Baseline criteria, plus central-tolerance pre-deployment
-screening of every heuristic detector against the Self Set (OQGF-P-3); autoimmunity
-and storm detection feeding the graded-response path (OQGF-P-5); a defined and
-recorded de-escalation path for every escalation (OQGF-P-8).
+**Baseline (OQGF-B):** P-1–P-5 apply: declared and measured host-harm bounds; non-suppressible deterministic gates; pre-deployment Self Set screening; scoped, expiring, signed tolerance grants; autoimmunity and response-storm detection. P-6, P-7, and P-8 apply under AMD-003, AMD-004, and AMD-005 at their stated tiers. Single-PQC-family grant signatures are acceptable.
+
+**Enhanced (OQGF-E):** All Baseline criteria, with Enhanced assessment under A.7 and the explicit Enhanced activation and resolution controls in P-6.6 and P-8.5. Screening and storm detection are already required at Baseline.
+
 High-Assurance (OQGF-H): All Enhanced criteria, plus a formally declared and
-audited host-harm bound with trend reporting (OQGF-P-1, OQGF-P-5); the adaptation
-loop with regression-tested, screened detector updates (OQGF-P-6); coordinated
-cross-organ signaling with no single point of coordination failure (OQGF-P-7); Tolerance
+audited host-harm bound with trend reporting (OQGF-P-1, OQGF-P-5); the explicit
+High-Assurance increments of P-6 and P-7 (whose underlying adaptation and
+coordination duties already apply at Baseline); Tolerance
 Grants dual-PQC-family signed (lattice and hash-based, consistent with OQGF-M-2)
 and reviewed by a second DAP.
 
@@ -242,7 +243,11 @@ curve, not an accident) and with site-reliability error-budget practice (the hos
 bound is, in effect, an error budget for false positives, governed and reported rather
 than left implicit).
 
+**Mapping boundary:** CNSA references do not make SLH-DSA an NSS-approved algorithm. The dual-family rule is an additional OQGF profile requirement; A.0.9 governs compatibility, algorithm parameters, and evidence roles. A mapping is not external certification.
+
 ## AMD.5 Technical architecture (implementation hooks)
+
+**Implementation status:** the following interfaces and dependency names are design sketches. They are not compiled code delivered by this repository. Historical references to an external implementation report the source author's context, not a fresh verification of that implementation. Apply the current normative text and A.0.9; an omitted field, enum variant, verifier check, or backend is not a conformance exemption.
 
 This section maps the amendment to the OQGF reference implementation (Part C). The
 Physiology Layer is cross-cutting, so its core types live in oqgf-core , with enforcement
@@ -344,8 +349,8 @@ This amendment closes the following:
 This amendment does not fully close, and states so honestly:
 
 - **Defining "legitimate" is a policy judgment, not a cryptographic one.** Host-harm measurement depends on a correct Self Set. A mislabeled baseline — one that records a malicious operation as "self" — creates a tolerance hole. This is a labeling and governance problem, not a cryptographic one, and it has the same shape as AMD-001's residual: the framework reduces the attack surface to exactly this point and names it. It is mitigated by central-tolerance screening (OQGF-P-3), DAP accountability for the Self Set (AMD.5.2), and the hard guarantee that no mislabeling can ever reach a Deterministic Gate (OQGF-P-2). The worst a bad baseline can do is over-tolerate a heuristic alert; it can never open the crypto gate.
-- **Adaptation can be poisoned.** OQGF-P-6 (obligation; deferred) lets the system learn from confirmed incidents. A falsely "confirmed" incident could teach a harmful detector. The obligation already requires every learned detector to pass central-tolerance screening (OQGF-P-3) before activation, but the full poisoning-resistance treatment is deferred to the revision that specifies OQGF-P-6 in detail. It is named here rather than left implicit.
-- **OQGF-P-6, P-7, and P-8 are obligations, not yet full requirements.** Their detailed normative content, conformance tests, and implementation hooks are deferred. The obligation binds now; the specification follows.
+- **Adaptation can be poisoned.** AMD-003 now fully specifies P-6 selection, provenance, screening, and activation. False incident labels and incomplete evaluation corpora remain risks to assess; the specification is no longer deferred.
+- **P-6, P-7, and P-8 are fully specified** in AMD-003, AMD-004, and AMD-005. The earlier stubs above are historical and non-operative.
 
 ## AMD.6 Traceability
 
@@ -356,9 +361,9 @@ This amendment does not fully close, and states so honestly:
 | OQGF-P-3 | `ToleranceController::screen` against `SelfSet`; screening record in `oqgf-memory` |
 | OQGF-P-4 | `oqgf-core::ToleranceGrant` (scoped, expiring, dual-signed); grant record in `oqgf-memory` |
 | OQGF-P-5 | host-harm monitor → `oqgf-inflammation` graded response; incident record in `oqgf-memory` |
-| OQGF-P-6 | (deferred) adaptation pipeline; learned detectors re-enter screen (OQGF-P-3) |
-| OQGF-P-7 | (deferred) generalizes AMD-001 signed-event emission across all organs |
-| OQGF-P-8 | (deferred) de-escalation path + return-to-baseline proof in `oqgf-inflammation` |
+| OQGF-P-6 | AMD-003 adaptation pipeline; learned detectors re-enter screening (OQGF-P-3) |
+| OQGF-P-7 | AMD-004 generalizes AMD-001 signed-event emission across all organs |
+| OQGF-P-8 | AMD-005 de-escalation path + return-to-baseline proof in `oqgf-inflammation` |
 
 ## AMD.7 Change log
 
@@ -381,4 +386,4 @@ normative requirement was removed.
 — End of OQGF Amendment 002.
 
 <!-- source-sync:navigation -->
-**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-1). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-1). Its identity and historical entries are retained; current text includes the dated consistency corrections. See the [integration map](OQGF-1_0.md#integration-map) and [resolution record](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

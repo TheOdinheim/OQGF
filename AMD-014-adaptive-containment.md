@@ -27,6 +27,9 @@ Custody); OQGF-P-14 (AMD-013, Recursive Inferential Privacy — conjunctive, can
 by containment state); OQGF-A-1/OQGF-A-5 (Organ 5 recording and the DAP); OQGF-R (Organ 4,
 redundancy and independent control); A.6.1 (incident response); A.6.3 (human oversight).
 
+
+**Consistency revision — 8 October 2026:** current requirements, tier summaries, and assessments are synchronized with the integrated framework. The [common conformance/signature/retention rules](OQGF-1_0.md#a09-common-interpretation-signature-profiles-and-assessment-limits) apply to this amendment. See the [resolution record](OQGF-1_0.md#synchronization-review). Original IDs and dated decisions are preserved; this is a public-draft maintenance revision, not a new AMD or an implementation pass.
+
 ---
 
 ## AMD.0 Front matter
@@ -144,22 +147,16 @@ quantities. Therefore C_{t+1} ⊑ C_t for every autonomous transition.
 
 Meet is associative, commutative, and idempotent: A ∧ B = B ∧ A; (A ∧ B) ∧ C = A ∧ (B ∧ C);
 A ∧ A = A. Therefore two independent Signals arriving in different order produce the same
-capability bound: C ∧ K₁ ∧ K₂ = C ∧ K₂ ∧ K₁. This fits AMD-004's deliberately unordered
-decentralized signaling architecture.
+capability bound: C ∧ K₁ ∧ K₂ = C ∧ K₂ ∧ K₁. This is compatible with AMD-004's per-source ordering and lack of a global order: independent sources may interleave. It does not remove source freshness or replay checks.
 
 Because each autonomous transition moves downward in the capability order and no autonomous
 operation moves upward, and a finite operational policy exposes finitely many Containment Caps,
 only finitely many distinct strict contractions can occur. The containment state reaches a fixed
 point unless governed Resolution intervenes. This prevents autonomous oscillation.
 
-**Reachable-effect safety theorem.** Let R(C) be the set of material external effects reachable
-under capability C. Under complete mediation (every material effect channel traverses a governed
-enforcement point): C_a ⊑ C_b ⟹ R(C_a) ⊆ R(C_b). Because C_{t+1} ⊑ C_t, we obtain
-R(C_{t+1}) ⊆ R(C_t). An autonomous containment transition cannot create a newly reachable
-external effect, provided the relevant effect channels are completely mediated by the governed
-controls. If complete mediation is false — a covert channel, undeclared device, proxy bypass, or
-ungoverned path — the theorem does not hold. P-15.2 therefore makes complete mediation an
-attested condition, not a silent assumption.
+**Conditional reachable-effect statement.** Let R(C) denote effects permitted by a fixed, completely mediated capability policy, with an explicitly monotone mapping from permission/resource bounds to permitted effects. Under those assumptions, C_a ⊑ C_b implies R(C_a) ⊆ R(C_b), so the meet construction cannot expand the agent's permitted effect set. Complete mediation alone does not prove that a particular implementation or its environment has this monotone semantics. The operator must establish the mapping, coupled resource dependencies, and actual enforcement; the coordinate-wise algebra does not provide that evidence.
+
+This statement does not claim that contraction cannot cause harm. Controller actions, service interruption, physical consequences, covert channels, or unmediated paths may create or shift risk; P-15.13 and P-13.6 govern those consequences. The abstract fixed point assumes a fixed finite cap set; policy changes, time-varying state, and Resolution require a separately governed transition.
 
 ### AMD.0.6 Terminology additions
 
@@ -310,14 +307,14 @@ Restoration. Restoration SHALL NOT occur because a Signal expired, because no ne
 occurred, because the model requests it, because the model claims the previous action was benign,
 because a learned monitor changes its score, because a process restarts, because a session
 identifier changes, or through Accountable Risk Acceptance used as a substitute for containment
-Resolution. Authority Restoration SHALL be governed by OQGF-P-8 (AMD-005). The restored envelope
+Resolution. Authority Restoration SHALL require DAP authorization and satisfied Resolution criteria under OQGF-P-8 (AMD-005) at every tier where P-15 applies. The restored envelope
 SHALL satisfy C_t ⊏ C_{t+1} ⊑ C_baseline ⊑ C_max unless a separately governed change
 establishes a new Operational Baseline Envelope. The contained system MAY provide evidence
 relevant to Resolution; it SHALL NOT be the authoritative resolver of its own containment.
 
 **OQGF-P-15.12 (Incident Adaptation and Risk Reconciliation).** A confirmed material containment
-event SHALL be reconciled with existing OQGF mechanisms: the incident SHALL seed AMD-003 detector
-refinement; containment Signals SHALL remain P-7 Signals; material risk SHALL enter or update the
+event SHALL be reconciled with existing OQGF mechanisms: the incident SHALL be submitted for AMD-003 seeding eligibility review; only
+DAP-confirmed true positives may seed refinement, and activation retains every P-6 gate; containment Signals SHALL remain P-7 Signals; material risk SHALL enter or update the
 P-10 Risk Register (AMD-008); affected causal paths SHALL update the P-13 RRPG (AMD-012) where
 applicable; the Capability Envelope SHALL be reassessed where the incident revealed undeclared
 actual capability; Intent/Trajectory reconciliation SHALL be performed; and Barrier or
@@ -362,21 +359,9 @@ Containment history is append-only; Resolution does not erase the fact that cont
 
 ## AMD.2 Conformance criteria per level
 
-**Baseline (OQGF-B):** Declared Containment Scope (OQGF-P-15.2); ECE bounded by AMD-011
-Capability Envelope (OQGF-P-15.1); signed Containment Caps with autonomous contraction only
-(OQGF-P-15.3); model inability to modify containment policy (OQGF-P-15.5); explicit Resolution
-Path for every containment state (OQGF-P-15.11); no autonomous restoration; Organ 5
-state-transition evidence (OQGF-P-15.14); declared residual channels not completely mediated
-(OQGF-P-15.2). Single-PQC-family cap signatures acceptable.
+**Baseline (OQGF-B):** All P-15 requirements, including P-15.13a, apply within P-15.1 scope: bounded ECE; declared mediation; autonomous contraction only; deterministic caps; trajectory and equivalent-path analysis; post-contraction attestation; transitive confinement; independent freeze/termination; DAP-authorized Resolution; incident/risk linkage; host-harm control; task-exhaustion outcomes; and reconstructable evidence. The capability floor in P-12.1 still applies: an external-effect system must meet at least Enhanced, not claim Baseline from this control list.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus multi-domain contraction with
-effect-equivalent-path reasoning (OQGF-P-15.7); event-driven post-contraction attestation
-(OQGF-P-15.8); trajectory- and composition-aware boundary pressure detection (OQGF-P-15.6);
-transitive sub-agent confinement (OQGF-P-15.9); Risk Register and RRPG reconciliation
-(OQGF-P-15.12); host-harm and induced-risk evaluation (OQGF-P-15.13); containment timing tied
-to P-13 Intervention Margin; adversarial testing of at least one indirect effect path;
-demonstrated inability of the governed model to restore authority after process or session
-restart.
+**Enhanced (OQGF-E):** All applicable Baseline controls, plus adversarial testing of at least one indirect effect path and demonstrated inability of the governed model to restore authority after a process or session restart. Post-contraction attestation, transitive confinement, and host-harm governance are already mandatory controls.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus dual-PQC-family signatures on
 Containment Caps and ECE checkpoints per OQGF-R-1; independent verification of contraction
@@ -478,9 +463,13 @@ An auditor SHALL:
 - **Incident basis:** OpenAI long-horizon report (20 July 2026); OpenAI–Hugging Face (21 July
   2026); Anthropic evaluation incidents (30 July 2026); UK AISI (4 August 2026).
 
+**Mapping boundary:** CNSA references do not make SLH-DSA an NSS-approved algorithm. The dual-family rule is an additional OQGF profile requirement; A.0.9 governs compatibility, algorithm parameters, and evidence roles. A mapping is not external certification.
+
 ---
 
 ## AMD.5 Technical architecture (implementation hooks)
+
+**Implementation status:** the following interfaces and dependency names are design sketches. They are not compiled code delivered by this repository. Historical references to an external implementation report the source author's context, not a fresh verification of that implementation. Apply the current normative text and A.0.9; an omitted field, enum variant, verifier check, or backend is not a conformance exemption.
 
 AMD-014 introduces no new organ, no new Signal bus, no new DAP type, no new Risk Register, no new
 RRPG, and no new Resolution engine. It extends `oqgf-core` with the ECE, Containment Cap, and
@@ -682,4 +671,4 @@ out-of-bounds strategies.
 — End of OQGF Amendment 014.1.
 
 <!-- source-sync:navigation -->
-**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-15). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-15). Its identity and historical entries are retained; current text includes the dated consistency corrections. See the [integration map](OQGF-1_0.md#integration-map) and [resolution record](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

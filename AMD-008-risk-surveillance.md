@@ -12,9 +12,12 @@ convention.
 **Normative dependencies:** OQGF-A (Organ 5, Memory, for the register of record and the
 accountable DAP, OQGF-A-5); OQGF-P-1 (host-harm bound, AMD-002), OQGF-P-5 (autoimmunity /
 storm detection as a risk source, AMD-002), OQGF-P-9 (accountable risk acceptance, AMD-006);
-OQGF-G-4 and OQGF-M-1 (the two Deterministic Gates, as one risk source among several);
+OQGF-G-4 and OQGF-M-1 (examples of Deterministic Gates, as one risk source among several);
 OQGF-M-13 (documented risk requiring DAP acceptance, AMD-001, now given a register of record);
 consistent with the per-crate `THREAT_MODEL.md` obligation of Part C.
+
+
+**Consistency revision — 8 October 2026:** current requirements, tier summaries, and assessments are synchronized with the integrated framework. The [common conformance/signature/retention rules](OQGF-1_0.md#a09-common-interpretation-signature-profiles-and-assessment-limits) apply to this amendment. See the [resolution record](OQGF-1_0.md#synchronization-review). Original IDs and dated decisions are preserved; this is a public-draft maintenance revision, not a new AMD or an implementation pass.
 
 ---
 
@@ -96,9 +99,9 @@ immediate elimination (avoid the threat by destroying its source). The immune sy
 comes as much from *finding and correctly triaging* threats as from the gates that fire on
 the two or three patterns it can recognize without thinking.
 
-The translation is exact. The Deterministic Gates (OQGF-G-4, OQGF-M-1) are the reflexive,
-conserved-pattern back-end — they fire on the crypto pattern and the attestation pattern and
-nothing else, exactly as complement fixes on a foreign surface and asks no further questions.
+The analogy motivates the design below; it is not an engineering proof. The cryptographic and attestation gates (G-4 and M-1) exemplify the deterministic
+back-end. Other gates govern custody, egress, privacy, and semantic authority under
+their own clauses; this analogy does not limit the set of Deterministic Gates.
 Risk surveillance is the dendritic-cell-and-NK-cell front-end: it finds the risks the gates
 were never watching for, catalogs them, assesses each one, and assigns each a disposition —
 avoid, reduce, transfer, or accept — exactly as the immune system triages what its patrols
@@ -196,7 +199,7 @@ requirement.
 function, not a point-in-time exercise, drawing at minimum from: confirmed incidents recorded
 in Organ 5, including autoimmunity and storm events (OQGF-P-5); the threat models maintained
 per trust boundary (the per-crate `THREAT_MODEL.md` obligation); Deterministic-Gate findings
-(OQGF-G-4, OQGF-M-1); supply-chain and dependency changes (OQGF-G-6.2 supply-chain
+(OQGF-G-4, OQGF-M-1); supply-chain and dependency changes (A.6.2 supply-chain
 re-evaluation); and material changes to the system or its operating environment. A Register
 that is refreshed only at assessment time does not satisfy this requirement.
 
@@ -233,16 +236,9 @@ not only the risks currently carried but the history of how each was decided.
 
 ## AMD.2 Conformance criteria per level
 
-**Baseline (OQGF-B):** A Risk Register exists and records description, context, likelihood,
-impact, a named DAP owner, and exactly one disposition per risk (OQGF-P-10.1, OQGF-P-10.3); the
-Accept disposition carries OQGF-P-9 accountability and, for gate findings, is realized as an
-OQGF-P-9 entry (OQGF-P-10.4); the Register is recorded in Organ 5. Single-PQC-family acceptance
-signatures acceptable.
+**Baseline (OQGF-B):** P-10.1–P-10.6 apply: the authoritative Risk Register; continuous identification; one current disposition per risk; scoped accountable acceptance; treatment tracking and residual reassessment; periodic review; and retained history. Single-PQC-family acceptance signatures are acceptable.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus continuous identification from the named risk
-sources (OQGF-P-10.2); Avoid/Reduce/Transfer plans tracked to closure with visible open items
-and residual-risk re-assessment (OQGF-P-10.5); a reportable standing inventory of all identified
-risks and dispositions subject to periodic review (OQGF-P-10.6).
+**Enhanced (OQGF-E):** All Baseline criteria, assessed under A.7. Continuous identification, treatment tracking, and reportable review are already required at Baseline.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus dual-PQC-family signatures on every
 Accept disposition (ML-DSA + SLH-DSA, consistent with OQGF-M-2); second-DAP review of any Accept
@@ -300,9 +296,13 @@ An auditor SHALL:
   dispositioned, tracked, reviewed) and with the object-capability principle that a disposition
   is itself an attributable, signed act.
 
+**Mapping boundary:** CNSA references do not make SLH-DSA an NSS-approved algorithm. The dual-family rule is an additional OQGF profile requirement; A.0.9 governs compatibility, algorithm parameters, and evidence roles. A mapping is not external certification.
+
 ---
 
 ## AMD.5 Technical architecture (implementation hooks)
+
+**Implementation status:** the following interfaces and dependency names are design sketches. They are not compiled code delivered by this repository. Historical references to an external implementation report the source author's context, not a fresh verification of that implementation. Apply the current normative text and A.0.9; an omitted field, enum variant, verifier check, or backend is not a conformance exemption.
 
 The Risk Register is a core type (`oqgf-core`), persisted in `oqgf-memory` (Organ 5). Its Accept
 disposition reuses the AMD-006 `RiskAcceptance` type unchanged for gate findings, and an
@@ -439,4 +439,4 @@ catalog does not prevent — each mapped to the shape of a prior amendment's res
 — End of OQGF Amendment 008.
 
 <!-- source-sync:navigation -->
-**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-10). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-10). Its identity and historical entries are retained; current text includes the dated consistency corrections. See the [integration map](OQGF-1_0.md#integration-map) and [resolution record](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

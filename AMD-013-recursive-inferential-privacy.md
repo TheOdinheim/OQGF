@@ -22,6 +22,9 @@ input); OQGF-A-1, OQGF-A-5 (Organ 5 recording and the Designated Accountable Par
 estimators may satisfy the analytical requirements if they meet the declared assurance criteria.
 This amendment does not require a quantum estimator.
 
+
+**Consistency revision — 8 October 2026:** current requirements, tier summaries, and assessments are synchronized with the integrated framework. The [common conformance/signature/retention rules](OQGF-1_0.md#a09-common-interpretation-signature-profiles-and-assessment-limits) apply to this amendment. See the [resolution record](OQGF-1_0.md#synchronization-review). Original IDs and dated decisions are preserved; this is a public-draft maintenance revision, not a new AMD or an implementation pass.
+
 ---
 
 ## AMD.0 Front matter
@@ -106,7 +109,7 @@ protected information through a cascading, compositional process. Each tissue-da
 (individual disclosure) is a consequence of the immune system's own legitimate action — but the
 resulting exposure of B and C was never intended and progressively widens the attack surface.
 
-The translation is exact. A governed system releases fact A (authorized, individually
+The analogy motivates the design below; it is not an engineering proof. A governed system releases fact A (authorized, individually
 permitted). The release causes no harm by itself. But the recipient, combining A with their
 existing knowledge, can now infer protected proposition B. And from B, they can infer C. Each
 step was enabled by an authorized disclosure; the cascading inference was never authorized. P-14.4
@@ -273,8 +276,10 @@ policy. A system that forgets what it already told a recipient and re-evaluates 
 isolation does not satisfy this requirement when the cumulative effect is material.
 
 **OQGF-P-14.7 (Minimum-Loss Task-Sufficient Release).** Where more than one Candidate Release can
-satisfy the authorized task, the system SHALL select a policy-permitted candidate that minimizes
-governed inferential privacy loss subject to declared task-utility requirements. Candidate classes
+satisfy the authorized task, the system SHALL select a policy-permitted candidate with the least governed inferential
+privacy loss among the evaluated task-sufficient candidates, under the declared comparison
+method and uncertainty policy. The candidate search scope and exclusions SHALL be recorded;
+a bounded search SHALL NOT be presented as proof of a global optimum. Candidate classes
 SHOULD include, where applicable: exact release; redaction; generalization;
 tokenization/pseudonymization; differential-privacy mechanism; derived answer; cryptographic or
 attested proof; local computation; encrypted computation; and denial. This requirement does not
@@ -335,20 +340,9 @@ it SHALL create or update the OQGF-P-10 Risk Register entry (AMD-008) and link i
 
 ## AMD.2 Conformance criteria per level
 
-**Baseline (OQGF-B):** Protected Propositions maintained for material privacy concerns
-(OQGF-P-14.1); intended recipient and purpose evaluated before material release (OQGF-P-14.2);
-prospective counterfactual assessment within declared scope (OQGF-P-14.3); relevant disclosure
-history preserved (OQGF-P-14.6); deterministic final release authority (OQGF-P-14.8); material
-privacy verdict recorded in Organ 5 (OQGF-P-14.13); uncertainty treated explicitly with
-conservative failure on high-impact propositions (OQGF-P-14.9). Single-PQC-family gate
-signatures acceptable.
+**Baseline (OQGF-B):** P-14.1–P-14.13 apply wherever their materiality conditions hold: protected propositions; recipient-conditioned prospective assessment; recursive/mosaic and cumulative exposure; comparison of task-sufficient release candidates; deterministic release control; conservative uncertainty; multi-principal policy; protected explanations; estimator neutrality; and recorded decisions. Single-PQC-family gate signatures are acceptable.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus many-to-one mosaic representation
-(OQGF-P-14.5); multi-hop recursive propagation (OQGF-P-14.4); candidate-transformation
-comparison with minimum-loss selection (OQGF-P-14.7); calibrated inferability estimates;
-event-driven update after material recipient-capability or disclosure-state change;
-multi-principal handling with declared conflict-resolution (OQGF-P-14.10); adversarial tests for
-cumulative and mosaic leakage.
+**Enhanced (OQGF-E):** All Baseline criteria, plus calibrated inferability estimates, event-driven updates after material recipient-capability or disclosure-state change, and adversarial cumulative/mosaic-leakage tests. Unsupported numerical estimates remain explicitly uncertain under P-14.9.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus robust or high-quantile treatment of
 recipient uncertainty for high-impact propositions; independently reviewed Protected Proposition
@@ -432,9 +426,13 @@ An auditor SHALL:
 - **CNSA 2.0:** ML-DSA-87 for gate-decision signatures; dual-family (ML-DSA + SLH-DSA) at
   High-Assurance per OQGF-R-1.
 
+**Mapping boundary:** CNSA references do not make SLH-DSA an NSS-approved algorithm. The dual-family rule is an additional OQGF profile requirement; A.0.9 governs compatibility, algorithm parameters, and evidence roles. A mapping is not external certification.
+
 ---
 
 ## AMD.5 Technical architecture (implementation hooks)
+
+**Implementation status:** the following interfaces and dependency names are design sketches. They are not compiled code delivered by this repository. Historical references to an external implementation report the source author's context, not a fresh verification of that implementation. Apply the current normative text and A.0.9; an omitted field, enum variant, verifier check, or backend is not a conformance exemption.
 
 The Privacy Inferability Hypergraph and the Inferential Privacy Gate are core types in
 `oqgf-core`, persisted in `oqgf-memory` (Organ 5). The gate sits at the Controlled Boundary
@@ -482,8 +480,8 @@ pub struct InferabilityAssessment {
 }
 
 /// The nonnegative counterfactual increase in inferability (OQGF-P-14.3).
-/// delta is NonNegative — claims that disclosure REDUCES inferability are
-/// structurally unrepresentable.
+/// The metric clips a modeled decrease to zero by definition. Construction must
+/// validate this invariant; the type name does not prove the estimate or enforcement.
 pub struct ExposureDelta {
     pub proposition: PropositionId,
     pub prior: InferabilityScore,             // P(s_j | K_r)
@@ -527,12 +525,13 @@ pub enum TransformationType {
 }
 ```
 
-The safety properties are structural. `PrivacyVerdict` has no variant and no method that converts
-`Deny` or `Abstain` into `Allow` without passing through `InferentialPrivacyGate::evaluate` with
-a different candidate — the model cannot override a denial. `ExposureDelta.delta` is
-`NonNegative`, making negative deltas (claims that disclosure *reduces* inferability)
-unrepresentable. `RecipientState.knowledge` has no "empty" default, so treating unknown knowledge
-as zero requires an explicit, auditable choice rather than a silent default.
+The sketch names verdicts and a nonnegative loss metric; it does not prove release
+enforcement or estimate correctness. A trusted constructor must validate the metric,
+and every release path must validate the authoritative gate result, candidate binding,
+current recipient/disclosure state, and permitted exception authority. Unknown
+knowledge must remain explicitly uncertain rather than silently zero. A model or
+caller that can construct an `Allow` value must still lack authority to release data
+without the independent deterministic checks and their evidence.
 
 ### AMD.5.2 What this closes, and what it does not
 
@@ -644,4 +643,4 @@ govern both the individual components and the composition.
 — End of OQGF Amendment 013.
 
 <!-- source-sync:navigation -->
-**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-14). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-14). Its identity and historical entries are retained; current text includes the dated consistency corrections. See the [integration map](OQGF-1_0.md#integration-map) and [resolution record](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

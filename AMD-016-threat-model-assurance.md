@@ -25,6 +25,9 @@ failures may seed detector refinement); OQGF-P-7 (AMD-004, Coordinated Signaling
 (AMD-002, deterministic/heuristic boundary); OQGF-A-1/OQGF-A-5 (Organ 5 recording and the DAP);
 Part C per-crate `THREAT_MODEL.md` obligation (the document this amendment makes governed).
 
+
+**Consistency revision — 8 October 2026:** current requirements, tier summaries, and assessments are synchronized with the integrated framework. The [common conformance/signature/retention rules](OQGF-1_0.md#a09-common-interpretation-signature-profiles-and-assessment-limits) apply to this amendment. See the [resolution record](OQGF-1_0.md#synchronization-review). Original IDs and dated decisions are preserved; this is a public-draft maintenance revision, not a new AMD or an implementation pass.
+
 ---
 
 ## AMD.0 Front matter
@@ -272,18 +275,9 @@ graph, signal bus, or containment engine SHALL be created.
 
 ## AMD.2 Conformance criteria per level
 
-**Baseline (OQGF-B):** Threat models versioned, dated, DAP-owned, and scope-declared
-(OQGF-P-17.1); material claims carry provenance (OQGF-P-17.2); machine-generated hypotheses
-distinguishable from verified facts (OQGF-P-17.3); a declared Reconciliation Cadence exists
-(OQGF-P-17.4); Coverage Failures recorded in Organ 5 and entered into the Risk Register
-(OQGF-P-17.5); learned proposals not autonomously authoritative (OQGF-P-17.6); threat-model
-history retained (OQGF-P-17.9). Single-PQC-family signatures on threat-model versions acceptable.
+**Baseline (OQGF-B):** P-17.1–P-17.10 apply: versioned, owned, scoped threat models; claim provenance and epistemic distinction; actual reconciliation at the declared cadence; recorded coverage failures; deterministic authority; attacker conditioning; capability/trajectory linkage where applicable; retained history; and risk/propagation linkage. Single-PQC-family threat-model signatures are acceptable.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus reconciliation against the attested deployed
-system at the declared cadence (OQGF-P-17.4); attacker-conditioned claims (OQGF-P-17.7);
-reconciliation against Capability Envelope and Trajectory Record for AMD-011 systems
-(OQGF-P-17.8); risk and propagation linkage (OQGF-P-17.10); adversarial testing of at least
-one stale claim and one unmodeled path; event-driven reconciliation on material system change.
+**Enhanced (OQGF-E):** All Baseline criteria, plus adversarial tests of at least one stale claim and one unmodeled path, and event-driven reconciliation on material system change. Declaring a cadence without performing reconciliation does not meet Baseline.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus dual-PQC-family signatures on
 threat-model versions and material claim records per OQGF-R-1; independent verification of
@@ -301,7 +295,7 @@ An auditor SHALL:
 
 1. Request a threat-model version and confirm it carries a version identifier, timestamp,
    responsible DAP, system scope, and adversary scope (OQGF-P-17.1). **This is the
-   load-bearing test of this amendment**: it proves the threat model is a governed artifact,
+   load-bearing test of this amendment**: it checks, for the exercised case, that the threat model is a governed artifact,
    not an ungoverned document.
 2. Select a material claim and confirm it carries provenance, supporting evidence, and epistemic
    state (OQGF-P-17.2, OQGF-P-17.3). Confirm a machine-generated hypothesis is visually and
@@ -357,9 +351,13 @@ An auditor SHALL:
 - **CNSA 2.0:** ML-DSA-87 for threat-model version signatures; dual-family at High-Assurance
   per OQGF-R-1.
 
+**Mapping boundary:** CNSA references do not make SLH-DSA an NSS-approved algorithm. The dual-family rule is an additional OQGF profile requirement; A.0.9 governs compatibility, algorithm parameters, and evidence roles. A mapping is not external certification.
+
 ---
 
 ## AMD.5 Technical architecture (implementation hooks)
+
+**Implementation status:** the following interfaces and dependency names are design sketches. They are not compiled code delivered by this repository. Historical references to an external implementation report the source author's context, not a fresh verification of that implementation. Apply the current normative text and A.0.9; an omitted field, enum variant, verifier check, or backend is not a conformance exemption.
 
 AMD-016 introduces no new organ, no new risk register, no new propagation graph, no new signal
 bus, no new containment engine, and no new semantic-authority mechanism. It extends `oqgf-core`
@@ -539,4 +537,4 @@ of a prior amendment's residual.
 — End of OQGF Amendment 016.
 
 <!-- source-sync:navigation -->
-**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-17). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-17). Its identity and historical entries are retained; current text includes the dated consistency corrections. See the [integration map](OQGF-1_0.md#integration-map) and [resolution record](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

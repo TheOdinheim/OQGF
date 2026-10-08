@@ -20,6 +20,9 @@ for evidentiary signatures); A.6.1 (incident response, statistical-reconciliatio
 trigger); OQGF-P-10 (AMD-008, the Risk Register that receives an unexplained decision);
 OQGF-P-9 (AMD-006, accountable acceptance where such a risk is carried).
 
+
+**Consistency revision — 8 October 2026:** current requirements, tier summaries, and assessments are synchronized with the integrated framework. The [common conformance/signature/retention rules](OQGF-1_0.md#a09-common-interpretation-signature-profiles-and-assessment-limits) apply to this amendment. See the [resolution record](OQGF-1_0.md#synchronization-review). Original IDs and dated decisions are preserved; this is a public-draft maintenance revision, not a new AMD or an implementation pass.
+
 ---
 
 ## AMD.0 Front matter
@@ -40,14 +43,12 @@ enumeration. "Dominant Pauli-string contributions" is therefore a complete descr
 small system and a vanishing sample of a large one — and nothing in the framework requires an
 artifact to say which it is. An explanation that covers all observables of weight two, presented
 without stating that bound, implies a completeness it does not have. The remedy is not to forbid
-partial explanations; partial explanations are the only kind physics permits at scale. The remedy
+partial explanations; the feasibility and coverage of an explanation depend on the model, observable family, and available sampling resources. The remedy
 is to require that the bound be **declared and recorded**, so that a reader — an auditor, a
 regulator, a DAP — knows exactly what the artifact does and does not cover.
 
 **Second, it presumes the explanation signal exists.** Variational quantum circuits are subject to
-**barren plateaus**: as system size grows, gradients and observable expectation values concentrate
-exponentially toward zero (McClean et al., 2018; Cerezo et al., 2021). In that regime every Pauli
-contribution sinks beneath shot noise and the resulting artifact is indistinguishable from noise.
+**barren plateaus** in particular circuit, cost-function, initialization, and noise regimes: gradient variance may decay exponentially with size (McClean et al., 2018; Cerezo et al., 2021). This does not imply that every observable expectation or every large model vanishes. Explanation validity must be tested for the chosen observable, method, profile, and sampling budget.
 The framework currently has no way to record that outcome as anything other than a successful
 explanation. This is the most dangerous failure mode in this amendment's scope, because it is
 silent: the audit chain would assert that a regulated decision was explained when in fact the
@@ -86,10 +87,10 @@ they qualify.
 
 One consequence of that placement is stated plainly, because it determines the shape of
 OQGF-A-10: **Organ 5 is the recorder, not a gate.** The framework's structural prevention lives in
-the two Deterministic Gates (OQGF-G-4, OQGF-M-1). Organ 5's assurance is that the record is
+the applicable Deterministic Gates (including G-4, M-1, I-10, and P-12.4). Organ 5's assurance is that the record is
 complete, honest, and attributable. The Null Explanation is therefore fail-closed *in the sense
 that matters for a recorder* — it refuses to record a non-explanation as an explanation — and its
-consequence for action is enforced through DAP accountability rather than through a build gate.
+consequence for action is enforced by the consuming authorization path, which must validate the DAP acknowledgment and current evidence state before action. Recording an acknowledgment alone does not enforce that rule.
 
 ### AMD.0.3 The biological basis
 
@@ -126,20 +127,23 @@ noise model and reconciles the empirical sampling distribution against it. A fla
 the declared trainability profile is expected physiology. A flat signal deviating from it is an
 anomaly, and anomalies are incidents.
 
-*Novelty note, per Odin's fact-check discipline: the anergy-panel construction applied to QML
-explanation-channel attestation is believed novel and SHALL be verified against the current
-literature before this amendment is published or claimed as prior art. Classical shadows and
-barren plateaus are established results and are cited as such in AMD.4.*
+*Novelty status: the proposed anergy-panel analogy and its QML use are not asserted here
+to be novel or established prior art. A separate current literature review is required
+before making such a claim. The cited classical-shadow and barren-plateau results are
+method- and regime-dependent; they do not prove this framework's implementation.*
 
 ### AMD.0.4 Terminology additions
 
 - **Explanation Scope Bound** — the declared limit of what an explanation artifact covers:
   the observable weight bound *k*, the estimation method, the sample count, and the confidence
-  interval. An artifact covering all Pauli strings of weight ≤ *k* is a complete statement about
-  that bounded set and no statement at all about the remainder.
-- **Null Explanation** — an explanation artifact whose signal is statistically indistinguishable
-  from zero at the declared confidence level. Recorded explicitly as Null; never recorded as
-  valid. The honest record of an absent explanation.
+  interval and its individual or simultaneous coverage meaning. The declared method may
+  estimate a bounded observable set with stated uncertainty; it is not an exact complete
+  description, and it makes no unsupported coverage claim about the remainder.
+- **Null Explanation** — an artifact that does not supply an accepted explanation: its
+  signal is statistically indistinguishable from zero under A-9, is invalidated by an
+  A-11 reconciliation anomaly or A-12 channel failure, or lacks required validity evidence.
+  Record Null with a supported cause or pending cause plus an Evidence Gap; never report
+  it as Valid. Statistical non-detection does not prove that information is physically absent.
 - **Trainability Profile** — the declared expected signal/gradient-variance behavior for a given
   model architecture, qubit count, and device, against which the observed explanation signal is
   statistically reconciled (the OQGF-M-3 declare-then-test pattern applied to explainability).
@@ -148,11 +152,9 @@ barren plateaus are established results and are cited as such in AMD.4.*
 - **Reconciliation Anomaly** — a flat or distorted explanation signal that deviates from the
   declared Trainability Profile: an incident trigger under A.6.1, not an expected regime.
 - **Canary Probe** — an analytically known, shallow, non-degenerate control circuit executed
-  through the same explanation pipeline, device, and session as a governed job, whose correct
-  explanation attests that the explanation channel is functioning. The recall-antigen analog.
+  through the same explanation pipeline, device, and session as a governed job, whose result provides bounded evidence about explanation-channel function for a declared scope. The recall-antigen analog.
 - **Channel Failure** — the condition in which a Canary Probe fails to produce its known
-  explanation, indicating that the explanation pipeline itself — not the model — is compromised,
-  miscalibrated, or non-responsive.
+  explanation, indicating that the declared channel check failed; the record SHALL distinguish a confirmed malfunction from an inconclusive or unavailable check. A failed check alone does not prove adversarial compromise or identify the root cause.
 
 ### AMD.0.5 Scope, and what this amendment does not require
 
@@ -202,11 +204,7 @@ as decided.
 4. **Estimation method is not mandated; classical shadows are RECOMMENDED.** Assumed to keep the
    framework method-neutral and durable as estimation techniques improve, consistent with
    AMD.0.5.
-5. **A Channel Failure invalidates the session, not merely the job.** Where a Canary Probe fails,
-   every explanation artifact produced in that session SHALL be recorded as Null with cause
-   `ChannelFailure`. Assumed because a non-responsive channel gives no basis to trust any artifact
-   it produced, and salvaging individual artifacts from a demonstrably broken channel is the
-   optimistic-verdict error the framework's conformance discipline exists to prevent.
+5. **A Channel Failure invalidates the declared scope.** The binding scope is the job, session, or batch declared under A-12, with its pipeline, device, time range, and membership. A session-scoped probe covers the whole declared session; a narrower declared scope is not silently promoted to session scope. Scope SHALL NOT be narrowed after failure to preserve a favorable result; evidence of wider impact SHALL expand the invalidation with a recorded reason. This follows the ratified granularity decision in assumption 2.
 
 ---
 
@@ -220,7 +218,9 @@ OQGF-A-4 presumes.
 under OQGF-A-4 SHALL declare its Explanation Scope Bound: the observable weight bound *k* (or the
 equivalent structural limit of the method used), the estimation method, the number of samples, and
 the confidence interval at which the estimates hold. An artifact that does not declare its bound
-SHALL NOT satisfy OQGF-A-4. An artifact SHALL NOT be presented, formatted, or recorded in a manner
+SHALL NOT satisfy OQGF-A-4. The record SHALL identify the covered observable set and whether confidence is
+individual or simultaneous, including the declared treatment of multiple comparisons.
+An artifact SHALL NOT be presented, formatted, or recorded in a manner
 that implies coverage beyond its declared bound. Classical-shadow estimation (AMD.4) is RECOMMENDED
 for systems at which direct enumeration of the observable space is intractable; any method
 yielding a declared bound, sample count, and confidence interval satisfies this requirement.
@@ -231,7 +231,12 @@ Explanation**, explicitly marked as such, with its cause recorded as one of: Exp
 Regime (OQGF-A-11), Reconciliation Anomaly (OQGF-A-11), or Channel Failure (OQGF-A-12). A Null
 Explanation SHALL NOT be recorded, reported, or exported as a valid explanation, and SHALL NOT be
 suppressed or omitted from the Organ 5 record. A system that records an information-free artifact
-as a successful explanation does not satisfy OQGF-A-4.
+as a successful explanation does not satisfy OQGF-A-4. If evidence cannot support one
+of the three causes, the artifact SHALL remain Null with classification pending and an
+explicit Evidence Gap; a missing profile or inconclusive test SHALL NOT be labeled
+Expected Trainability Regime. Pending cause is an unresolved evidence state, not a fourth
+cause or a valid explanation. A-10 action authorization SHALL remain blocked until the
+required cause and acknowledgment evidence are available.
 
 **OQGF-A-10 (Accountability for Unexplained Decisions).** A regulated AI/ML decision whose
 explanation artifact is Null is an **unexplained regulated decision**. Such a decision SHALL NOT
@@ -248,10 +253,12 @@ explanation a named, signed, reviewable act rather than a silent default.
 **Trainability Profile** for each governed variational or kernel quantum model — the expected
 explanation-signal behavior (e.g., gradient or expectation-value variance as a function of qubit
 count, circuit depth, and device) — and SHALL statistically reconcile the observed explanation
-signal against it, recording the test and its result alongside the artifact. A flat signal that
-reconciles with the declared profile SHALL be recorded as an Expected Trainability Regime. A flat
+signal against it, recording the test and its result alongside the artifact. A flat signal supported as consistent with the declared profile under a predeclared
+test, uncertainty bound, and adequate sampling SHALL be recorded as an Expected
+Trainability Regime. Failure to reject a mismatch with an underpowered test is not sufficient;
+inconclusive reconciliation SHALL remain an Evidence Gap under A-9. A flat
 or distorted signal that deviates from the declared profile SHALL be recorded as a Reconciliation
-Anomaly and SHALL trigger the incident-response pathway for statistical reconciliation failure
+Anomaly, SHALL mark the affected artifact Null under A-9, and SHALL trigger the incident-response pathway for statistical reconciliation failure
 under A.6.1. This requirement applies the OQGF-M-3 declare-then-test pattern to explainability;
 it does not modify OQGF-M-3.
 
@@ -259,29 +266,26 @@ it does not modify OQGF-M-3.
 High-Assurance SHALL execute a **Canary Probe** — a shallow, analytically known control circuit
 whose correct explanation is non-degenerate by construction — through the same explanation
 pipeline, on the same device, within the same session as the governed job, at a declared
-granularity (per-job, per-session, or per-batch). The probe's produced explanation SHALL be
-compared against its known analytic result. Where the probe produces its known result, the
-explanation channel is attested for that scope. Where the probe fails to produce its known result,
+granularity (per-job, per-session, or per-batch). The scope membership and acceptance tolerance, sample budget, and decision rule SHALL be declared before the governed results are used. The probe's produced explanation SHALL be compared against its known analytic result under that rule. A passing result supplies bounded evidence for that scope and fault model; it does not prove that every job or every failure mode is correct. Where the probe fails to produce its known result,
 a **Channel Failure** SHALL be recorded, every explanation artifact produced within that scope
 SHALL be recorded as Null with cause Channel Failure (OQGF-A-9), and the incident-response pathway
 under A.6.1 SHALL be triggered. The Canary Probe is RECOMMENDED at Baseline and Enhanced. The
 probe circuit SHALL NOT be predictable to the point of permitting selective evasion; probe
-selection SHALL be varied.
+selection SHALL be varied. A required probe that is missing or inconclusive SHALL leave
+channel assurance unresolved and SHALL NOT support a valid-artifact claim. Invalidation
+SHALL be appended with references to all affected artifacts; previously signed records
+SHALL NOT be overwritten. Consumers and exports SHALL evaluate the latest validity state
+and the required acknowledgment before use. A failure discovered after an action SHALL
+trigger retrospective incident review and notification to affected governed consumers;
+the framework SHALL NOT claim the late check prevented the earlier action.
 
 ---
 
 ## AMD.2 Conformance criteria per level
 
-**Baseline (OQGF-B):** Explanation artifacts declare their Scope Bound, method, sample count, and
-confidence interval (OQGF-A-8); Null Explanations recorded explicitly with cause and never as
-valid (OQGF-A-9); an unexplained regulated decision requires a signed DAP acknowledgment before
-action and is recorded in the Risk Register (OQGF-A-10). Single-PQC-family acknowledgment
-signatures acceptable. Canary Probe RECOMMENDED.
+**Baseline (OQGF-B):** A-8–A-11 apply to governed quantum explanation artifacts at every tier: scope, method, samples and confidence; explicit Null status with supported cause or an unresolved evidence gap; DAP acknowledgment before action on a classified Null result; and Trainability Profiles with recorded reconciliation. Single-PQC-family acknowledgments are acceptable. A-12 canaries are RECOMMENDED at a declared scope.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus a declared Trainability Profile per governed
-model with recorded reconciliation of the observed signal, Expected Trainability Regime and
-Reconciliation Anomaly distinguished, and anomalies routed to A.6.1 incident response
-(OQGF-A-11). Canary Probe RECOMMENDED at a declared granularity.
+**Enhanced (OQGF-E):** All Baseline criteria, with Enhanced audit-record signatures under A-3 and assessment under A.7. Trainability Profiles are already required at Baseline. A-12 canaries remain RECOMMENDED.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus the Canary Probe REQUIRED at a declared
 granularity with varied probe selection, Channel Failure invalidating every artifact in scope
@@ -302,7 +306,7 @@ An auditor SHALL:
 2. Induce or select a case in which the explanation signal is statistically indistinguishable from
    zero, and confirm the artifact is recorded as Null with a cause, is not recorded or exported as
    valid, and is not omitted from the record (OQGF-A-9). **This is the load-bearing test of this
-   amendment**: it proves the system reports absence of explanation rather than manufacturing
+   amendment**: it checks, for the exercised case, that the system reports absence of explanation rather than manufacturing
    false assurance.
 3. Confirm that a decision carrying a Null Explanation was not acted upon absent a signed DAP
    acknowledgment recording cause and justification, verify the PQC signature chain, and confirm
@@ -314,7 +318,7 @@ An auditor SHALL:
 5. At High-Assurance, request Canary Probe records for a sampled session and confirm the probe
    produced its known analytic result; confirm the declared granularity; and confirm probe
    selection is varied (OQGF-A-12).
-6. Inject a deliberate explanation-channel fault (for example, a misconfigured estimator or a
+6. Where a canary is required or claimed, inject a deliberate explanation-channel fault (for example, a misconfigured estimator or a
    truncated sample path) and confirm the Canary Probe detects it, that a Channel Failure is
    recorded, that every artifact in scope is marked Null with cause Channel Failure, and that
    incident response is triggered (OQGF-A-12, OQGF-A-9).
@@ -357,11 +361,15 @@ An auditor SHALL:
     RECOMMENDED bounded-estimation method under OQGF-A-8.
   - *Anergy panels / recall-antigen testing:* established clinical immunology practice, the
     biological source of OQGF-A-12. Its application to QML explanation-channel attestation is
-    believed novel and is to be literature-verified before publication (AMD.0.3).
+    an unverified design analogy, with no novelty or prior-art claim (AMD.0.3).
+
+**Mapping boundary:** CNSA references do not make SLH-DSA an NSS-approved algorithm. The dual-family rule is an additional OQGF profile requirement; A.0.9 governs compatibility, algorithm parameters, and evidence roles. A mapping is not external certification.
 
 ---
 
 ## AMD.5 Technical architecture (implementation hooks)
+
+**Implementation status:** the following interfaces and dependency names are design sketches. They are not compiled code delivered by this repository. Historical references to an external implementation report the source author's context, not a fresh verification of that implementation. Apply the current normative text and A.0.9; an omitted field, enum variant, verifier check, or backend is not a conformance exemption.
 
 Explanation artifacts are produced and stored by `oqgf-memory` (Organ 5), with Pauli-string
 decomposition and kernel evaluation computed Python-side through PennyLane/Qiskit and ingested via
@@ -399,7 +407,8 @@ pub struct ExplanationScope {
 pub enum ExplanationValidity {
     Valid,
     Null {
-        cause: NullCause,
+        cause: Option<NullCause>, // None means pending cause plus a required Evidence Gap; no action
+        evidence_gap: Option<EvidenceGapRef>, // must be present while cause is unresolved
         /// OQGF-A-10: the decision SHALL NOT be acted upon until this is present
         /// and signed. None => unexplained and unacknowledged => no action.
         acknowledgment: Option<DapAcknowledgment>,
@@ -413,7 +422,7 @@ pub enum NullCause {
     ExpectedTrainabilityRegime,
     /// Flat or distorted AND deviates from the profile: incident under A.6.1.
     ReconciliationAnomaly,
-    /// The Canary Probe failed; the channel, not the model, is non-responsive.
+    /// A declared canary check failed; cause investigation is still required.
     ChannelFailure,
 }
 
@@ -422,27 +431,21 @@ pub struct TrainabilityReconciliation {
     pub declared_profile: TrainabilityProfile,
     pub observed_signal: SignalStatistic,
     pub test: StatisticalTest,      // mirrors the M-3 K-S / chi-squared machinery
-    pub outcome: TrainabilityOutcome, // Consistent | Deviates
+    pub outcome: TrainabilityOutcome, // Consistent | Deviates | Inconclusive
 }
 
-/// OQGF-A-12 — the recall-antigen analog. A known-answer circuit proving the
-/// explanation channel is alive. Failure invalidates the whole scope, not one job.
+/// OQGF-A-12 — a known-answer circuit providing bounded evidence that the
+/// explanation channel produced the expected result for the sampled fault model. Failure invalidates the whole scope, not one job.
 pub struct CanaryAttestation {
     pub probe_id: ProbeId,             // varied selection; not predictable
     pub granularity: CanaryScope,      // PerJob | PerSession | PerBatch (declared)
     pub expected: KnownExplanation,    // analytic, non-degenerate by construction
     pub observed: ExplanationDigest,
-    pub outcome: CanaryOutcome,        // Attested | ChannelFailure
+    pub outcome: CanaryOutcome,        // Attested | ChannelFailure | Unresolved
 }
 ```
 
-The safety property is structural rather than procedural: `ExplanationValidity` has no variant in
-which a Null artifact can be represented as `Valid`, so the silent-false-assurance failure is
-unrepresentable in the type rather than prevented by discipline. The `acknowledgment: Option<..>`
-field makes the OQGF-A-10 condition explicit at the point of use — a consumer must confront the
-absence of a DAP signature before acting on an unexplained decision. And because a
-`CanaryOutcome::ChannelFailure` marks every artifact in its declared scope Null, a broken channel
-cannot yield a single surviving "valid" explanation.
+The enum distinguishes represented validity states; it cannot stop a producer from falsely constructing `Valid`, and an optional acknowledgment field does not enforce authorization. A conforming consumer must check evidence, scope membership, current append-only invalidations, cause classification, and all required DAP signatures before acting. Producer/consumer validation and negative tests are required to establish that behavior. The sketch is not an implemented enforcement guarantee.
 
 ### AMD.5.2 What this closes, and what it does not
 
@@ -452,16 +455,17 @@ This amendment **closes** the following:
   method, samples, confidence — so a partial explanation can never imply completeness
   (OQGF-A-8).
 - **Silent false assurance.** An information-free artifact is recorded as Null with a cause, never
-  as a successful explanation, and is unrepresentable as Valid in the type system (OQGF-A-9).
+  as a successful explanation. Validity checks and consumers must enforce that distinction;
+  an enum alone cannot do so (OQGF-A-9).
 - **The anonymous unexplained decision.** Proceeding on a decision that could not be explained is
   now a named, signed, justified, risk-registered act rather than a default (OQGF-A-10, via
   AMD-008 and AMD-006).
 - **The physics-versus-attack ambiguity.** A flat signal is classified against a declared
-  Trainability Profile: consistent means expected physics, deviating means incident
-  (OQGF-A-11).
-- **The unexaminable explanation channel.** The Canary Probe attests that the explanation pipeline
-  itself is alive, so a suppressed or miscalibrated channel is detected rather than mistaken for a
-  flat model (OQGF-A-12).
+  Trainability Profile: supported consistency permits the expected-regime classification,
+  deviation triggers an incident, and inconclusive evidence remains unresolved (OQGF-A-11).
+- **The unexamined explanation channel.** A declared canary supplies a bounded check for
+  the exercised channel regime and fault model, with failure and missing evidence explicitly
+  affecting artifact validity; it does not guarantee detection of every selective attack (A-12).
 
 This amendment **does not** fully close, and states so honestly:
 
@@ -475,10 +479,10 @@ This amendment **does not** fully close, and states so honestly:
   adversary who can distinguish probe circuits from governed circuits could suppress explanations
   selectively while passing the canary. Varied, non-predictable probe selection (OQGF-A-12) raises
   the cost of that attack; it does not eliminate it. Named, bounded, not solved.
-- **Low-weight bounds are a physics limit, not a framework limit.** Classical shadows and related
-  methods estimate low-weight observables efficiently; genuinely high-weight structure in a large
-  Hilbert space remains beyond any classical estimator. The framework can require that this
-  boundary be declared; it cannot move it.
+- **Estimation cost depends on the measurement scheme and observable family.** A declared
+  low-weight bound may be useful but is not a universal theorem that every higher-weight
+  observable is unestimable. Sampling cost, accessible structure, uncertainty, and omitted
+  observables must be stated for the actual method and job.
 - **A valid explanation is not necessarily a good one.** An artifact may satisfy every requirement
   here — bounded, non-null, reconciled, channel-attested — and still be a poor explanation of the
   decision it accompanies. Explanation *quality* remains a governance and scientific judgment, the
@@ -495,7 +499,7 @@ This amendment **does not** fully close, and states so honestly:
 | Requirement | Implementation hook |
 | --- | --- |
 | OQGF-A-8 | `oqgf-memory::ExplanationScope` on every artifact; classical-shadow estimator reached Python-side via `oqgf.qsdk` (PennyLane/Qiskit) and ingested through PyO3; bound recorded, never implied |
-| OQGF-A-9 | `ExplanationValidity::Null { cause, .. }` — no representable path from Null to Valid; persisted append-only in `oqgf-memory` |
+| OQGF-A-9 | `ExplanationValidity::Null { cause, evidence_gap, .. }` plus producer/consumer validation of the latest validity state; invalidations persist append-only |
 | OQGF-A-10 | `DapAcknowledgment` (reuses `DesignatedAccountableParty`, OQGF-A-5) required before action; dual-signed via `oqgf-redundant` at High-Assurance; `risk_ref` into the AMD-008 `RiskRegister` |
 | OQGF-A-11 | `TrainabilityReconciliation` mirroring the OQGF-M-3 K-S / χ² machinery in `oqgf-mhc`; `Deviates` routes to the A.6.1 incident pathway |
 | OQGF-A-12 | `CanaryAttestation` executed through `oqgf-quantum-broker::{ibm,braket,azure,ionq,quantinuum}` in-session; `ChannelFailure` marks every artifact in the declared `CanaryScope` Null |
@@ -533,4 +537,4 @@ a prior amendment's residual.
 — End of OQGF Amendment 010.
 
 <!-- source-sync:navigation -->
-**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#organ-5). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#organ-5). Its identity and historical entries are retained; current text includes the dated consistency corrections. See the [integration map](OQGF-1_0.md#integration-map) and [resolution record](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

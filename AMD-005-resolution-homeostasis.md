@@ -2,6 +2,9 @@
 
 The Resolution Requirement: Active Return to Baseline and the Bound on Chronic Escalation Amendment ID: OQGF-AMD-2026-005 Amends: OQGF-1.0, Section A.P (Physiology Layer). Supersedes the deferred OQGF-P-8 obligation introduced as a stub in AMD-002 with full normative content (OQGF-P-8.1 through OQGF-P-8.7). The AMD-002 P-8 stub SHALL be annotated as superseded by this amendment. Author: Jeremy Rose, CEO — Odin’s LLC, Wasilla, Alaska Date: 8 June 2026 Status: Public draft for NIST, sector regulators, and the Odin’s engineering team Normative dependencies: OQGF-I (Organ 2), OQGF-A (Organ 5); OQGF-P-1 (AMD-002, host harm); OQGF-P-7.4 (AMD-004, raise-only autonomy); OQGF-P-6 (AMD-003, learned-detector preservation).
 
+
+**Consistency revision — 8 October 2026:** current requirements, tier summaries, and assessments are synchronized with the integrated framework. The [common conformance/signature/retention rules](OQGF-1_0.md#a09-common-interpretation-signature-profiles-and-assessment-limits) apply to this amendment. See the [resolution record](OQGF-1_0.md#synchronization-review). Original IDs and dated decisions are preserved; this is a public-draft maintenance revision, not a new AMD or an implementation pass.
+
 ## AMD.0 Front matter
 
 ### AMD.0.1 Purpose of this amendment
@@ -73,7 +76,7 @@ permanent.
 These requirements supersede and fully specify OQGF-P-8.
 OQGF-P-8.1 (Declared Resolution Path). Every Escalation type SHALL declare,
 before it may be used, its Resolution Path — the criteria marking the triggering condition
-cleared, and the target Baseline Posture. An Escalation with no declared Resolution Path
+cleared, the target Baseline Posture, and the maximum escalation duration. An Escalation with no declared Resolution Path
 SHALL NOT be permitted. There are no one-way ratchets.
 OQGF-P-8.2 (Active, Recorded Resolution). Return to the Baseline Posture SHALL
 be an explicit, recorded decision in Organ 5 (OQGF-A) — the cleared condition, the time,
@@ -86,14 +89,17 @@ between escalated and baseline states. The system contracts deliberately, not in
 OQGF-P-8.4 (Memory Preservation on Stand-Down). De-escalation SHALL NOT
 erase the Organ 5 record of the incident, nor revert any tolerance-screened Refined
 Detector produced under OQGF-P-6. The response stands down; the forensic record
-and the learned defense are retained. Standing down the army does not discard the
-intelligence.
-OQGF-P-8.5 (Resolution Authority / Fail-Safe Asymmetry). Autonomous action
-MAY raise posture (OQGF-P-7.4) but SHALL NOT autonomously de-escalate above
-Baseline. De-escalation above Baseline SHALL require the Resolution Path criteria to be
-met and DAP confirmation. Where the system is uncertain, it SHALL remain escalated.
-Raising posture is cheap and reversible; lowering it prematurely re-exposes the host, so
-lowering is the guarded direction.
+and the learned defense are retained. This prohibits automatic rollback as a side effect
+of stand-down; a separately authorized P-6.5 rollback remains permitted.
+OQGF-P-8.5 (Resolution Authority / Fail-Safe Asymmetry). Autonomous action MAY
+raise defensive posture under P-7.4. At Enhanced and High-Assurance, de-escalation SHALL
+require satisfied Resolution Path criteria and DAP confirmation. At the Baseline assurance
+tier (OQGF-B), automated resolution MAY execute only under a prior DAP-approved Resolution
+Path with an explicit recorded decision; a raw Signal or its expiry is insufficient.
+Baseline Posture means an operational state and is not the OQGF-B assurance tier.
+Where P-15 containment applies, P-15.11's DAP-authorized restoration rule SHALL govern
+at every applicable tier. Uncertainty SHALL NOT justify de-escalation.
+
 OQGF-P-8.6 (Chronic-Escalation Detection). An Escalation persisting beyond its
 declared maximum duration without resolving or being explicitly re-justified by a DAP
 SHALL be flagged as a Chronic Escalation, raised through Organ 2 (OQGF-I), and
@@ -107,11 +113,10 @@ demonstrable, not merely asserted.
 
 ## AMD.2 Conformance criteria per level
 
-Baseline (OQGF-B): Every Escalation type has a declared Resolution Path (OQGF-P-8.1); resolution is an explicit recorded decision, not a silent timeout (OQGF-P-8.2);
-hysteresis present to prevent flapping (OQGF-P-8.3).
-Enhanced (OQGF-E): All Baseline criteria, plus memory preservation on stand-down
-(OQGF-P-8.4); fail-safe authority asymmetry with DAP-confirmed de-escalation above
-Baseline (OQGF-P-8.5); Chronic-Escalation detection (OQGF-P-8.6).
+**Baseline (OQGF-B):** P-8.1–P-8.4 and P-8.6 apply: declared Resolution Paths, explicit recorded decisions, dwell/hold hysteresis, preserved incident history and learned defenses, and Chronic-Escalation detection. P-8.5 defines the Baseline assurance-tier authorization rule; P-15.11 imposes its stricter restoration rule wherever containment applies.
+
+**Enhanced (OQGF-E):** All Baseline criteria, plus DAP confirmation for de-escalation under P-8.5. The word Baseline in that tier condition means OQGF-B, not the operational Baseline Posture.
+
 High-Assurance (OQGF-H): All Enhanced criteria, plus recorded proof of return to
 baseline (OQGF-P-8.7); dual-PQC-family signatures on resolution decisions (ML-DSA +
 SLH-DSA per OQGF-M-2); and second-DAP review of any de-escalation from the
@@ -146,7 +151,11 @@ Cross-discipline lineage: consistent with the circuit-breaker recovery pattern
 lifecycle (detect → mitigate → resolve → return to steady state), and control-theory
 hysteresis for oscillation damping.
 
+**Mapping boundary:** CNSA references do not make SLH-DSA an NSS-approved algorithm. The dual-family rule is an additional OQGF profile requirement; A.0.9 governs compatibility, algorithm parameters, and evidence roles. A mapping is not external certification.
+
 ## AMD.5 Technical architecture (implementation hooks)
+
+**Implementation status:** the following interfaces and dependency names are design sketches. They are not compiled code delivered by this repository. Historical references to an external implementation report the source author's context, not a fresh verification of that implementation. Apply the current normative text and A.0.9; an omitted field, enum variant, verifier check, or backend is not a conformance exemption.
 
 The resolution engine lives in oqgf-inflammation (Organ 2), drawing on oqgf-memory for
 the incident record and learned-detector preservation, and is the governed counterpart
@@ -228,4 +237,4 @@ counterpart to AMD-004’s raise-only signaling.
 — End of OQGF Amendment 005.
 
 <!-- source-sync:navigation -->
-**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-8). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-8). Its identity and historical entries are retained; current text includes the dated consistency corrections. See the [integration map](OQGF-1_0.md#integration-map) and [resolution record](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

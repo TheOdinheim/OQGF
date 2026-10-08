@@ -22,6 +22,9 @@ OQGF-P-2 (deterministic/heuristic boundary, AMD-002); OQGF-P-7 (coordinated sign
 OQGF-P-10 (risk register, AMD-008); OQGF-P-9 (accountable risk acceptance, AMD-006);
 OQGF-A-1 (decision record), OQGF-A-5 (DAP); A.6.1 (incident response); A.6.3 (human oversight).
 
+
+**Consistency revision — 8 October 2026:** current requirements, tier summaries, and assessments are synchronized with the integrated framework. The [common conformance/signature/retention rules](OQGF-1_0.md#a09-common-interpretation-signature-profiles-and-assessment-limits) apply to this amendment. See the [resolution record](OQGF-1_0.md#synchronization-review). Original IDs and dated decisions are preserved; this is a public-draft maintenance revision, not a new AMD or an implementation pass.
+
 ---
 
 ## AMD.0 Front matter
@@ -147,7 +150,7 @@ not merely by what it *is*. A motile, toxin-secreting, biofilm-forming pathogen 
 more aggressive response than a non-motile, non-toxigenic strain of the same species, because the
 immune system assesses **capability** — and responds proportionally.
 
-The translation is exact. An AI system's governance burden should be determined not only by what
+The analogy motivates the design below; it is not an engineering proof. An AI system's governance burden should be determined not only by what
 data it processes (its identity to the governance framework — the PAMP) but by what capabilities
 it carries (its virulence factors — the DAMP): code execution, internet access, credential access,
 sub-agent creation, persistence, identity creation, public-artifact authority. Two systems
@@ -240,7 +243,13 @@ classification per A.0.6, preserved unchanged) and its Capability-Triggered Tier
 the composition of Capability Properties present in the deployed system per OQGF-P-12.2). Public
 or synthetic data SHALL NOT be used to justify a lower governance posture when the system can take
 consequential action. The existing FIPS 199 alignment is not weakened; a second axis is added, and
-the higher resulting obligation governs.
+the higher resulting obligation governs. External-effect authority, credential access,
+or sub-agent creation SHALL individually require at least Enhanced. Other properties and
+their composition SHALL be assessed under a declared, DAP-approved tier policy; no
+fixed High-Assurance trigger is inferred merely from a capability's name. The Data-Triggered
+Tier includes confidentiality, integrity, and availability impact; Public data alone does
+not establish low impact. A capability change SHALL trigger reassessment, but need not
+raise a tier if the existing tier already covers the resulting obligation.
 
 **OQGF-P-12.2 (Capability Envelope Declaration).** A conforming system SHALL maintain a
 **Capability Envelope** — a signed inventory of the Capability Properties present in the deployed
@@ -280,11 +289,11 @@ includes network access SHALL enforce **deterministic default-deny egress**: all
 network traffic SHALL be denied unless the destination, protocol, and port are listed in a
 signed egress manifest. The egress manifest SHALL be external to and unmodifiable by the agent.
 Enforcement SHALL be deterministic under OQGF-P-2 (AMD-002): fail-closed, non-suppressible, and
-no tolerance mechanism, exception, or model instruction SHALL open it. This is a Deterministic
+no tolerance mechanism, model instruction, or exception outside the governed P-9 authorization path SHALL open it. This is a Deterministic
 Gate alongside OQGF-G-4 (cryptographic gate) and OQGF-I-10 (data-classification egress gate);
 OQGF-I-10 triggers on what the *data* is, OQGF-P-12.4 triggers on what the *system can reach*.
 A deliberate, bounded decision to add a destination to the egress manifest SHALL be handled as
-Accountable Risk Acceptance under OQGF-P-9 (AMD-006). DNS resolution, tunneling, and encoding
+Accountable Risk Acceptance under OQGF-P-9 (AMD-006), followed by an authorized, signed manifest update before use. The acceptance SHALL NOT bypass the manifest or independently broaden intent or an active containment cap. DNS resolution, tunneling, and encoding
 channels SHALL be governed as egress paths, not exempted as utility services.
 
 **OQGF-P-12.5 (Independent Termination).** Any system whose Capability Envelope includes
@@ -352,18 +361,9 @@ observation) to the forensic evidence path.
 
 ## AMD.2 Conformance criteria per level
 
-**Baseline (OQGF-B):** Capability Envelope declared, signed, and assessed for tier determination
-(OQGF-P-12.1, OQGF-P-12.2); prompt-only containment not accepted as sufficient for any
-requirement (OQGF-P-12.7); independent termination present for systems with external-effect
-authority (OQGF-P-12.5); trajectory recorded in Organ 5 at sufficient granularity for
-post-incident reconstruction (OQGF-P-12.8). Single-PQC-family Envelope signatures acceptable.
+**Baseline (OQGF-B):** P-12.1–P-12.8 apply wherever their stated capability condition is present: declared and attested individual/collective envelopes, tier determination, default-deny network control, independent termination for external effects, constrained delegation, rejection of prompt-only enforcement, and independently captured trajectories. Single-PQC-family Envelope signatures are acceptable at Baseline. External-effect authority, credential access, or sub-agent creation floors the Governing Tier at Enhanced; satisfying this Baseline control list does not authorize a Baseline claim for such a system.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus Capability Envelope attested against the
-deployed environment before first operation and periodically thereafter (OQGF-P-12.3);
-deterministic default-deny egress with a signed, model-unmodifiable egress manifest for systems
-with network access (OQGF-P-12.4); sub-agent creation governed as a recorded act with capability
-subset and intent attenuation enforced (OQGF-P-12.6); capability-envelope changes that introduce
-new properties entered into the Risk Register (OQGF-P-10, AMD-008).
+**Enhanced (OQGF-E):** All Baseline criteria at the Governing Tier, plus capability-envelope changes introducing new properties entered into the Risk Register. Environment attestation, network containment, and constrained delegation are already applicable requirements below this tier where their capability conditions hold.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus dual-PQC-family signatures on the
 Capability Envelope and egress manifest (OQGF-R-1); continuous environment attestation at
@@ -383,7 +383,7 @@ An auditor SHALL:
    present in the deployed system, is signed, and that the Governing Tier is the higher of the
    Data-Triggered and Capability-Triggered tiers (OQGF-P-12.1, OQGF-P-12.2). Introduce a
    Capability Property (e.g., add network access to a previously offline system) and confirm the
-   Governing Tier escalates accordingly. **This is the load-bearing test of this amendment.**
+   Governing Tier is reassessed and raised when the higher-of rule or an explicit floor requires it. **This is the load-bearing test of this amendment.**
 2. Verify that the deployed environment matches the declared Envelope: confirm a capability
    declared absent is in fact unreachable (not merely prompt-instructed as unavailable), and that
    a capability declared present is governed as declared (OQGF-P-12.3). Introduce a discrepancy
@@ -451,9 +451,13 @@ An auditor SHALL:
   - UK AISI: AISI incident report 4 August 2026; 19 unsanctioned actions across 10 of 122
     evaluation runs; GitHub notified.
 
+**Mapping boundary:** CNSA references do not make SLH-DSA an NSS-approved algorithm. The dual-family rule is an additional OQGF profile requirement; A.0.9 governs compatibility, algorithm parameters, and evidence roles. A mapping is not external certification.
+
 ---
 
 ## AMD.5 Technical architecture (implementation hooks)
+
+**Implementation status:** the following interfaces and dependency names are design sketches. They are not compiled code delivered by this repository. Historical references to an external implementation report the source author's context, not a fresh verification of that implementation. Apply the current normative text and A.0.9; an omitted field, enum variant, verifier check, or backend is not a conformance exemption.
 
 The Capability Envelope is a core type (`oqgf-core`), signed alongside the AIBOM (Organ 1),
 attested via `oqgf-mhc` (Organ 3), and recorded in `oqgf-memory` (Organ 5). The egress gate
@@ -520,12 +524,12 @@ pub struct SubAgentRecord {
 }
 ```
 
-The `governing_tier` field makes the higher-of rule a type-level fact: it is always `max(
-capability_tier, data_tier)`, and every downstream tier-gated requirement reads `governing_tier`.
-The `deny_by_default` field on `EgressManifest` is structurally `true` rather than configurable,
-making default-allow unrepresentable. Sub-agent governance composes with AMD-001 by holding the
-*same* `IntentProvenanceChain` type, so monotonic attenuation is inherited rather than
-re-implemented.
+The fields express the intended contract; public structs and Boolean fields do not
+enforce it. An implementation must derive and validate the Governing Tier, reject any
+default-allow manifest, enforce parent/child capability and authenticated intent
+attenuation, and require every consumer to use those validated results. Reusing a type
+does not prove that its checks ran. Negative tests must exercise forged or inconsistent
+fields and the actual external authorization path.
 
 ### AMD.5.2 What this closes, and what it does not
 
@@ -676,4 +680,4 @@ individual-agent capabilities.
 — End of OQGF Amendment 011.1.
 
 <!-- source-sync:navigation -->
-**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-12). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-12). Its identity and historical entries are retained; current text includes the dated consistency corrections. See the [integration map](OQGF-1_0.md#integration-map) and [resolution record](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

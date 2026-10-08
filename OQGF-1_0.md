@@ -5,7 +5,7 @@
 *Author: Jeremy Rose, CEO — Odins LLC, Wasilla, Alaska*
 *Document Set ID: OQGF-INTEGRATED-2026-001*
 *Initial publication: 20 May 2026*
-*Source synchronization: 8 October 2026; framework identifier retained*
+*Consistency revision: 8 October 2026; framework and requirement identifiers retained*
 *Status: Public draft for NIST, sector regulators, and the Odin's engineering team*
 
 ---
@@ -27,10 +27,10 @@ OQGF-1.0 applies to:
 - Commercial entities that voluntarily adopt OQGF to demonstrate quantum-safe and AI-governance maturity.
 - Vendors supplying AI/ML, cryptographic, or quantum computing components into the above environments.
 
-OQGF-1.0 is voluntary in its civilian form and mandatory only where adopted by reference by a contracting authority, sector risk management agency (SRMA), or regulator.
+OQGF-1.0 is voluntary in its civilian form and mandatory only where adopted by reference by a contracting authority, sector risk management agency (SRMA), or regulator. An OQGF mapping does not itself authorize cryptography, processing, or deployment under another regime. Direct NSS deployment requires a competent-authority-approved NSS profile: the civilian dual-family profile includes SLH-DSA, which is not in CNSA 2.0. This document supplies no automatic NSS authorization or substitute profile; see A.0.9.
 
 ### A.0.4 Normative references
-The following documents are incorporated by reference. Where a reference is undated, the latest edition applies.
+The following documents inform the applicable requirements. Drafts remain drafts; mappings do not incorporate every external control indiscriminately. Each assessment SHALL record the exact edition, status, applicability, and any competent-authority overlay used. A later publication triggers governed review rather than silently changing an existing verdict.
 - **NIST FIPS 203** — Module-Lattice-Based Key-Encapsulation Mechanism Standard (ML-KEM).
 - **NIST FIPS 204** — Module-Lattice-Based Digital Signature Standard (ML-DSA).
 - **NIST FIPS 205** — Stateless Hash-Based Digital Signature Standard (SLH-DSA).
@@ -42,7 +42,8 @@ The following documents are incorporated by reference. Where a reference is unda
 - **NIST SP 800-53 Rev. 5** — Security and Privacy Controls for Information Systems and Organizations.
 - **NIST SP 800-171** Rev. 3 — Protecting CUI in Nonfederal Systems.
 - **NIST SP 1800-38 A/B/C** — Migration to Post-Quantum Cryptography (NCCoE preliminary drafts).
-- **NIST SP 800-90A/B/C** — Random bit generation, entropy sources, and RBG construction.
+- **NIST SP 800-90A/B/C** — Random bit generation, entropy sources, and RBG construction; SP 800-90C final, September 2025.
+- **NIST SP 800-88 Rev. 2** — Guidelines for Media Sanitization, September 2025; technical basis for evaluating cryptographic erasure.
 - **NIST SP 800-218** — Secure Software Development Framework (SSDF).
 - **NIST FIPS 199 / FIPS 200** — Security categorization and minimum requirements.
 - **DoW CIO memorandum "Preparing for Migration to Post Quantum Cryptography,"** signed 18 Nov 2025 (cleared 20 Nov 2025).
@@ -57,19 +58,19 @@ The following documents are incorporated by reference. Where a reference is unda
 - **Sentinel** — a software component that observes traffic, behavior, or telemetry at a defined boundary and emits structured signals to other organs.
 - **Attestation** — a cryptographically signed claim about the identity, configuration, or measured state of a hardware or software component.
 - **Statistical reproducibility** — for a quantum computation, the property that the sampled output distribution from a stated circuit on a stated device matches a declared noise model within a stated statistical test (e.g., Kolmogorov-Smirnov, χ²) at a stated confidence level.
-- **Mosca's inequality (X + Y > Z)** — if data must remain confidential for X years, the migration to PQC takes Y years, and a CRQC is anticipated in Z years, then migration must already be in progress.
+- **Mosca planning bound (X + Y ≥ Z)** — X is the confidentiality lifetime, Y the migration duration, and Z the remaining time from a declared assessment date to a declared CRQC planning date. All are durations in the same units. Equality leaves no planning margin; a negative margin signals that timely protection cannot be assured by the planned migration alone. G-7 defines the dates and treatment.
 - **Re-signing** — replacing or augmenting an existing signature with a signature under a newer cryptographic generation, preserving the chain of provenance.
 - **Designated Accountable Party (DAP)** — a named natural person bearing legal and reputational responsibility for a specific AI/ML system's outcomes.
 
 ### A.0.6 Conformance levels
 OQGF-1.0 defines three levels, aligned to FIPS 199 impact:
 - **Baseline (OQGF-B)** — Low impact systems; minimum quantum-safe hygiene and AI accountability.
-- **Enhanced (OQGF-E)** — Moderate impact; full five-organ coverage with continuous monitoring.
-- **High-Assurance (OQGF-H)** — High impact and NSS-adjacent; CNSA 2.0 algorithms, dual-PQC-family signing, multi-jurisdictional replication, third-party continuous attestation.
+- **Enhanced (OQGF-E)** — Moderate impact or an applicable capability floor; all applicable five-organ and physiology requirements, with the specified Enhanced assurance increments.
+- **High-Assurance (OQGF-H)** — High impact or a higher capability determination; applicable algorithm profiles, dual-PQC-family evidence, multi-jurisdictional replication, and third-party continuous attestation. NSS compatibility is separately scoped under A.0.9.
 
-A system shall not claim a conformance level higher than the lowest-level organ it implements.
+All five organs and applicable physiology requirements SHALL be assessed at every tier. A system SHALL NOT claim a level higher than its least-conforming applicable organ or physiology obligation. The required Governing Tier and the achieved conformance result SHALL be reported separately; failure to meet a required tier does not authorize relabeling the system at a lower one.
 
-**Capability determination:** [OQGF-P-12.1](#oqgf-p-12) adds the capability-triggered determination axis. Its Effective Tier is the higher of the Impact Tier and Capability-Triggered Tier. The original impact classification above remains in place; it is not the only tier-selection input for systems within P-12 scope.
+**Capability determination:** [P-12.1](#oqgf-p-12) defines the **Governing Tier** as the higher of the Data-Triggered Tier (the confidentiality, integrity, and availability impact tier) and Capability-Triggered Tier. It also defines the Enhanced capability floors. “Effective tier” and “impact tier” in earlier prose refer to these same concepts, not additional tiers.
 
 ### A.0.7 Normative verb conventions
 SHALL / SHALL NOT denote absolute requirements. SHOULD / SHOULD NOT denote strong recommendations whose deviation requires documented justification. MAY denotes permitted choices.
@@ -83,7 +84,7 @@ Amendment (AMD) requirements are incorporated into this document using the repos
 
 Read the organ together with its linked A.P obligations. A rule's location does not restrict its cross-organ scope. References of the form `AMD.n` inside an incorporated block refer to sections of the source amendment named above that block. Existing OQGF requirement identifiers remain unchanged.
 
-This is an editorial integration of the supplied public-draft requirements, not a new amendment or an implementation-conformance result. Explicit replacements in AMD-018 and the supersession of AMD-002's P-6/P-7/P-8 stubs are applied. Known unresolved source readings are listed in A.9.5; integration does not silently decide them. Part C is design guidance and illustrative code, not evidence that a deployed implementation satisfies Part A.
+The initial integration has been followed by the dated consistency revision recorded in A.9.5. Explicit replacements in AMD-018 and the supersession of AMD-002's P-6/P-7/P-8 stubs are applied. The current amendment and integrated texts are synchronized; the earlier readings remain in Git history and explicitly marked historical passages. No new AMD number, historical ratification, or implementation-conformance result is claimed. Part C and amendment implementation sketches are proposed design material.
 
 For future changes, update the amendment and the corresponding integrated blocks in the same repository change. Review tier criteria, assessment procedures, shared dependencies, and Part C together. Record the reason and source revision in A.9.4/A.9.6.
 
@@ -100,6 +101,31 @@ For future changes, update the amendment and the corresponding integrated blocks
 ---
 
 
+### A.0.9 Common interpretation, signature profiles, and assessment limits
+
+**Requirement precedence and applicability.** Unqualified numbered SHALL requirements apply at every tier within their stated technical scope. Tier summaries are cumulative and cannot waive them by omission. Explicit tier qualifiers govern their own clauses; conditional quantum, agent, personal-data, and other scope conditions are not universal hardware mandates. An assessment SHALL enumerate every applicable requirement and tier increment. “Not applicable” requires a scope-based justification; missing evidence, unavailable funding, or an unimplemented control is not inapplicability. The corrections in A.9.5 replace the former conflicting readings, not merely annotate them.
+
+**Signature roles.** A signed source object and the Organ 5 audit envelope containing it are different objects. A source acknowledgment may use one PQC family below High-Assurance when its own requirement permits; the containing audit record must independently satisfy A-3. Required signatures SHALL cover the same canonical payload or an authenticated manifest of its immutable digests, with algorithm parameters, key identities, role, scope, and validity policy bound to the record. Verification SHALL check every signature required by the applicable profile; failure SHALL NOT trigger silent downgrade or a weaker quorum.
+
+| Object/profile | Baseline | Enhanced | High-Assurance civilian profile |
+|---|---|---|---|
+| Audit-record envelope (A-3) | At least one approved PQC signature | At least two distinct PQC families | ML-DSA-87 and SLH-DSA with a declared 256-bit parameter set |
+| Other signed control/evidence objects | Their specific clause; at least one approved PQC signature where signing is required | Their specific clause; the audit envelope still requires two families | ML-DSA + SLH-DSA for evidentiary signatures under R-1; use the High-Assurance parameters above |
+| Timestamp evidence | RFC 3161 authority independent of the event producer, with an approved PQC-signed token | Same | Same independence; PQC token using the declared High-Assurance algorithm parameters |
+| Integrity digests | Approved, explicitly named hash and parameters | Same | SHA-384 or SHA-512 unless a competent authority requires a different approved profile |
+
+Unless a source clause specifies a stronger parameter, Baseline/Enhanced signing may use ML-DSA-65/87 or an explicitly named FIPS 205 SLH-DSA parameter set from the FIPS 205 128, 192, or 256 parameter families, with the exact hash variant declared. Two variants of ML-DSA count as one family; LMS/XMSS and SLH-DSA are hash-based, not two independent families. Stateful LMS/XMSS is limited to an approved software/firmware-signing use with state-management evidence. A KEM, including ML-KEM or HQC, is not a signature. Classical signatures alone do not satisfy these PQC profiles. The signature-count rules apply to OQGF-issued records and envelopes. Upstream hardware quotes, certificate chains, and RFC 3161 tokens retain their separately declared validation profiles; the required dual-signed OQGF envelope binds that evidence but does not strengthen an upstream root or prove its truth. A single-family TSA token does not substitute for the dual-family audit envelope. A cryptographic parameter choice is not proof of FIPS module validation.
+
+**CNSA/NSS boundary.** CNSA 2.0 mappings identify relevant algorithms and use cases; OQGF's additional SLH-DSA requirement is not a CNSA requirement or NSS approval. Where mandatory external policy prohibits a required OQGF algorithm, the prohibited algorithm SHALL NOT be deployed. The assessor SHALL report the profile incompatibility and withhold an unqualified OQGF tier claim until an authorized, explicitly documented compatible profile or design exists. A P-9 acceptance does not issue an external waiver or quietly replace dual-family signing with a single family. No NSS-specific substitute profile is approved by this revision.
+
+**Append-only history and retention.** “Retained,” “never deleted,” and “append-only” prohibit silent alteration or disappearance within the applicable retention period; they do not impose perpetual retention of personal data. Records SHALL have a retention basis and expiry (default seven years absent an applicable different requirement). Corrections, invalidations, closures, erasures, and authorized retirement SHALL be recorded as later events linked to the earlier history. P-11 governs personal payloads and personal metadata throughout that history. Replication SHALL respect lawful destination and transfer controls; a jurisdiction count does not authorize a disclosure. An expired record segment may be retired under declared policy with a signed, minimized disposition/checkpoint; this is distinct from rewriting live audit history.
+
+**Claims and evidence.** A signature establishes an attributable integrity binding under its assumptions, not the truth of the signed claim. A schema or enum is not an enforcement proof; finite tests establish outcomes for their declared cases. Missing or inconclusive evidence SHALL remain explicit and SHALL NOT be converted into a satisfied control. Biological analogies and implementation examples are explanatory, not mathematical proofs or delivered capabilities. Assessment procedures apply at the requirement's actual tier and scope; tests SHALL run in authorized isolated environments where operational disruption is possible. A model may propose evidence or decisions but cannot supply its own authoritative approval.
+
+**Source status.** A dated “ratified” source decision retains its stated historical status. Other public-draft design assumptions are draft choices, not evidence of prior approval. This consistency revision records current corrections without assigning a new amendment ID or certifying an implementation. Control mappings are informative relationships requiring assessment, not assertions that ISO, NIST, CNSA, or a regulator endorses OQGF.
+
+---
+
 <a id="organ-1"></a>
 
 ## A.1 Organ 1 — OQGF-G (Genetic Layer / Compliance as Code)
@@ -114,25 +140,25 @@ In biology, every cell carries the same genome; compliance, likewise, must be in
 - **OQGF-G-1** The organization SHALL maintain a current CBOM for every system in scope, conformant to CycloneDX 1.6 or later (or SPDX equivalent), listing every cryptographic primitive, library, parameter set, certificate, key reference, and protocol with its FIPS validation reference where applicable.
 - **OQGF-G-2** The organization SHALL maintain a current AIBOM for every AI/ML system in scope, listing models, weights provenance, training data sources, evaluation datasets, fine-tuning corpora, prompts, system messages, frameworks, and licenses.
 - **OQGF-G-3** Every release artifact (binary, container image, model weights file, or signed manifest) SHALL be cryptographically signed using a signature algorithm approved at the system's conformance level (see A.1.4) and SHALL embed or reference its CBOM and AIBOM digests.
-- **OQGF-G-4** The build pipeline SHALL enforce, as a non-bypassable gate, that no artifact may be promoted to a regulated environment unless its CBOM and AIBOM are present, signed, and free of disallowed algorithms.
-- **OQGF-G-5** Cryptographic agility SHALL be designed in from first commit: no algorithm identifier may be hard-coded; all algorithms SHALL be selected through a negotiation layer that supports at minimum one classical and one PQC alternative per primitive class.
-- **OQGF-G-6** All cryptographic modules in scope SHALL be FIPS 140-3 validated by 21 September 2026; FIPS 140-2 modules SHALL NOT be included in new procurements after that date.
-- **OQGF-G-7** Key lifetime SHALL be set to satisfy Mosca's inequality: for confidentiality keys protecting data that must remain secret for X years, with anticipated migration duration Y, the key SHALL be replaced with a PQC-protected key not later than (Z − X − Y) years before the anticipated CRQC date Z, with Z defaulting to 2030 unless a documented sector-specific value applies.
+- **OQGF-G-4** The build pipeline SHALL enforce a non-bypassable deterministic promotion decision. Required CBOM/AIBOM evidence and signatures SHALL be present and valid. Disallowed-algorithm findings SHALL block unless the particular finding is eligible for an authorized P-9 acceptance under the governing policy and external authority. All findings SHALL remain visible; accepted-risk promotion SHALL be distinct from a clean result, and any remaining blocker SHALL prevent promotion.
+- **OQGF-G-5** Cryptographic agility SHALL be designed in from first commit: implementation identifiers and parameter sets SHALL be explicit and versioned, while operational selection SHALL use signed policy rather than unchangeable application assumptions. Asymmetric key-establishment and signature interfaces SHALL support approved PQC algorithms and permitted migration alternatives. Symmetric ciphers and hashes SHALL use their approved quantum-resistant profiles; a nonexistent “PQC replacement” for every primitive is not required. Negotiation SHALL fail closed against prohibited algorithms and downgrade.
+- **OQGF-G-6** For OQGF conformance after 21 September 2026, cryptographic modules in scope SHALL be FIPS 140-3 validated for the deployed version, environment, mode, and services. FIPS 140-2 modules SHALL NOT be included in new OQGF procurements after that date. This is the framework's conformance rule; NIST historical-list status is not the same as certificate revocation or a universal prohibition on all existing deployments. A library name, FIPS build feature, or algorithm validation alone SHALL NOT establish module validation.
+- **OQGF-G-7** Confidentiality migration planning SHALL declare an assessment date t0, confidentiality lifetime X, migration duration Y, and CRQC planning date Tq, with Z = Tq − t0 in the same time units as X and Y. The latest planned migration start is Tq − X − Y; completion is no later than Tq − X. If X + Y ≥ Z, immediate risk treatment SHALL be recorded; a future key rotation SHALL NOT be credited with protecting already harvested ciphertext. The default OQGF planning date is 1 January 2030 unless a documented sector-specific date applies; it is a planning assumption, not a forecast. The plan SHALL cover data protection, key establishment, key lifetime, and residual exposure, not rotation alone.
 - **OQGF-G-8** Policy SHALL be expressed as code, version-controlled, signed, and evaluated automatically against every build; policy changes SHALL require dual review.
 - **OQGF-G-9** The CBOM and AIBOM SHALL be regenerated and re-signed on every release and SHALL be retained for the retention period mandated by the applicable sector overlay (default seven years).
 
 ### A.1.4 Conformance criteria per level
-- **Baseline:** CBOM and AIBOM present, signed with ML-DSA-65 or SLH-DSA-128s; CI gate present for disallowed algorithms; FIPS 140-3 modules by 21 Sep 2026.
-- **Enhanced:** All of the above plus full cryptographic agility layer; key lifetime calculation documented per primitive; policy-as-code under signed control.
-- **High-Assurance:** All of the above plus CNSA 2.0 algorithms (ML-KEM-1024, ML-DSA-87, LMS/XMSS for code signing, AES-256, SHA-384/512); HSM-backed signing keys; dual-control key issuance; build pipeline itself signed and attested.
+- **Baseline:** G-1–G-9 apply, including inventories, signed artifacts, deterministic promotion, governed agility, FIPS module evidence, dated migration calculations, signed dual-reviewed policy, and release/retention records. Baseline bill signatures use ML-DSA-65/87 or an explicitly named SLH-DSA 128-bit-or-higher parameter set under A.0.9.
+- **Enhanced:** All Baseline criteria, with the Enhanced system assessment, audit signatures, and R-6.2 hardware custody. Agility, migration calculations, and policy-as-code are not deferred to this tier.
+- **High-Assurance:** All Enhanced criteria; the applicable A.0.9 profile; signed and attested build pipeline; R-6.3 threshold custody. Approved LMS/XMSS software/firmware-signing obligations are use-specific and do not replace R-1 evidentiary signatures.
 
 ### A.1.5 Assessment procedures
-An auditor SHALL: (1) request the CBOM and AIBOM for a randomly selected release; (2) verify each signature using only the public roots of trust declared by the organization; (3) attempt to push a build containing a banned algorithm and confirm the CI gate rejects it; (4) inspect HSM logs for key issuance events; (5) replay the Mosca calculation for at least one long-lived confidentiality key.
+An auditor SHALL: (1) request the CBOM and AIBOM for a randomly selected release; (2) verify each signature using only the public roots of trust declared by the organization; (3) confirm a banned algorithm blocks without a policy-eligible P-9 acceptance and remains visibly accepted-risk with one; also confirm missing signed inventories and unaccepted blockers cannot be waived; (4) inspect custody evidence at the applicable R-6 tier; (5) replay the dated G-7 migration calculation and verify units, start/completion dates, and residual harvested-ciphertext exposure.
 
 ### A.1.6 Control mappings
 - **NIST AI RMF:** GOVERN-1.1, GOVERN-4.2, MAP-4.1.
 - **NIST SP 800-53 Rev. 5:** CM-2, CM-8, SR-3, SR-4, SR-11, SI-7, SA-8, SA-10, SA-11, SA-15.
-- **ISO/IEC 42001 Annex A:** A.6 (resources for AI systems), A.7 (data for AI systems), A.10 (third-party and customer relationships).
+- **ISO/IEC 42001 Annex A:** A.6 (AI system lifecycle), A.7 (data for AI systems), A.10 (third-party and customer relationships).
 - **CNSA 2.0:** ML-KEM-1024, ML-DSA-87, LMS/XMSS per SP 800-208.
 
 ---
@@ -144,7 +170,7 @@ The following navigation summary identifies this organ's connections. The linked
 
 | Shared requirement | Organ 1 connection |
 |---|---|
-| [P-1–P-5](#oqgf-p-1), [P-9](#oqgf-p-9) | Keep deterministic gates, heuristic tolerance, and accountable risk acceptance distinct; see the unresolved gate wording in A.9.5. |
+| [P-1–P-5](#oqgf-p-1), [P-9](#oqgf-p-9) | Keep deterministic gates, heuristic tolerance, and accountable risk acceptance distinct; apply P-2/P-9 eligibility and non-waivable evidence requirements. |
 | [P-7](#oqgf-p-7) | Connect policy/inventory posture to signed cross-organ signals. |
 | [P-11](#oqgf-p-11), [P-14](#oqgf-p-14) | Inventory and govern personal data, purpose, retention, and inferential privacy. |
 | [P-12](#oqgf-p-12), [P-13](#oqgf-p-13) | Apply the effective tier and record material downstream risk associated with artifacts and controls. |
@@ -191,9 +217,9 @@ These requirements establish the Barrier Layer as a sub-function of Organ 2.
 
 **OQGF-I-8 (Barrier at Controlled Boundaries).** A conforming system SHALL identify its Controlled Boundaries and SHALL deploy a Barrier at each that governs the crossing of data content in both directions. The Barrier is the enforcement counterpart to the OQGF-I-1 sentinel: the sentinel observes what crosses; the Barrier decides whether it may. A Controlled Boundary with no Barrier does not satisfy this requirement.
 
-**OQGF-I-9 (Boundary Custody Record).** Data authorized to cross a Controlled Boundary above the Public classification SHALL carry, or be matched at the Barrier to, a signed Boundary Custody Record stating at minimum the data's classification, its origin, and the destinations authorized for that classification. The BCR is a bill of materials for data in transit — sibling to the CBOM (OQGF-G-1) and AIBOM (OQGF-G-2) — and SHALL be signed under a signature algorithm approved at the system's conformance level. A BCR that is unsigned, malformed, or expired SHALL NOT authorize a crossing.
+**OQGF-I-9 (Boundary Custody Record).** Data authorized to cross a Controlled Boundary above the Public classification SHALL carry, or be matched at the Barrier to, a signed Boundary Custody Record stating at minimum the data's classification, its origin, and the destinations authorized for that classification. The BCR is a bill of materials for data in transit — sibling to the CBOM (OQGF-G-1) and AIBOM (OQGF-G-2) — and SHALL be signed under a signature algorithm approved at the system's conformance level. The BCR SHALL bind the covered data, boundary, destination, issuer, issue time, and expiry. A BCR that is unsigned, malformed, invalidly signed, or expired SHALL NOT authorize a crossing.
 
-**OQGF-I-10 (Egress Control — Deterministic, Fail-Closed).** Data of a declared classification above Public SHALL NOT cross a Controlled Boundary to a destination not authorized for that classification. Absent a valid BCR authorizing the crossing, the Barrier SHALL deny it. Enforcement of a declared classification against an unauthorized destination is a **Deterministic Gate** under OQGF-P-2 (AMD-002): it is fail-closed and non-suppressible, and no tolerance mechanism, exception, or operator action SHALL open it. A deliberate, bounded decision to send classified data past the Barrier for a legitimate reason that cannot yet be otherwise satisfied SHALL be handled as **Accountable Risk Acceptance** under OQGF-P-9 (AMD-006) — recorded, scoped, expiring, DAP-signed, its finding kept visible and its verdict visibly distinct from an unrestricted crossing — and SHALL NOT be expressed as suppression.
+**OQGF-I-10 (Egress Control — Deterministic, Fail-Closed).** Data above Public SHALL cross a Controlled Boundary only with a valid BCR and an authorized destination decision. The ordinary Destination Policy SHALL deny an unauthorized destination. A bounded exception MAY proceed only through P-9.2 where the applicable destination/classification policy and external authority permit it, with a valid BCR bound to the authorized exception and a distinct accepted-risk verdict. The original policy finding SHALL remain visible. Missing, malformed, expired, or invalidly signed BCRs SHALL NOT be excused by risk acceptance. Tolerance, a model instruction, or an unauthorized operator action SHALL NOT open this Deterministic Gate. A DAP's signature does not by itself grant declassification or disclosure authority.
 
 **OQGF-I-11 (Ingress Provenance).** Data entering across a Controlled Boundary without established provenance SHALL be marked untrusted and SHALL NOT enter a Privileged Context — a training corpus, evaluation dataset, fine-tuning corpus, model registry, or any AIBOM-governed artifact (OQGF-G-2) — until its provenance is established and recorded. Unprovenanced ingress data MAY be used in non-privileged contexts; it SHALL NOT be treated as authoritative, nor admitted to the artifacts from which models are built, on the strength of its mere arrival.
 
@@ -207,17 +233,18 @@ These requirements establish the Barrier Layer as a sub-function of Organ 2.
 <!-- source-sync:end AMD-007:1 -->
 
 ### A.2.4 Conformance criteria per level
-- **Baseline:** Sentinels at the perimeter; HNDL risk scoring on inbound TLS; weekly review of high-score events.
-- **Enhanced:** Sentinels at all internal trust boundaries; layered authentication enforced; automated graded response.
-- **High-Assurance:** Continuous monitoring of every quantum cloud session; real-time threat-intel fusion; CNSA 2.0 channel preference enforced; classical-TLS treated as incident immediately for NSS data.
+- **Baseline:** I-1–I-7 apply at every relevant boundary and session: HNDL scoring, provider trust models, layered privileged authentication, graded response, and recorded resolution. Above-Public internal boundaries are not exempt. High-score events SHALL be reviewed at least weekly in addition to required immediate responses.
+- **Enhanced:** All Baseline criteria; automated graded response; third-party assessment under A.7; the Barrier criteria below also apply.
+- **High-Assurance:** All Enhanced criteria; independently reviewed continuous monitoring of every quantum cloud session; real-time threat-intelligence fusion; the applicable approved channel profile, with CNSA requirements applied in their actual scope; and the High-Assurance Barrier increments below. Classical-only TLS carrying NSS data SHALL trigger an immediate incident for review under the applicable authority; an OQGF risk acceptance is not an external waiver.
 
 **Additional criteria from [AMD-007-barrier-data-custody.md](AMD-007-barrier-data-custody.md):**
+
 #### Amendment tier criteria
 
 <!-- source-sync:start AMD-007:2 -->
-**Baseline (OQGF-B):** Barrier deployed at identified Controlled Boundaries (OQGF-I-8); signed BCR required for egress above Public (OQGF-I-9); deterministic, fail-closed egress control with knowingly-proceed routed through Accountable Risk Acceptance, never suppression (OQGF-I-10); Barrier decisions recorded in Organ 5 (OQGF-I-13); Uncontrolled Channels enumerated and recorded (OQGF-I-14). Single-PQC-family BCR signatures acceptable.
+**Baseline (OQGF-B):** I-8–I-15 apply at Controlled Boundaries: signed custody, deterministic egress authorization, ingress-provenance gating, screened content sentinels, recorded decisions, an Uncontrolled-Channel inventory and reduction obligation, and bypass detection. Single-PQC-family BCR signatures are acceptable.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus ingress-provenance gating into Privileged Contexts (OQGF-I-11); a data-content sentinel with central-tolerance screening and tolerable false positives (OQGF-I-12); Barrier-Bypass detection feeding the graded-response engine (OQGF-I-15); a documented reduction plan for the enumerated Uncontrolled Channels (OQGF-I-14).
+**Enhanced (OQGF-E):** All Baseline criteria, plus a documented reduction plan for the enumerated Uncontrolled Channels. Ingress provenance, content screening, and bypass detection are already required at Baseline.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus dual-PQC-family BCR signatures (ML-DSA + SLH-DSA, consistent with OQGF-M-2); DAP-reviewed Destination Policy; full BCR retention in Organ 5 for the sector retention period; and periodic re-screening of the content sentinel against the evolving Self Set as the baseline changes (consistent with OQGF-P-6 High-Assurance).
 <!-- source-sync:end AMD-007:2 -->
@@ -231,8 +258,8 @@ An auditor SHALL: (1) attempt a classical-only TLS connection to a sentinel-prot
 <!-- source-sync:start AMD-007:3 -->
 An auditor SHALL:
 
-1. Attempt to egress data of a declared classification above Public to a destination not authorized for that classification, and confirm the Barrier denies it fail-closed; confirm no tolerance mechanism, exception, or operator action can open it (OQGF-I-10). **This is the load-bearing test of this amendment.**
-2. Attempt to send classified data past the Barrier and confirm the only permitted path is an Accountable Risk Acceptance under OQGF-P-9 that keeps the finding visible and produces a verdict distinct from an unrestricted crossing — not a suppression (OQGF-I-10 / AMD-006).
+1. Attempt to egress data of a declared classification above Public to a destination not authorized for that classification, and confirm the Barrier denies it fail-closed; confirm tolerance and unauthorized operator actions cannot open it, and only a policy-eligible P-9 exception with valid custody and disclosure authority can proceed (OQGF-I-10). **This is the load-bearing test of this amendment.**
+2. Attempt to send classified data past the Barrier and confirm an exception to the ordinary destination policy requires a valid BCR and policy-eligible Accountable Risk Acceptance under OQGF-P-9 that keeps the finding visible and produces a verdict distinct from an unrestricted crossing — not a suppression (OQGF-I-10 / AMD-006).
 3. Present data with an expired or malformed BCR and confirm the crossing is denied (OQGF-I-9, OQGF-I-10).
 4. Introduce unprovenanced data at ingress and confirm it cannot enter a training corpus, evaluation set, fine-tuning corpus, or model registry until provenance is established and recorded, while confirming it remains usable in a non-privileged context (OQGF-I-11).
 5. Inject sensitive data without a classification label and confirm the content sentinel flags it and emits a Signal, and confirm its false positives are tolerable and screened rather than fail-closed (OQGF-I-12).
@@ -261,6 +288,8 @@ An auditor SHALL:
 - **CNSA 2.0:** ML-DSA-87 for BCR signatures; dual-family (ML-DSA + SLH-DSA) at High-Assurance per OQGF-M-2.
 - **EU AI Act:** Article 10 (data governance and training-data provenance) for the ingress path; Article 15 (cybersecurity) for the egress path.
 - **Cross-discipline lineage:** consistent with data-loss-prevention (DLP) egress control, cloud access security broker (CASB) enforcement, data provenance and lineage systems, and zero-trust data security — in which the boundary and the data, not the network perimeter, are the control point.
+
+**Mapping boundary:** CNSA references do not make SLH-DSA an NSS-approved algorithm. The dual-family rule is an additional OQGF profile requirement; A.0.9 governs compatibility, algorithm parameters, and evidence roles. A mapping is not external certification.
 <!-- source-sync:end AMD-007:4 -->
 
 ### A.2.7 Integrated cross-organ obligations
@@ -287,9 +316,9 @@ The MHC Layer is the framework's identity organ. As major histocompatibility com
 Static credentials and perimeter trust collapse under quantum and AI threats. The MHC analog requires that every actor present, on demand, a fresh, PQC-signed claim about what it is, what state it is in, and what it intends to do. For quantum workloads the claim extends to the circuit, the calibration data, and the empirical output distribution.
 
 ### A.3.3 Normative requirements
-- **OQGF-M-1** Every device and workload acting on data above Public SHALL present a PQC-signed attestation rooted in a hardware root of trust (TPM 2.0, AMD SEV-SNP, Intel TDX/SGX, or NVIDIA H100 CC) before being granted any privilege.
-- **OQGF-M-2** Attestations SHALL be dual-signed under two PQC families (lattice and either hash or code) for High-Assurance systems.
-- **OQGF-M-3** Quantum hardware attestation SHALL include three reconciled elements: the executed circuit, the device calibration data at execution time, and the empirical sampling distribution; these SHALL be statistically tested against the declared noise model.
+- **OQGF-M-1** Every device and workload acting on data above Public SHALL present a valid, fresh PQC-signed attestation bound to a declared hardware root of trust before privilege is granted. A hardware technology name alone does not establish PQC support. If a trusted attester verifies a native hardware quote and emits a PQC-signed statement, the original quote, verification path, root assumptions, and any classical-root residual SHALL remain declared; re-signing does not convert a classical root into a PQC root. Missing, forged, expired, or unverifiable identity evidence SHALL block. P-9 can address an eligible attested policy finding, not the absence of valid identity or required intent authority.
+- **OQGF-M-2** High-Assurance attestations SHALL carry ML-DSA and SLH-DSA signatures under the A.0.9 civilian evidentiary profile; a KEM or second parameter set from the same family SHALL NOT count as the second signature family. The CNSA/NSS boundary in A.0.9 applies.
+- **OQGF-M-3** Every governed quantum job SHALL have reconciled circuit identity, execution-time device calibration, and empirical sampling distribution, tested against a declared noise model with a stated method, tolerance, sample budget, and uncertainty. A statistical match is consistency evidence, not proof of provider honesty or unique hardware identity. Missing evidence or an inconclusive/underpowered test SHALL NOT be recorded as a pass. Classical-only systems may justify non-applicability to this quantum-job requirement.
 - **OQGF-M-4** Credentials SHALL be short-lived: workload credentials SHALL expire within 24 hours, user privileged sessions within 8 hours, and quantum-job tokens within 1 hour.
 - **OQGF-M-5** Mutual authentication SHALL be required for every connection; one-sided TLS SHALL NOT satisfy this requirement.
 - **OQGF-M-6** A vendor trust score SHALL be computed per supplier based on declared attestation capability, FIPS validation, breach history, jurisdictional exposure, and statistical reconciliation pass rate; the score SHALL be reviewed quarterly.
@@ -331,8 +360,11 @@ using only declared public roots of trust.
 
 **OQGF-M-9 (Monotonic Intent Attenuation).** The authority expressed by an intent SHALL
 only narrow as it propagates. Each hop MAY add intent caveats; no hop SHALL be able to
-broaden the authority it received. The cryptographic construction SHALL make broadening
-computationally infeasible, not merely detectable. Where an actor at hop N requires
+broaden the authority it received. The chain SHALL cryptographically bind each delegation to its authenticated parent,
+recipient, scope, invariants, nonce, and expiry. The deterministic verifier SHALL reject
+a child scope that is not a subset of the authenticated parent scope before action.
+Forgery resistance protects those bindings; signatures alone do not prove attenuation
+or make it impossible for a malicious holder to propose an over-broad child. Where an actor at hop N requires
 authority broader than it received, it SHALL request a new Root Intent from an authorized
 principal rather than self-broadening.
 
@@ -371,22 +403,18 @@ credential lifetime of the actor at the current hop (per OQGF-M-4).
 <!-- source-sync:end AMD-001:1 -->
 
 ### A.3.4 Conformance criteria per level
-- **Baseline:** TPM 2.0 attestation; classical or PQC-signed; short-lived credentials.
-- **Enhanced:** PQC-signed attestations; statistical reconciliation on at least one quantum provider; documented vendor trust scores.
-- **High-Assurance:** Dual-family signed attestations; statistical reconciliation on every quantum job; vendor trust score gating procurement.
+- **Baseline:** M-1–M-7 apply within their stated scope: valid PQC-bound hardware attestation, per-job quantum reconciliation where applicable, credential lifetimes, mutual authentication, vendor scoring, and re-attestation no later than lifetime/4. M-2's dual-family increment is High-Assurance only. Classical-only attestation does not satisfy M-1.
+- **Enhanced:** All Baseline criteria with third-party assessment under A.7 and R-6.2 custody. A single-provider sample is not a waiver of M-3 for other governed quantum jobs.
+- **High-Assurance:** All Enhanced criteria, plus M-2 dual-family attestation and vendor trust scores gating procurement under documented policy. M-3 already covers every applicable quantum job.
 
 **Additional criteria from [AMD-001-intent-binding.md](AMD-001-intent-binding.md):**
+
 #### Amendment tier criteria
 
 <!-- source-sync:start AMD-001:2 -->
-**Baseline (OQGF-B):** Intent Provenance Chain present and signed (OQGF-M-8); Costimulation
-Gate enforced for identity-plus-intent (OQGF-M-11); architectural anergy as default deny.
-Single-PQC-family chain signatures acceptable.
+**Baseline (OQGF-B):** M-8–M-14 apply to privileged multi-hop actions: signed complete intent provenance; deterministic attenuation and invariant checks; identity-plus-intent authorization; behavioral reconciliation; least-privilege root scope; nonce and expiry bounded by the current actor credential. Single-PQC-family chain signatures are acceptable.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus Monotonic Intent Attenuation
-cryptographically enforced (OQGF-M-9); Intent Invariant Enforcement at every hop
-(OQGF-M-10); Cross-Hop Behavioral Reconciliation feeding the graded response engine
-(OQGF-M-12); documented least-privilege Root Intent scoping (OQGF-M-13).
+**Enhanced (OQGF-E):** All Baseline criteria. Apply the Enhanced system assessment, audit-record signing, and key-custody requirements in A.7, A-3, and R-6.2; no M-8–M-14 duty first becomes mandatory at this tier.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus dual-PQC-family signatures on
 every chain entry (lattice and hash-based, consistent with OQGF-M-2); chain freshness
@@ -407,8 +435,9 @@ An auditor SHALL:
    Provenance Chain. Verify every signature back to the Root Intent using only declared
    public roots of trust.
 2. Attempt to broaden authority at an intermediate hop (inject a caveat removal or scope
-   expansion) and confirm that verification fails — that broadening is computationally
-   prevented, not merely flagged (OQGF-M-9).
+   expansion, including one correctly signed by a malicious child) and confirm rejection
+   before action (OQGF-M-9). Inspect the authenticated bindings and subset verifier; a
+   sampled rejection is not a proof of universal cryptographic security.
 3. Construct an action that satisfies the declared intent at the final hop but violates a
    Root Intent invariant, and confirm the Costimulation Gate denies it and the actor enters
    architectural anergy (OQGF-M-10, OQGF-M-11).
@@ -442,6 +471,8 @@ An auditor SHALL:
   High-Assurance per OQGF-M-2.
 - **Object-capability lineage:** consistent with the principle of attenuation in SPKI/SDSI
   and capability-based delegation models.
+
+**Mapping boundary:** CNSA references do not make SLH-DSA an NSS-approved algorithm. The dual-family rule is an additional OQGF profile requirement; A.0.9 governs compatibility, algorithm parameters, and evidence roles. A mapping is not external certification.
 <!-- source-sync:end AMD-001:4 -->
 
 ### A.3.7 Integrated cross-organ obligations
@@ -461,43 +492,43 @@ The following navigation summary identifies this organ's connections. The linked
 ## A.4 Organ 4 — OQGF-R (Redundant Defense Organ / No SPOF)
 
 ### A.4.1 Purpose
-Eliminate single points of cryptographic, computational, or jurisdictional failure. If one PQC family is broken, one cloud is compromised, or one entropy source is malicious, the organism survives.
+Reduce declared single points of cryptographic, computational, and jurisdictional failure through the controls required at each tier. Family compromise, provider loss, malicious entropy, and shared administrative dependencies require explicit threat models and tested failure behavior; the organ does not assert universal survival from redundancy alone.
 
 ### A.4.2 Architectural rationale
 The immune system carries multiple, independently evolved defenses (innate, adaptive humoral, adaptive cellular). One can fail without organism death. OQGF-R imposes the same diversity on cryptographic families, infrastructure providers, entropy, and audit storage.
 
 ### A.4.3 Normative requirements
-- **OQGF-R-1** High-Assurance systems SHALL employ at least two PQC signature families (one lattice — ML-DSA — and one hash-based — SLH-DSA — with code-based HQC added once standardized) in parallel for any signature relied on for legal evidence.
-- **OQGF-R-2** Production deployments SHALL be capable of multi-cloud operation; vendor lock-in to a single cryptographic, quantum, or compute provider SHALL be documented as a risk requiring DAP acceptance.
-- **OQGF-R-3** Where operationally permitted, a classical fallback (RSA-3072 or ECDSA P-384) SHALL be available in hybrid mode through 31 December 2030, after which classical fallback SHALL be removed except where explicit waiver applies.
-- **OQGF-R-4** Entropy sources SHALL be diversified across at least two physically independent mechanisms, validated under NIST SP 800-90B with continuous Repetition Count and Adaptive Proportion tests. **Per the DoW CIO memorandum of 18 Nov 2025, non-local quantum randomness generation and non-FIPS RNGs SHALL NOT be used as the sole source of entropy for confidentiality, authenticity, or key establishment in any DoD/DoW-connected system; FIPS-validated local QRNGs MAY contribute as one of two or more sources.**
-- **OQGF-R-5** Audit trails SHALL be replicated across at least two legal jurisdictions for High-Assurance systems, using CRDT- or hash-linked-log replication to preserve append-only integrity under partition.
+- **OQGF-R-1** High-Assurance civilian systems SHALL use ML-DSA and SLH-DSA in parallel for OQGF-issued record signatures relied on as evidence, with the A.0.9 parameters and verification rule. Additional approved signature families MAY be added; HQC is a KEM and SHALL NOT occupy a signature slot. NSS use remains subject to the explicit compatibility boundary in A.0.9. Cryptographic evidence does not by itself establish legal admissibility.
+- **OQGF-R-2** Production deployments SHALL maintain a documented, tested portability/recovery design sufficient for operation with an alternative provider. Baseline may run on one provider; Enhanced requires demonstrated multi-cloud capability; High-Assurance requires live multi-cloud operation. Vendor lock-in SHALL remain a DAP-owned accepted risk, but acceptance does not make an absent required portability or continuity control satisfied.
+- **OQGF-R-3** Where applicable policy permits migration hybrid modes, a classical component MAY accompany the required PQC component through 31 December 2030. It SHALL NOT replace a required PQC signature or silently downgrade key establishment. RSA/ECDSA signature options and ECDH key-establishment options SHALL be distinguished by primitive role. After that date, retaining a classical migration component requires a scoped waiver from the authority that owns the restriction; a DAP cannot issue an external waiver.
+- **OQGF-R-4** At every tier, entropy SHALL come from at least two physically independent mechanisms with SP 800-90B validation evidence and applicable Repetition Count/Adaptive Proportion health tests. A DRBG expands supplied entropy and SHALL NOT count as a second independent source merely because it is a separate interface. The source identities, shared dependencies, conditioning/RBG construction, failure policy, and validation scope SHALL be declared. Where the 18 November 2025 DoW memorandum applies, its restrictions on non-local quantum randomness, non-FIPS random generation, and listed quantum confidentiality/keying technologies apply to their security use, not merely to use as the sole source; only the competent authority can grant its exception. Local validated sources still require applicable intake/deployment approval. The two-source rule is OQGF policy, not a claim that NIST or the memorandum mandates two sources.
+- **OQGF-R-5** High-Assurance audit trails SHALL be replicated across at least two lawful jurisdictions with append-only integrity, authenticated writer identities, independently retained checkpoints, and gap/fork detection under partition. CRDT convergence alone SHALL NOT establish completeness, ordering, non-deletion, or protection against a shared compromised administrator. Destination, privacy, and retention controls SHALL apply to every replica. If lawful replication cannot meet this requirement, the assessment SHALL report the unmet control rather than authorize an unlawful transfer.
 
 **OQGF-R-6** Long-lived secrets — root signing keys, audit-signing keys, and any key whose compromise would permit forgery of evidence relied upon as legal record — SHALL be held under a custody model appropriate to the declared conformance level, and that model SHALL be declared in the CBOM.
 
 - **OQGF-R-6.1 (Baseline)** Long-lived secrets SHALL be protected against extraction, and the protection mechanism SHALL be declared. Software-held keys are permitted at Baseline if the CBOM declares them as such.
 
-- **OQGF-R-6.2 (Enhanced)** Long-lived secrets SHALL be held in a hardware security module or equivalent hardware-backed key store from which the private key material cannot be extracted, and key issuance and rotation SHALL require dual control — no single individual or credential SHALL be sufficient to issue, rotate, or authorize use of a long-lived secret. The custody model, the hardware boundary, and the dual-control procedure SHALL be declared in the CBOM.
+- **OQGF-R-6.2 (Enhanced)** Long-lived secrets SHALL be held in a hardware security module or equivalent hardware-backed key store from which the private key material cannot be extracted, and key issuance and rotation SHALL require dual control — no single individual or credential SHALL be sufficient to issue, rotate, or authorize use of a long-lived secret. The custody model, hardware boundary, and dual-control procedure SHALL be declared in the CBOM. Automated use MAY execute within a dual-authorized, recorded scope and expiry; a single operator SHALL NOT create or enlarge that authorization.
 
-- **OQGF-R-6.3 (High-Assurance)** In addition to R-6.2, long-lived secrets SHALL be held under k-of-n threshold custody using Shamir's Secret Sharing or threshold cryptography, with a quorum of at least 3-of-5. Shares SHALL be held by distinct custodians with documented separation of duty; a share-holding arrangement in which fewer than k independent parties can reconstruct the secret SHALL NOT satisfy this requirement. The organization SHALL maintain a documented key ceremony, a recovery procedure, and a rotation procedure, and SHALL rehearse recovery at least annually with the rehearsal recorded.
+- **OQGF-R-6.3 (High-Assurance)** In addition to R-6.2, long-lived secrets SHALL be held under k-of-n threshold custody using Shamir's Secret Sharing or threshold cryptography, with a 3-of-5 quorum or a documented configuration requiring at least three independent custodians and tolerating at least two unavailable shares. Shares SHALL be held by distinct custodians with documented separation of duty; a share-holding arrangement in which fewer than k independent parties can reconstruct the secret SHALL NOT satisfy this requirement. The organization SHALL maintain a documented key ceremony, a recovery procedure, and a rotation procedure, and SHALL rehearse recovery at least annually with the rehearsal recorded. Any reconstruction SHALL occur within the R-6.2 protected hardware boundary; plaintext reconstruction in ordinary host memory SHALL NOT satisfy R-6.3. Backup/recovery threshold custody SHALL NOT be represented as distributed runtime threshold signing.
 
 **A declared custody model that overstates the separation actually achieved is a conformance failure, not a documentation defect.** Threshold cryptography implemented without custodial separation satisfies R-6.3 in mechanism and fails it in substance; assessment (§A.4.5) tests the separation, not the algorithm.
 
-- **OQGF-R-7** The architecture SHALL include a placeholder integration point for future quantum-network key distribution, but SHALL NOT depend on it for current confidentiality.
+- **OQGF-R-7** The architecture SHALL document an optional future quantum-network integration boundary, disabled by default and excluded from current confidentiality claims. A design placeholder does not authorize testing, procurement, or deployment of QKD or other technologies prohibited by an applicable authority.
 
 ### A.4.4 Conformance criteria per level
 
-- **Baseline:** Single PQC family acceptable; one cloud; one entropy source plus DRBG; long-lived secrets extraction-protected with the mechanism declared (R-6.1).
-- **Enhanced:** Dual PQC families for audit signatures; multi-cloud capable; two entropy sources; **HSM-backed key custody with dual-control issuance and CBOM-declared custody model (R-6.2)**.
-- **High-Assurance:** Dual or triple PQC families for all evidentiary signatures; multi-cloud live; cross-jurisdictional audit replication; **3-of-5 threshold custody with documented ceremony, separated custodians, and annual recovery rehearsal (R-6.3)**.
+- **Baseline:** one approved PQC audit-signature family; one live cloud with the R-2 portability/recovery design; two independent entropy mechanisms under R-4; declared extraction protection under R-6.1.
+- **Enhanced:** all Baseline controls; two distinct PQC audit-signature families under A-3; demonstrated multi-cloud capability; non-extractable hardware-backed custody and dual-authorized issuance/rotation/use under R-6.2.
+- **High-Assurance:** all Enhanced controls; ML-DSA + SLH-DSA evidentiary signatures under A.0.9/R-1; live multi-cloud continuity; lawful cross-jurisdiction replication; R-6.3 separated threshold custody, protected reconstruction, and annual recovery rehearsal. A third signature family is optional and must be an approved signature family, not a KEM.
 
 ### A.4.5 Assessment procedures
-An auditor SHALL: (1) verify a sample audit signature under each declared PQC family independently; (2) simulate the failure of one cloud provider and verify continuity; (3) inspect entropy health-test logs.
+An auditor SHALL: (1) verify every signature required by the applicable A-3/R-1 profile, including missing/failed-signature rejection; (2) assess the Baseline portability/recovery design, Enhanced multi-cloud capability, or High-Assurance live failover as applicable; (3) verify physical entropy independence, actual validation scope, health-test handling, and rejection of a DRBG counted as an independent source. Exercises SHALL use an authorized isolated environment.
 
 (4) **Key custody, per declared level.**
 - **At Baseline:** inspect the CBOM's declared protection mechanism for long-lived secrets and verify the declaration matches the deployed mechanism.
 - **At Enhanced:** verify the private key material is non-extractable from the declared hardware boundary — request an export and confirm refusal — and inspect the dual-control procedure and its issuance records. **Attempt a single-operator issuance and confirm it is refused.**
-- **At High-Assurance:** additionally inspect Shamir share custody records, verify that shares are held by distinct custodians with documented separation of duty, inspect the key ceremony record, and inspect evidence of an annual recovery rehearsal. **Verify by inquiry that fewer than k independent parties cannot reconstruct the secret** — a threshold scheme whose shares are held by one party or one role does not satisfy R-6.3.
+- **At High-Assurance:** inspect threshold-share custody, effective identities and administrative privileges, ceremony records, recovery evidence, and the protected reconstruction boundary. Test refused below-quorum recovery in an authorized isolated environment and inspect who can override the controls. Inquiry alone is insufficient. Shares held under one effective authority do not establish independent custodians, and a recovery rehearsal does not by itself prove distributed runtime signing.
 
 #### Effect on existing conformance claims
 
@@ -523,9 +554,11 @@ The Organ 4 control mappings in §A.4.6 are extended:
 
 - **NIST SP 800-53 Rev. 5:** SC-12 (cryptographic key establishment and management) and **SC-12(1) (availability)** and **SC-12(2)/(3) (symmetric and asymmetric key management)** apply at all levels; **SC-12(6) (physical control of keys)** maps to R-6.2's hardware boundary; **CP-9 (system backup)** and **SC-12(1)** map to R-6.3's recovery rehearsal.
 - **NIST SP 800-57 Part 1 Rev. 5:** §6 (key management phases) and §8.1.5.2 (key recovery) inform R-6.3's ceremony and recovery obligations.
-- **FIPS 140-3:** Level 2 or above satisfies R-6.2's hardware boundary where the module's key-storage service is used; the level SHALL be declared in the CBOM. **A FIPS validation is not by itself evidence of dual control** — R-6.2 requires both.
+- **FIPS 140-3:** the module certificate, validation level, approved mode, security policy, and exact key services SHALL be declared in the CBOM. A level number alone does not establish a non-extractable hardware boundary or dual control. R-6.2 assessment SHALL verify those properties in the deployed configuration; an algorithm certificate or a software build flag is not module-validation evidence.
 - **ISO/IEC 42001 Annex A:** A.6 (AI system lifecycle), A.9 (use of AI systems) unchanged.
 - **CNSA 2.0:** unchanged.
+
+**Mapping boundary:** CNSA references do not make SLH-DSA an NSS-approved algorithm. The dual-family rule is an additional OQGF profile requirement; A.0.9 governs compatibility, algorithm parameters, and evidence roles. A mapping is not external certification.
 <!-- source-sync:end AMD-018:5 -->
 
 ### A.4.7 Integrated cross-organ obligations
@@ -538,7 +571,7 @@ The following navigation summary identifies this organ's connections. The linked
 | [P-9](#oqgf-p-9), [P-10](#oqgf-p-10), [P-13](#oqgf-p-13) | Record accepted infrastructure risks and effects of failures or defensive controls. |
 | [P-11](#oqgf-p-11) | Coordinate key destruction with personal-data erasure and retained audit structure. |
 | [P-12](#oqgf-p-12) | Use the effective tier when applying custody and signature obligations. |
-| [Organ 5](#organ-5) | Supply custody, signature diversity, and replication resilience for the same evidence records; the audit-signing conflict remains identified in A.9.5. |
+| [Organ 5](#organ-5) | Supply custody, signature diversity, and replication resilience for the same evidence records; the reconciled signature roles and tier profiles are in A.0.9/A-3. |
 
 <a id="organ-5"></a>
 
@@ -567,10 +600,10 @@ Immunological memory makes second exposures survivable. OQGF-A makes regulatory 
 
 **Personal-data lifecycle:** where this record contains personal data, [P-11](#oqgf-p-11) applies, including purpose, retention, erasure tombstones, and preservation of the audit skeleton.
 - **OQGF-A-2** For every quantum computation the system SHALL record the circuit, the device identifier, the calibration snapshot, and the **full empirical sampling distribution** — not a summary statistic — together with the declared noise model and the reconciliation test result.
-- **OQGF-A-3** Audit records SHALL be signed under at least two PQC families and timestamped via an RFC 3161-compliant authority that itself supports PQC signing.
+- **OQGF-A-3** Audit-record envelopes SHALL carry at least one approved PQC signature at Baseline and at least two distinct PQC signature families at Enhanced and High-Assurance, under A.0.9; High-Assurance uses the R-1 profile. Every audit record SHALL carry a verifiable RFC 3161 timestamp token signed under an approved PQC profile by an authority independent of the governed event producer. All required signatures and the timestamp binding SHALL verify; an unavailable service or failed signature SHALL be recorded as an evidence gap, not replaced by classical-only evidence or a weaker profile.
 - **OQGF-A-4** Quantum-appropriate explanation artifacts SHALL accompany decisions made by variational or kernel quantum models: e.g., dominant Pauli-string contributions for VQC outputs, kernel attribution for QSVM outputs, or measurement-statistic attribution where applicable.
 - **OQGF-A-5** Every regulated AI/ML system SHALL have a named DAP recorded in the audit record; the DAP SHALL be a natural person, not an entity.
-- **OQGF-A-6** Audit signatures SHALL be re-signed under the prevailing cryptographic generation at intervals not exceeding five years, preserving the original signatures and chain.
+- **OQGF-A-6** Audit evidence SHALL be renewed under the prevailing approved cryptographic profile at intervals not exceeding five years and before a relied-on algorithm or validation path loses its approved status. Original signatures, timestamp evidence, verification policy, validity changes, and lineage SHALL be preserved for the applicable retention period. Renewal SHALL NOT claim to repair earlier missing, forged, compromised, or invalid evidence, and SHALL NOT recover erased personal payloads.
 - **OQGF-A-7** A regulatory query interface SHALL be available within 72 hours of a lawful request, exposing the full audit chain in a read-only, signed export.
 
 **Integrated source:** [AMD-010-explanation-validity.md](AMD-010-explanation-validity.md).
@@ -579,11 +612,14 @@ Immunological memory makes second exposures survivable. OQGF-A makes regulatory 
 <!-- source-sync:start AMD-010:terms -->
 - **Explanation Scope Bound** — the declared limit of what an explanation artifact covers:
   the observable weight bound *k*, the estimation method, the sample count, and the confidence
-  interval. An artifact covering all Pauli strings of weight ≤ *k* is a complete statement about
-  that bounded set and no statement at all about the remainder.
-- **Null Explanation** — an explanation artifact whose signal is statistically indistinguishable
-  from zero at the declared confidence level. Recorded explicitly as Null; never recorded as
-  valid. The honest record of an absent explanation.
+  interval and its individual or simultaneous coverage meaning. The declared method may
+  estimate a bounded observable set with stated uncertainty; it is not an exact complete
+  description, and it makes no unsupported coverage claim about the remainder.
+- **Null Explanation** — an artifact that does not supply an accepted explanation: its
+  signal is statistically indistinguishable from zero under A-9, is invalidated by an
+  A-11 reconciliation anomaly or A-12 channel failure, or lacks required validity evidence.
+  Record Null with a supported cause or pending cause plus an Evidence Gap; never report
+  it as Valid. Statistical non-detection does not prove that information is physically absent.
 - **Trainability Profile** — the declared expected signal/gradient-variance behavior for a given
   model architecture, qubit count, and device, against which the observed explanation signal is
   statistically reconciled (the OQGF-M-3 declare-then-test pattern applied to explainability).
@@ -592,11 +628,9 @@ Immunological memory makes second exposures survivable. OQGF-A makes regulatory 
 - **Reconciliation Anomaly** — a flat or distorted explanation signal that deviates from the
   declared Trainability Profile: an incident trigger under A.6.1, not an expected regime.
 - **Canary Probe** — an analytically known, shallow, non-degenerate control circuit executed
-  through the same explanation pipeline, device, and session as a governed job, whose correct
-  explanation attests that the explanation channel is functioning. The recall-antigen analog.
+  through the same explanation pipeline, device, and session as a governed job, whose result provides bounded evidence about explanation-channel function for a declared scope. The recall-antigen analog.
 - **Channel Failure** — the condition in which a Canary Probe fails to produce its known
-  explanation, indicating that the explanation pipeline itself — not the model — is compromised,
-  miscalibrated, or non-responsive.
+  explanation, indicating that the declared channel check failed; the record SHALL distinguish a confirmed malfunction from an inconclusive or unavailable check. A failed check alone does not prove adversarial compromise or identify the root cause.
 <!-- source-sync:end AMD-010:terms -->
 
 #### Additional organ requirements
@@ -610,7 +644,9 @@ OQGF-A-4 presumes.
 under OQGF-A-4 SHALL declare its Explanation Scope Bound: the observable weight bound *k* (or the
 equivalent structural limit of the method used), the estimation method, the number of samples, and
 the confidence interval at which the estimates hold. An artifact that does not declare its bound
-SHALL NOT satisfy OQGF-A-4. An artifact SHALL NOT be presented, formatted, or recorded in a manner
+SHALL NOT satisfy OQGF-A-4. The record SHALL identify the covered observable set and whether confidence is
+individual or simultaneous, including the declared treatment of multiple comparisons.
+An artifact SHALL NOT be presented, formatted, or recorded in a manner
 that implies coverage beyond its declared bound. Classical-shadow estimation (AMD.4) is RECOMMENDED
 for systems at which direct enumeration of the observable space is intractable; any method
 yielding a declared bound, sample count, and confidence interval satisfies this requirement.
@@ -621,7 +657,12 @@ Explanation**, explicitly marked as such, with its cause recorded as one of: Exp
 Regime (OQGF-A-11), Reconciliation Anomaly (OQGF-A-11), or Channel Failure (OQGF-A-12). A Null
 Explanation SHALL NOT be recorded, reported, or exported as a valid explanation, and SHALL NOT be
 suppressed or omitted from the Organ 5 record. A system that records an information-free artifact
-as a successful explanation does not satisfy OQGF-A-4.
+as a successful explanation does not satisfy OQGF-A-4. If evidence cannot support one
+of the three causes, the artifact SHALL remain Null with classification pending and an
+explicit Evidence Gap; a missing profile or inconclusive test SHALL NOT be labeled
+Expected Trainability Regime. Pending cause is an unresolved evidence state, not a fourth
+cause or a valid explanation. A-10 action authorization SHALL remain blocked until the
+required cause and acknowledgment evidence are available.
 
 **OQGF-A-10 (Accountability for Unexplained Decisions).** A regulated AI/ML decision whose
 explanation artifact is Null is an **unexplained regulated decision**. Such a decision SHALL NOT
@@ -638,10 +679,12 @@ explanation a named, signed, reviewable act rather than a silent default.
 **Trainability Profile** for each governed variational or kernel quantum model — the expected
 explanation-signal behavior (e.g., gradient or expectation-value variance as a function of qubit
 count, circuit depth, and device) — and SHALL statistically reconcile the observed explanation
-signal against it, recording the test and its result alongside the artifact. A flat signal that
-reconciles with the declared profile SHALL be recorded as an Expected Trainability Regime. A flat
+signal against it, recording the test and its result alongside the artifact. A flat signal supported as consistent with the declared profile under a predeclared
+test, uncertainty bound, and adequate sampling SHALL be recorded as an Expected
+Trainability Regime. Failure to reject a mismatch with an underpowered test is not sufficient;
+inconclusive reconciliation SHALL remain an Evidence Gap under A-9. A flat
 or distorted signal that deviates from the declared profile SHALL be recorded as a Reconciliation
-Anomaly and SHALL trigger the incident-response pathway for statistical reconciliation failure
+Anomaly, SHALL mark the affected artifact Null under A-9, and SHALL trigger the incident-response pathway for statistical reconciliation failure
 under A.6.1. This requirement applies the OQGF-M-3 declare-then-test pattern to explainability;
 it does not modify OQGF-M-3.
 
@@ -649,14 +692,18 @@ it does not modify OQGF-M-3.
 High-Assurance SHALL execute a **Canary Probe** — a shallow, analytically known control circuit
 whose correct explanation is non-degenerate by construction — through the same explanation
 pipeline, on the same device, within the same session as the governed job, at a declared
-granularity (per-job, per-session, or per-batch). The probe's produced explanation SHALL be
-compared against its known analytic result. Where the probe produces its known result, the
-explanation channel is attested for that scope. Where the probe fails to produce its known result,
+granularity (per-job, per-session, or per-batch). The scope membership and acceptance tolerance, sample budget, and decision rule SHALL be declared before the governed results are used. The probe's produced explanation SHALL be compared against its known analytic result under that rule. A passing result supplies bounded evidence for that scope and fault model; it does not prove that every job or every failure mode is correct. Where the probe fails to produce its known result,
 a **Channel Failure** SHALL be recorded, every explanation artifact produced within that scope
 SHALL be recorded as Null with cause Channel Failure (OQGF-A-9), and the incident-response pathway
 under A.6.1 SHALL be triggered. The Canary Probe is RECOMMENDED at Baseline and Enhanced. The
 probe circuit SHALL NOT be predictable to the point of permitting selective evasion; probe
-selection SHALL be varied.
+selection SHALL be varied. A required probe that is missing or inconclusive SHALL leave
+channel assurance unresolved and SHALL NOT support a valid-artifact claim. Invalidation
+SHALL be appended with references to all affected artifacts; previously signed records
+SHALL NOT be overwritten. Consumers and exports SHALL evaluate the latest validity state
+and the required acknowledgment before use. A failure discovered after an action SHALL
+trigger retrospective incident review and notification to affected governed consumers;
+the framework SHALL NOT claim the late check prevented the earlier action.
 <!-- source-sync:end AMD-010:1 -->
 
 #### General evidence-capture independence
@@ -667,27 +714,26 @@ selection SHALL be varied.
   system's own report of its actions SHALL NOT be treated as sufficient evidence of those actions
   where independent observation is technically available. This principle does not require that
   every datum be independently observed — it requires that the evidence-capture path itself be
-  attested, that its coverage scope be declared, and that gaps be explicit.*
+  attested, that its coverage scope be declared, and that gaps be explicit. The governed system SHALL NOT control the capture policy, source identity,
+  authoritative clock, signing keys, retention controls, or independently retained checkpoints
+  for its own material evidence. Capture failures, truncation, substitution, and unauthorized
+  deletion attempts SHALL be recorded through an independent path. An Evidence Gap discloses
+  missing assurance; it does not satisfy a requirement for the missing evidence or authorize a
+  completeness claim.*
 
 ### A.5.4 Conformance criteria per level
-- **Baseline:** Decision logging with classical or single-PQC signatures; manual export available.
-- **Enhanced:** Dual-PQC signatures; quantum sampling distributions retained; explanation artifacts present.
-- **High-Assurance:** All of the above plus periodic re-signing on an automated schedule; cross-jurisdictional replication; live regulator portal.
+- **Baseline:** all applicable A-1–A-11 controls, including provenance and independent capture, per-job quantum evidence, tier-correct PQC signing and timestamping, DAP ownership, evidence renewal, and lawful query export within 72 hours. Manual export is acceptable; classical-only audit signatures are not.
+- **Enhanced:** all Baseline controls, plus dual-family audit envelopes under A-3 and third-party assessment. Quantum distributions, explanations, and Trainability Profiles are already required where applicable.
+- **High-Assurance:** all Enhanced controls; R-1 evidentiary signatures, automated evidence-renewal scheduling under A-6, a live access-controlled regulator portal, lawful replicated retention, continuous assessor evidence under A.7, and A-12 canaries with the review obligations below.
 
 **Additional criteria from [AMD-010-explanation-validity.md](AMD-010-explanation-validity.md):**
+
 #### Amendment tier criteria
 
 <!-- source-sync:start AMD-010:2 -->
-**Baseline (OQGF-B):** Explanation artifacts declare their Scope Bound, method, sample count, and
-confidence interval (OQGF-A-8); Null Explanations recorded explicitly with cause and never as
-valid (OQGF-A-9); an unexplained regulated decision requires a signed DAP acknowledgment before
-action and is recorded in the Risk Register (OQGF-A-10). Single-PQC-family acknowledgment
-signatures acceptable. Canary Probe RECOMMENDED.
+**Baseline (OQGF-B):** A-8–A-11 apply to governed quantum explanation artifacts at every tier: scope, method, samples and confidence; explicit Null status with supported cause or an unresolved evidence gap; DAP acknowledgment before action on a classified Null result; and Trainability Profiles with recorded reconciliation. Single-PQC-family acknowledgments are acceptable. A-12 canaries are RECOMMENDED at a declared scope.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus a declared Trainability Profile per governed
-model with recorded reconciliation of the observed signal, Expected Trainability Regime and
-Reconciliation Anomaly distinguished, and anomalies routed to A.6.1 incident response
-(OQGF-A-11). Canary Probe RECOMMENDED at a declared granularity.
+**Enhanced (OQGF-E):** All Baseline criteria, with Enhanced audit-record signatures under A-3 and assessment under A.7. Trainability Profiles are already required at Baseline. A-12 canaries remain RECOMMENDED.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus the Canary Probe REQUIRED at a declared
 granularity with varied probe selection, Channel Failure invalidating every artifact in scope
@@ -698,7 +744,7 @@ continued adequacy.
 <!-- source-sync:end AMD-010:2 -->
 
 ### A.5.5 Assessment procedures
-An auditor SHALL: (1) select a regulated decision at random and request the full chain; (2) verify both PQC signatures; (3) re-run the statistical reconciliation on a sampled quantum record; (4) confirm DAP identity and acknowledgment; (5) inspect the re-signing log.
+An auditor SHALL: (1) select a regulated decision at random and request the full chain; (2) verify all signatures required by the declared A-3 profile and the RFC 3161 token; reject a missing/failed required signature; (3) re-run the statistical reconciliation on a sampled quantum record; (4) confirm DAP identity and, where A-10 applies, the required acknowledgment and latest artifact-validity state; (5) inspect the re-signing log.
 
 **Additional assessment from [AMD-010-explanation-validity.md](AMD-010-explanation-validity.md):**
 #### Amendment assessment
@@ -712,7 +758,7 @@ An auditor SHALL:
 2. Induce or select a case in which the explanation signal is statistically indistinguishable from
    zero, and confirm the artifact is recorded as Null with a cause, is not recorded or exported as
    valid, and is not omitted from the record (OQGF-A-9). **This is the load-bearing test of this
-   amendment**: it proves the system reports absence of explanation rather than manufacturing
+   amendment**: it checks, for the exercised case, that the system reports absence of explanation rather than manufacturing
    false assurance.
 3. Confirm that a decision carrying a Null Explanation was not acted upon absent a signed DAP
    acknowledgment recording cause and justification, verify the PQC signature chain, and confirm
@@ -724,7 +770,7 @@ An auditor SHALL:
 5. At High-Assurance, request Canary Probe records for a sampled session and confirm the probe
    produced its known analytic result; confirm the declared granularity; and confirm probe
    selection is varied (OQGF-A-12).
-6. Inject a deliberate explanation-channel fault (for example, a misconfigured estimator or a
+6. Where a canary is required or claimed, inject a deliberate explanation-channel fault (for example, a misconfigured estimator or a
    truncated sample path) and confirm the Canary Probe detects it, that a Channel Failure is
    recorded, that every artifact in scope is marked Null with cause Channel Failure, and that
    incident response is triggered (OQGF-A-12, OQGF-A-9).
@@ -774,7 +820,9 @@ An auditor SHALL:
     RECOMMENDED bounded-estimation method under OQGF-A-8.
   - *Anergy panels / recall-antigen testing:* established clinical immunology practice, the
     biological source of OQGF-A-12. Its application to QML explanation-channel attestation is
-    believed novel and is to be literature-verified before publication (AMD.0.3).
+    an unverified design analogy, with no novelty or prior-art claim (AMD.0.3).
+
+**Mapping boundary:** CNSA references do not make SLH-DSA an NSS-approved algorithm. The dual-family rule is an additional OQGF profile requirement; A.0.9 governs compatibility, algorithm parameters, and evidence roles. A mapping is not external certification.
 <!-- source-sync:end AMD-010:4 -->
 
 ### A.5.7 Integrated cross-organ obligations
@@ -816,9 +864,9 @@ and conformant with declared policy. Host harm is the governance analog of self-
 Self Set — the declared, versioned corpus of known-good operations and baselines
 that represents “self.” Detectors are screened against it before deployment.
 Deterministic Gate (Non-Suppressible) — a fail-closed safety control that fires on
-a conserved danger pattern: the Genetic Layer crypto/SBOM gate (OQGF-G-4) and
-MHC attestation verification (OQGF-M-1). The innate-layer analog. Tolerance SHALL
-NOT apply to it.
+a declared authorization policy: G-4, M-1, I-10, P-12.4, and other controls explicitly
+designated Deterministic Gates. Tolerance SHALL NOT apply; permitted risk acceptance
+is governed separately by P-9 and does not remove the finding or create missing authority.
 Heuristic Response (Tolerable) — a graded, behavioral, or statistical detection
 (Organ 2 sentinels, cross-hop behavioral reconciliation, anomaly scoring). The
 adaptive-layer analog. Tolerance MAY apply to it.
@@ -845,14 +893,19 @@ tracked, reported, and reviewed with the same rigor applied to a false negative.
 system that measures only what it blocks, and not what it wrongly blocks, does not
 satisfy this requirement.
 OQGF-P-2 (Tolerance Scope — the innate/adaptive boundary). Self-tolerance
-SHALL apply only to Heuristic Responses. It SHALL NOT apply to Deterministic Gates.
-No tolerance mechanism, suppression, exception, or operator action defined anywhere
-in OQGF SHALL cause a quantum- vulnerable artifact to pass the Genetic Layer gate
-(OQGF-G-4), nor an unattested actor to be admitted past MHC verification (OQGF-M-1).
-Deterministic Gates SHALL remain fail-closed and non-suppressible. Tolerance reduces
-false alarms on the trained layer; it never opens a confirmed hole on the conserved-pattern layer. This requirement is the safety constraint on which every other
-requirement in this amendment depends, and it SHALL be enforced structurally — a
-request to suppress a Deterministic Gate SHALL be refused, not honored silently.
+SHALL apply only to Heuristic Responses and SHALL NOT apply to Deterministic Gates.
+Detection, evidence validation, and the final authorization decision SHALL remain
+deterministic, fail-closed, and non-suppressible. A Tolerance Grant SHALL NOT remove
+or hide a gate finding. A scoped P-9 Risk-Acceptance Entry MAY authorize proceeding
+past a policy finding only where the governing exception policy and applicable external
+authority permit it; the finding and distinct accepted-risk verdict SHALL remain visible.
+Acceptance SHALL NOT supply a missing or invalid signature, identity attestation,
+intent delegation, evidence record, or legal authority, and SHALL NOT substitute for
+P-8/P-15 Resolution. Absent all required evidence and a valid authorization, the gate
+SHALL deny. This rule applies to G-4, M-1, I-10, P-12.4, and other controls explicitly
+designated Deterministic Gates. Proceeding with accepted risk is not a clean conformance
+verdict. Attempts to suppress a Deterministic Gate SHALL be refused and recorded.
+
 OQGF-P-3 (Central Tolerance — pre-deployment self-screening). Before
 activation, every Heuristic Response detector SHALL be screened against the declared
 Self Set and SHALL NOT be deployed if its host-harm rate against that baseline exceeds
@@ -882,17 +935,14 @@ side effect to be tolerated.
 #### Conformance criteria
 
 <!-- source-sync:start AMD-002:2 -->
-Baseline (OQGF-B): Host harm defined and measured (OQGF-P-1). Tolerance scope
-enforced — Deterministic Gates demonstrably non-suppressible (OQGF-P-2). Peripheral
-tolerance via signed, scoped, expiring Tolerance Grants recorded in Organ 5 (OQGF-P-4). Single-PQC-family grant signatures acceptable.
-Enhanced (OQGF-E): All Baseline criteria, plus central-tolerance pre-deployment
-screening of every heuristic detector against the Self Set (OQGF-P-3); autoimmunity
-and storm detection feeding the graded-response path (OQGF-P-5); a defined and
-recorded de-escalation path for every escalation (OQGF-P-8).
+**Baseline (OQGF-B):** P-1–P-5 apply: declared and measured host-harm bounds; non-suppressible deterministic gates; pre-deployment Self Set screening; scoped, expiring, signed tolerance grants; autoimmunity and response-storm detection. P-6, P-7, and P-8 apply under AMD-003, AMD-004, and AMD-005 at their stated tiers. Single-PQC-family grant signatures are acceptable.
+
+**Enhanced (OQGF-E):** All Baseline criteria, with Enhanced assessment under A.7 and the explicit Enhanced activation and resolution controls in P-6.6 and P-8.5. Screening and storm detection are already required at Baseline.
+
 High-Assurance (OQGF-H): All Enhanced criteria, plus a formally declared and
-audited host-harm bound with trend reporting (OQGF-P-1, OQGF-P-5); the adaptation
-loop with regression-tested, screened detector updates (OQGF-P-6); coordinated
-cross-organ signaling with no single point of coordination failure (OQGF-P-7); Tolerance
+audited host-harm bound with trend reporting (OQGF-P-1, OQGF-P-5); the explicit
+High-Assurance increments of P-6 and P-7 (whose underlying adaptation and
+coordination duties already apply at Baseline); Tolerance
 Grants dual-PQC-family signed (lattice and hash-based, consistent with OQGF-M-2)
 and reviewed by a second DAP.
 <!-- source-sync:end AMD-002:2 -->
@@ -941,7 +991,7 @@ Evaluation Corpus — an independent set of attack and known-good samples
 clonal-selection arena.
 Detector Provenance — the signed lineage of a Refined Detector: its seeding
 incident, the evaluation corpus version, its self-tolerance screening result, and the
-approving DAP.
+responsible DAP and activation authorization.
 Maturation Pipeline — the governed process from seeding incident to selected,
 screened, approved, activated Refined Detector.
 <!-- source-sync:end AMD-003:terms -->
@@ -969,27 +1019,27 @@ the cost of self-tolerance. This is the germinal-center tolerance checkpoint and
 binding link to AMD-002.
 OQGF-P-6.4 (Detector Provenance). Every Refined Detector SHALL carry signed
 Detector Provenance — the Seeding Incident identifier, the Evaluation Corpus version,
-the self-tolerance screening result, and the approving DAP — recorded in Organ 5
+the self-tolerance screening result, and the responsible DAP plus activation-authorization reference — recorded in Organ 5
 (OQGF-A). A detector whose provenance cannot be reconstructed SHALL NOT be
 active.
 OQGF-P-6.5 (Reversibility). Every activated Refined Detector SHALL be versioned
 and reversible. A rollback SHALL be a recorded event in Organ 5 carrying its justification
-and the acting DAP. The system SHALL be able to return to any prior detector
-generation.
+and the acting DAP. Prior detector generations SHALL remain identifiable for the applicable retention
+period. Reactivation SHALL use P-6.2/P-6.3/P-6.6 and current policy; an unsafe, revoked,
+or out-of-policy generation SHALL NOT be restored solely because rollback is available.
 OQGF-P-6.6 (No Autonomous Activation above Baseline). At Enhanced assurance
 and above, activation of a Refined Detector SHALL require DAP approval. Autonomous
 generation and autonomous selection are permitted; autonomous activation is not. At
-Baseline, autonomous activation is permitted only for detectors that have passed OQGF-P-6.2 and OQGF-P-6.3 and whose provenance is recorded per OQGF-P-6.4.
+Baseline, autonomous activation is permitted only for detectors that have passed OQGF-P-6.2 and OQGF-P-6.3 and whose provenance is recorded per OQGF-P-6.4, identifying the DAP-approved activation policy. Enhanced and High-Assurance require approval of the individual activation; Baseline may use that prior policy authorization.
 <!-- source-sync:end AMD-003:1 -->
 
 #### Conformance criteria
 
 <!-- source-sync:start AMD-003:2 -->
-Baseline (OQGF-B): Refinement seeded only by confirmed incidents (OQGF-P-6.1);
-selection on an independent corpus (OQGF-P-6.2); tolerance-gated activation (OQGF-P-6.3); recorded provenance (OQGF-P-6.4). Autonomous activation permitted only
-under those gates.
-Enhanced (OQGF-E): All Baseline criteria, plus mandatory reversibility with recorded
-rollback (OQGF-P-6.5); DAP-approved activation, no autonomous activation (OQGF-P-6.6).
+**Baseline (OQGF-B):** P-6.1–P-6.5 apply: DAP-confirmed seeding incidents, independent selection evidence, tolerance screening, signed provenance, and versioned, governed rollback. Autonomous activation is permitted only under the Baseline conditions in P-6.6.
+
+**Enhanced (OQGF-E):** All Baseline criteria, plus individual DAP approval before activation under P-6.6; autonomous activation is prohibited.
+
 High-Assurance (OQGF-H): All Enhanced criteria, plus dual-PQC-family signatures on
 Detector Provenance (ML-DSA + SLH-DSA, consistent with OQGF-M-2); a second-DAP
 review of every activated Refined Detector; and periodic re-screening of active learned
@@ -1008,7 +1058,7 @@ the selection stage disqualifies it (OQGF-P-6.2).
 it is discarded, not activated (OQGF-P-6.3). This is the load-bearing test:
 improvement never overrides self-tolerance.
 4. Select an active Refined Detector and reconstruct its full provenance from Organ 5 —
-seeding incident, corpus version, screening result, approving DAP (OQGF-P-6.4).
+seeding incident, corpus version, screening result, responsible DAP and activation authorization (OQGF-P-6.4).
 5. Roll back an active Refined Detector and confirm the prior generation is restored and
 the rollback is recorded (OQGF-P-6.5).
 6. At Enhanced and above, confirm no path exists to activate a Refined Detector
@@ -1046,7 +1096,11 @@ signed envelope carrying: the source organ, the Signal class, a severity, the in
 posture effect, a scope, a freshness nonce, and an expiry — signed under ML-DSA
 (dual-family at High-Assurance per OQGF-M-2). A Signal that is unsigned, malformed,
 or expired SHALL be ignored. An attacker SHALL NOT be able to drive organ posture by
-forging a Signal.
+forging a Signal. Receivers SHALL authenticate source authority, deduplicate nonces or
+sequence identifiers, and make repeated delivery idempotent. Delivery SHALL be retried
+while valid, ordered per source, with durable tracking of loss or expiry. At-least-once
+delivery is conditional on recovery within the validity window; a partition does not
+justify honoring an expired Signal or claiming that delivery occurred.
 OQGF-P-7.2 (Posture Coupling). A Signal of sufficient severity SHALL be able to
 change the posture of an organ other than the one that emitted it — for example, an
 Organ 2 (Inflammation) HNDL detection raising Organ 3 (MHC) attestation frequency
@@ -1059,9 +1113,10 @@ gracefully, not halt it. This requirement is assessed jointly with Organ 4 (OQGF
 the “no central command” guarantee.
 OQGF-P-7.4 (Raise-Only Autonomy). An autonomous Signal MAY only raise defensive
 posture. Lowering posture (de-escalation) SHALL NOT be performed in response to a
-raw Signal and SHALL be governed by Resolution (OQGF-P-8). Consequently a forged,
-replayed, or misleading Signal cannot stand the system down; at worst it can over-tighten, which is bounded by self-tolerance (OQGF-P-1, OQGF-P-5). This mirrors the
-monotonic, fail-safe spirit of AMD-001.
+raw Signal and SHALL be governed by Resolution (OQGF-P-8). Forged or replayed Signals SHALL be rejected under P-7.1. Raise-only behavior
+prevents direct autonomous de-escalation but does not by itself prove safety: excessive
+tightening can disrupt service. P-1, P-5, and applicable P-15 host-harm controls govern
+that induced risk; it SHALL NOT be dismissed as harmless merely because posture rose.
 OQGF-P-7.5 (Cascade Bound). Signal propagation SHALL be rate-limited and loop-bounded so that a Signal Cascade cannot itself threaten host availability. A cascade
 exceeding its declared bound SHALL be detected and raised as a Response Storm under
 OQGF-P-5. This is the cytokine-storm prevention, and it is the binding link to AMD-002.
@@ -1074,15 +1129,14 @@ Coordination SHALL be auditable after the fact.
 #### Conformance criteria
 
 <!-- source-sync:start AMD-004:2 -->
-Baseline (OQGF-B): Signed Signal envelope with expiry, forged/expired Signals ignored
-(OQGF-P-7.1); at least one declared, recorded cross-organ Posture Coupling (OQGF-P-7.2); raise-only autonomy (OQGF-P-7.4). Single-PQC-family Signal signatures
-acceptable.
-Enhanced (OQGF-E): All Baseline criteria, plus demonstrated decentralization —
-coordination survives loss of any one transport path (OQGF-P-7.3); cascade bounding
-with storm escalation (OQGF-P-7.5); Signal provenance recorded in Organ 5 (OQGF-P-7.6).
+**Baseline (OQGF-B):** P-7.1–P-7.6 apply: authenticated, fresh Signals; declared cross-organ coupling; resilient coordination; raise-only autonomous signaling; bounded cascades; and recorded material effects. Single-PQC-family Signal signatures are acceptable. Loss of one organ or transport path must not silence the surviving coordination paths.
+
+**Enhanced (OQGF-E):** All Baseline criteria, assessed by a third party under A.7. Decentralization, cascade bounding, and provenance are already mandatory at Baseline.
+
 High-Assurance (OQGF-H): All Enhanced criteria, plus dual-PQC-family Signal
-signatures (ML-DSA + SLH-DSA); demonstrated graceful degradation under loss of any
-one organ; and a declared, reviewed full coupling matrix across all five organs.
+signatures (ML-DSA + SLH-DSA); independent review of the graceful-degradation
+evidence already required for applicable failure cases; and a declared, reviewed full
+coupling matrix across all five organs.
 <!-- source-sync:end AMD-004:2 -->
 
 #### Assessment procedures
@@ -1137,7 +1191,7 @@ analog.
 These requirements supersede and fully specify OQGF-P-8.
 OQGF-P-8.1 (Declared Resolution Path). Every Escalation type SHALL declare,
 before it may be used, its Resolution Path — the criteria marking the triggering condition
-cleared, and the target Baseline Posture. An Escalation with no declared Resolution Path
+cleared, the target Baseline Posture, and the maximum escalation duration. An Escalation with no declared Resolution Path
 SHALL NOT be permitted. There are no one-way ratchets.
 OQGF-P-8.2 (Active, Recorded Resolution). Return to the Baseline Posture SHALL
 be an explicit, recorded decision in Organ 5 (OQGF-A) — the cleared condition, the time,
@@ -1150,14 +1204,17 @@ between escalated and baseline states. The system contracts deliberately, not in
 OQGF-P-8.4 (Memory Preservation on Stand-Down). De-escalation SHALL NOT
 erase the Organ 5 record of the incident, nor revert any tolerance-screened Refined
 Detector produced under OQGF-P-6. The response stands down; the forensic record
-and the learned defense are retained. Standing down the army does not discard the
-intelligence.
-OQGF-P-8.5 (Resolution Authority / Fail-Safe Asymmetry). Autonomous action
-MAY raise posture (OQGF-P-7.4) but SHALL NOT autonomously de-escalate above
-Baseline. De-escalation above Baseline SHALL require the Resolution Path criteria to be
-met and DAP confirmation. Where the system is uncertain, it SHALL remain escalated.
-Raising posture is cheap and reversible; lowering it prematurely re-exposes the host, so
-lowering is the guarded direction.
+and the learned defense are retained. This prohibits automatic rollback as a side effect
+of stand-down; a separately authorized P-6.5 rollback remains permitted.
+OQGF-P-8.5 (Resolution Authority / Fail-Safe Asymmetry). Autonomous action MAY
+raise defensive posture under P-7.4. At Enhanced and High-Assurance, de-escalation SHALL
+require satisfied Resolution Path criteria and DAP confirmation. At the Baseline assurance
+tier (OQGF-B), automated resolution MAY execute only under a prior DAP-approved Resolution
+Path with an explicit recorded decision; a raw Signal or its expiry is insufficient.
+Baseline Posture means an operational state and is not the OQGF-B assurance tier.
+Where P-15 containment applies, P-15.11's DAP-authorized restoration rule SHALL govern
+at every applicable tier. Uncertainty SHALL NOT justify de-escalation.
+
 OQGF-P-8.6 (Chronic-Escalation Detection). An Escalation persisting beyond its
 declared maximum duration without resolving or being explicitly re-justified by a DAP
 SHALL be flagged as a Chronic Escalation, raised through Organ 2 (OQGF-I), and
@@ -1173,11 +1230,10 @@ demonstrable, not merely asserted.
 #### Conformance criteria
 
 <!-- source-sync:start AMD-005:2 -->
-Baseline (OQGF-B): Every Escalation type has a declared Resolution Path (OQGF-P-8.1); resolution is an explicit recorded decision, not a silent timeout (OQGF-P-8.2);
-hysteresis present to prevent flapping (OQGF-P-8.3).
-Enhanced (OQGF-E): All Baseline criteria, plus memory preservation on stand-down
-(OQGF-P-8.4); fail-safe authority asymmetry with DAP-confirmed de-escalation above
-Baseline (OQGF-P-8.5); Chronic-Escalation detection (OQGF-P-8.6).
+**Baseline (OQGF-B):** P-8.1–P-8.4 and P-8.6 apply: declared Resolution Paths, explicit recorded decisions, dwell/hold hysteresis, preserved incident history and learned defenses, and Chronic-Escalation detection. P-8.5 defines the Baseline assurance-tier authorization rule; P-15.11 imposes its stricter restoration rule wherever containment applies.
+
+**Enhanced (OQGF-E):** All Baseline criteria, plus DAP confirmation for de-escalation under P-8.5. The word Baseline in that tier condition means OQGF-B, not the operational Baseline Posture.
+
 High-Assurance (OQGF-H): All Enhanced criteria, plus recorded proof of return to
 baseline (OQGF-P-8.7); dual-PQC-family signatures on resolution decisions (ML-DSA +
 SLH-DSA per OQGF-M-2); and second-DAP review of any de-escalation from the
@@ -1214,8 +1270,8 @@ Escalation is flagged, raised through Organ 2, and recorded (OQGF-P-8.6).
 
 <!-- source-sync:start AMD-006:terms -->
 - **Deterministic Gate** — as defined in OQGF-P-2: a fail-closed, non-suppressible control.
-  The conformant set is the Genetic Layer crypto gate (OQGF-G-4) and the MHC attestation
-  gate (OQGF-M-1).
+  The set includes G-4, M-1, I-10, P-12.4, and other explicitly designated gates;
+  each retains its own non-waivable evidence and authorization conditions.
 - **Suppression** — any mechanism whose effect is that a finding is absent from the
   system's output, or that the verdict produced is indistinguishable from a verdict
   produced when the finding did not exist. Tolerance (OQGF-P-4) is suppression of a
@@ -1235,17 +1291,18 @@ Escalation is flagged, raised through Organ 2, and recorded (OQGF-P-8.6).
 #### Requirements
 
 <!-- source-sync:start AMD-006:1 -->
-These requirements add OQGF-P-9 to Section A.P. They do not modify OQGF-P-2 or OQGF-P-4;
-they define a distinct mechanism and its boundary with those requirements.
+These requirements add OQGF-P-9 to Section A.P. The current text is synchronized with
+P-2's exception boundary; P-4 remains a separate mechanism for heuristic false positives.
 
 **OQGF-P-9.1 (Non-Suppression / Visibility Preserved).** A Risk-Acceptance Entry SHALL NOT
 remove, mask, or hide the finding it accepts. The accepted finding SHALL remain present in
-the Cryptographic Bill of Materials and in the gate's output. The gate's **human-readable
+the relevant inventory or evidence record (the CBOM for cryptographic findings) and in the gate's output. The gate's **human-readable
 report** SHALL distinguish a clean result from a result that is proceeding while carrying one
 or more accepted risks, naming the accepted findings; it SHALL NOT present an accepted-risk
-build as indistinguishable from a clean build. The gate's **exit status MAY remain the
-promote code (0)**, since a valid acceptance is an authorization to promote and the exit
-code is the gate's promote-or-block CI contract; the required distinction is in the report
+build as indistinguishable from a clean build. In the command-line promote/block contract,
+if there are no blocking findings, or every blocking finding has a valid, eligible
+acceptance, and all non-waivable prerequisites pass, the gate SHALL return the promote
+code (0). Otherwise it SHALL return the block status; the required distinction is in the report
 and the structured output, not the exit code. No Risk-Acceptance Entry SHALL, under any
 construction, cause a quantum-vulnerable artifact to produce a *verdict* indistinguishable
 from one in which no quantum-vulnerable artifact were present. This requirement is what
@@ -1255,12 +1312,20 @@ clean pass with the risk recorded only where no operator will see it.
 
 **OQGF-P-9.2 (Accountable Risk-Acceptance Entry).** A decision to proceed past a
 Deterministic-Gate finding SHALL be expressed as a Risk-Acceptance Entry that is: scoped to
-a specific finding by exact component identity and the precise advisory or reason (never a
+a specific finding by the exact affected object, action, resource, or component identity
+and the precise finding identifier/advisory or reason (never a
 blanket acceptance of a class such as "all quantum-vulnerable components"); bound to a named
 Designated Accountable Party (DAP, OQGF-A-5); carrying an expiry; PQC-signed binding the
 acceptance to the issuing DAP (dual-family at High-Assurance per OQGF-M-2); and recorded in
 Organ 5 (OQGF-A) with its justification. An entry lacking any of these properties SHALL have
-no effect.
+no effect. The signed entry SHALL identify the governing exception-policy version and
+the issuing DAP's authority for the specific finding, action, target, and environment.
+The gate SHALL verify that policy permits this class of exception before applying it.
+Missing/invalid required signatures, identity, intent, or custody evidence; non-waivable
+legal or contractual restrictions; and required containment Resolution SHALL NOT be
+overridden. Acceptance does not confer conformance with an unmet requirement. It SHALL
+be recorded against the relevant inventory or evidence object; CBOM references apply to
+cryptographic findings, not indiscriminately to every kind of gate.
 
 **OQGF-P-9.3 (Expiry and Reversion).** An expired or out-of-scope Risk-Acceptance Entry
 SHALL have no effect, and on expiry the accepted finding SHALL revert to blocking exactly as
@@ -1286,16 +1351,9 @@ the risks it is currently carrying does not satisfy OQGF-P-1.
 #### Conformance criteria
 
 <!-- source-sync:start AMD-006:2 -->
-**Baseline (OQGF-B):** Accepted findings remain visible in output, and the verdict
-distinguishes clean from carrying-accepted-risk (OQGF-P-9.1). Every Risk-Acceptance Entry is
-scoped, named to a DAP, expiring, and recorded in Organ 5 (OQGF-P-9.2). Expired or
-out-of-scope entries have no effect and revert to blocking (OQGF-P-9.3). Single-PQC-family
-entry signatures acceptable.
+**Baseline (OQGF-B):** P-9.1–P-9.5 apply: eligibility under declared exception policy; a distinct accepted-risk result; visible findings; scoped, DAP-bound, expiring PQC-signed entries; expiry reversion; separation from tolerance; and a periodically reviewed, reportable register. Single-PQC-family acceptance signatures are acceptable.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus the OQGF-P-9 register demonstrably
-distinct from the OQGF-P-4 tolerance register, with no decision expressible as both
-(OQGF-P-9.4); and a reportable standing inventory of active accepted risks subject to
-periodic review (OQGF-P-9.5).
+**Enhanced (OQGF-E):** All Baseline criteria, assessed under A.7. Register separation and review are already mandatory at Baseline.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus dual-PQC-family signatures on every
 Risk-Acceptance Entry (ML-DSA + SLH-DSA, consistent with OQGF-M-2); second-DAP review of any
@@ -1309,7 +1367,7 @@ acceptance duration after which re-acceptance requires fresh justification.
 An auditor SHALL:
 
 1. Place a genuinely quantum-vulnerable component in production scope with a valid
-   Risk-Acceptance Entry, and confirm the component is still present in the CBOM output, the
+   policy-eligible Risk-Acceptance Entry, with all other prerequisites satisfied, and confirm the component is still present in the CBOM output, the
    human-readable report visibly names it as a carried accepted risk (not a clean pass), and
    the exit status is the promote code (0). Then place the same component with **no** valid
    entry and confirm it blocks. The two runs SHALL be distinguishable in the report
@@ -1323,6 +1381,9 @@ An auditor SHALL:
    (OQGF-P-9.4, reaffirming OQGF-P-2).
 5. Request the standing inventory of active accepted risks and confirm it enumerates every
    current acceptance with its DAP, scope, and expiry (OQGF-P-9.5).
+6. Present a correctly signed acceptance for a non-waivable finding, missing identity,
+   missing intent, or missing custody evidence; confirm denial. Present one accepted
+   finding together with an unaccepted blocker and confirm a blocking exit status.
 <!-- source-sync:end AMD-006:3 -->
 
 ---
@@ -1371,7 +1432,7 @@ requirement.
 function, not a point-in-time exercise, drawing at minimum from: confirmed incidents recorded
 in Organ 5, including autoimmunity and storm events (OQGF-P-5); the threat models maintained
 per trust boundary (the per-crate `THREAT_MODEL.md` obligation); Deterministic-Gate findings
-(OQGF-G-4, OQGF-M-1); supply-chain and dependency changes (OQGF-G-6.2 supply-chain
+(OQGF-G-4, OQGF-M-1); supply-chain and dependency changes (A.6.2 supply-chain
 re-evaluation); and material changes to the system or its operating environment. A Register
 that is refreshed only at assessment time does not satisfy this requirement.
 
@@ -1408,16 +1469,9 @@ not only the risks currently carried but the history of how each was decided.
 #### Conformance criteria
 
 <!-- source-sync:start AMD-008:2 -->
-**Baseline (OQGF-B):** A Risk Register exists and records description, context, likelihood,
-impact, a named DAP owner, and exactly one disposition per risk (OQGF-P-10.1, OQGF-P-10.3); the
-Accept disposition carries OQGF-P-9 accountability and, for gate findings, is realized as an
-OQGF-P-9 entry (OQGF-P-10.4); the Register is recorded in Organ 5. Single-PQC-family acceptance
-signatures acceptable.
+**Baseline (OQGF-B):** P-10.1–P-10.6 apply: the authoritative Risk Register; continuous identification; one current disposition per risk; scoped accountable acceptance; treatment tracking and residual reassessment; periodic review; and retained history. Single-PQC-family acceptance signatures are acceptable.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus continuous identification from the named risk
-sources (OQGF-P-10.2); Avoid/Reduce/Transfer plans tracked to closure with visible open items
-and residual-risk re-assessment (OQGF-P-10.5); a reportable standing inventory of all identified
-risks and dispositions subject to periodic review (OQGF-P-10.6).
+**Enhanced (OQGF-E):** All Baseline criteria, assessed under A.7. Continuous identification, treatment tracking, and reportable review are already required at Baseline.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus dual-PQC-family signatures on every
 Accept disposition (ML-DSA + SLH-DSA, consistent with OQGF-M-2); second-DAP review of any Accept
@@ -1471,8 +1525,9 @@ An auditor SHALL:
 - **Retention Period** — the declared span, tied to the Purpose, for which personal data may be
   held before erasure (OQGF-P-11.4).
 - **Crypto-Shredding (Cryptographic Erasure)** — erasure performed by destroying the quantum-safe
-  key under which personal data is encrypted at rest, rendering the ciphertext irrecoverable while
-  the record itself is preserved in the append-only store (OQGF-P-11.5). The apoptosis analog.
+  keys and recovery paths for the covered encrypted payload, subject to the inventory,
+  residual-copy, and verification conditions of P-11.5. A minimized, lawfully retained
+  audit record remains; a deleted key handle alone does not prove irrecoverability.
 - **Erasure Tombstone** — the signed, append-only record that an erasure occurred: the record
   reference, the classification, the time, and the acting DAP. The audit skeleton that survives
   clearance.
@@ -1514,29 +1569,19 @@ fulfilled, whichever is earlier. An indefinite-retention default SHALL NOT satis
 The Retention Period is subject to any overriding legal-hold or sector-retention obligation, which,
 where it applies, SHALL itself be recorded as the basis for continued retention.
 
-**OQGF-P-11.5 (Erasure by Crypto-Shredding).** Erasure of Personal Data SHALL be performed by
-destroying the quantum-safe key under which it is encrypted at rest, and SHALL NOT be performed by
-deleting the record from the append-only store (Organ 5, OQGF-A). On erasure: the ciphertext and the
-audit skeleton — that a record existed, its timestamp, its classification, and the authority for
-erasure — SHALL be preserved; and a signed Erasure Tombstone SHALL be appended recording the erasure
-event, its time, and the acting DAP (dual-family signature at High-Assurance per OQGF-M-2). The key
-protecting erasable Personal Data SHALL be quantum-safe (CNSA 2.0: ML-KEM key establishment and/or
-AES-256), because erasure by key destruction is durable only if the cipher is not quantum-vulnerable
-(OQGF-G-7). This requirement reconciles the erasure obligation with the OQGF-A append-only and
-never-delete principles: the record is never deleted; its content is made cryptographically
-irrecoverable, and the fact and authority of erasure are themselves recorded.
+**OQGF-P-11.5 (Erasure by Crypto-Shredding).** Personal payloads subject to erasure SHALL be encrypted at rest using AES-256 in an approved authenticated construction with an appropriately scoped data-encryption key. Where asymmetric key establishment is used, an approved PQC KEM SHALL protect that establishment; ML-KEM is not a payload-encryption algorithm. Erasure SHALL destroy the keys and all usable copies, wrappers, recovery material, and threshold-share combinations capable of recovering the covered payload, including in replicas and backups within the declared scope. Residual plaintext and derived personal copies SHALL be erased or separately dispositioned under P-11.4.
+
+The ciphertext and minimized audit skeleton SHALL remain for their applicable lawful retention period without rewriting prior signed events. Personal fields within the skeleton, subject identifiers, low-entropy digests, and linkage metadata SHALL themselves satisfy P-11; hashing alone SHALL NOT be assumed to anonymize them. A signed Erasure Tombstone SHALL record the scope, time, DAP, verification evidence, and any residual or deferred erasure (dual-family at High-Assurance). Erasure SHALL NOT be reported complete while a known usable recovery path remains. The record SHALL distinguish verified destruction within the declared boundary from unverified third-party copies. A tombstone or algorithm name alone does not establish legal erasure compliance. Where retained content would violate an applicable obligation, the system SHALL record the conflict, restrict the affected processing, and resolve retention/design with the competent authority rather than claim both obligations satisfied.
 
 **OQGF-P-11.6 (Subject Rights).** A conforming system SHALL be able to answer, for an authenticated
 data subject: what Personal Data relating to them is held, its declared Purpose, and its Retention
 Period; and SHALL be able to execute erasure (OQGF-P-11.5) on a lawful request. These SHALL be served
 through the Organ 5 regulator query interface (OQGF-A-7), extended to authenticated data subjects,
-within that interface's declared response window. A subject's own personal data SHALL be
-reconstructable for disclosure and erasable on request through the same accountable interface that
-serves a lawful regulatory query.
+within that interface's declared response window. Access SHALL be limited to the authenticated subject's authorized data; this does not expose other subjects' data or the full regulator audit export. The default OQGF response window is 72 hours, subject to a stricter applicable deadline. A recorded legal hold or other applicable restriction SHALL be reported as a reason for non-erasure, not as completed erasure. Data already validly erased need not be reconstructed; the permitted tombstone/status is returned instead.
 
 **OQGF-P-11.7 (Personal Data in the Accountability Record).** Where Organ 5 records a regulated
-decision (OQGF-A-1), any Personal Data in the recorded input SHALL be stored either as a
-privacy-preserving derivative or under the crypto-shredding regime of OQGF-P-11.5, so that the
+decision (OQGF-A-1), any Personal Data in inputs, outputs, explanations, trajectories, identifiers, or metadata SHALL be stored either as a
+demonstrably non-personal derivative or under the crypto-shredding regime of OQGF-P-11.5, so that the
 accountability obligation (OQGF-A) and the erasure obligation (OQGF-P-11.5) do not conflict. This
 converts the "privacy-preserving derivative" hook already present in OQGF-A-1 into a specified
 obligation: the accountability record SHALL NOT become a store of un-erasable Personal Data, and the
@@ -1547,20 +1592,12 @@ re-signed record of erased Personal Data SHALL remain irrecoverable.
 #### Conformance criteria
 
 <!-- source-sync:start AMD-009:2 -->
-**Baseline (OQGF-B):** Personal Data identified and tagged across sensitivity tiers, the tag
-triggering lifecycle obligations even when the tier is Public (OQGF-P-11.1); a declared Purpose and
-Retention Period per datum (OQGF-P-11.3, OQGF-P-11.4); erasure by crypto-shredding under a
-quantum-safe key with the append-only record preserved and a signed tombstone (OQGF-P-11.5);
-personal data in the accountability record stored as a derivative or under crypto-shredding
-(OQGF-P-11.7). Single-PQC-family tombstone signatures acceptable; at-rest encryption quantum-safe
-per CNSA 2.0.
+**Baseline (OQGF-B):** P-11.1–P-11.7 apply wherever Personal Data is processed, including Public data: tagging, minimization, lawful declared purpose, bounded retention, scoped cryptographic erasure, subject access and lawful erasure requests, and protection of personal data throughout the accountability record. Single-PQC-family tombstone signatures are acceptable; at-rest payload encryption uses AES-256 with governed key management.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus minimization into Privileged Contexts
-(OQGF-P-11.2); purpose-limitation enforcement with a fresh DAP decision required on any material
-repurposing (OQGF-P-11.3); subject access answered through the Organ 5 interface (OQGF-P-11.6).
+**Enhanced (OQGF-E):** All Baseline criteria, assessed under A.7. Minimization, purpose enforcement, and subject rights are already mandatory at Baseline.
 
-**High-Assurance (OQGF-H):** All Enhanced criteria, plus subject erasure executed within the
-OQGF-A-7 response window (OQGF-P-11.6); dual-PQC-family signatures on Erasure Tombstones (ML-DSA +
+**High-Assurance (OQGF-H):** All Enhanced criteria; the subject-response window under
+P-11.6 already applies at every tier. Additional duties are dual-PQC-family signatures on Erasure Tombstones (ML-DSA +
 SLH-DSA per OQGF-M-2); DAP-reviewed Purpose declarations; **per-subject key granularity** so that
 erasure is subject-precise rather than purpose-coarse; threshold custody of erasable-data keys
 consistent with OQGF-R-6; and periodic minimization audits of Privileged Contexts.
@@ -1574,12 +1611,8 @@ An auditor SHALL:
 1. Identify a datum relating to an identifiable person whose sensitivity tier is Public, and confirm
    it is tagged Personal and that the tag triggers the lifecycle obligations despite the Public tier
    (OQGF-P-11.1).
-2. Request erasure of a Personal datum and confirm: the quantum-safe key is destroyed; the ciphertext
-   and audit skeleton remain in the append-only store; a signed Erasure Tombstone records the event,
-   its time, and the acting DAP; and the record is **not** deleted (OQGF-P-11.5). Then confirm the
-   at-rest key was quantum-safe (CNSA 2.0) such that the erased content is not recoverable by breaking
-   the cipher (OQGF-P-11.5, OQGF-G-7). **This is the load-bearing test of this amendment** — it proves
-   erasure and the append-only record coexist.
+2. Request erasure of a Personal datum and inspect the complete decryption/recovery-path inventory. Verify destruction of relevant keys, wrappers and reconstructable shares; inspect replica/backup handling and any plaintext residuals. Confirm a minimized audit skeleton and signed tombstone remain, and that incomplete coverage is reported as incomplete rather than passed (P-11.5). Attempt authorized recovery in an isolated test and check the declared result; finite testing does not prove universal irrecoverability or legal compliance.
+
 3. Confirm Personal Data carries a declared Purpose and Retention Period, then attempt to use it for a
    materially different purpose and confirm a fresh DAP decision is required and recorded, not a silent
    reuse (OQGF-P-11.3).
@@ -1640,7 +1673,13 @@ classification per A.0.6, preserved unchanged) and its Capability-Triggered Tier
 the composition of Capability Properties present in the deployed system per OQGF-P-12.2). Public
 or synthetic data SHALL NOT be used to justify a lower governance posture when the system can take
 consequential action. The existing FIPS 199 alignment is not weakened; a second axis is added, and
-the higher resulting obligation governs.
+the higher resulting obligation governs. External-effect authority, credential access,
+or sub-agent creation SHALL individually require at least Enhanced. Other properties and
+their composition SHALL be assessed under a declared, DAP-approved tier policy; no
+fixed High-Assurance trigger is inferred merely from a capability's name. The Data-Triggered
+Tier includes confidentiality, integrity, and availability impact; Public data alone does
+not establish low impact. A capability change SHALL trigger reassessment, but need not
+raise a tier if the existing tier already covers the resulting obligation.
 
 **OQGF-P-12.2 (Capability Envelope Declaration).** A conforming system SHALL maintain a
 **Capability Envelope** — a signed inventory of the Capability Properties present in the deployed
@@ -1680,11 +1719,11 @@ includes network access SHALL enforce **deterministic default-deny egress**: all
 network traffic SHALL be denied unless the destination, protocol, and port are listed in a
 signed egress manifest. The egress manifest SHALL be external to and unmodifiable by the agent.
 Enforcement SHALL be deterministic under OQGF-P-2 (AMD-002): fail-closed, non-suppressible, and
-no tolerance mechanism, exception, or model instruction SHALL open it. This is a Deterministic
+no tolerance mechanism, model instruction, or exception outside the governed P-9 authorization path SHALL open it. This is a Deterministic
 Gate alongside OQGF-G-4 (cryptographic gate) and OQGF-I-10 (data-classification egress gate);
 OQGF-I-10 triggers on what the *data* is, OQGF-P-12.4 triggers on what the *system can reach*.
 A deliberate, bounded decision to add a destination to the egress manifest SHALL be handled as
-Accountable Risk Acceptance under OQGF-P-9 (AMD-006). DNS resolution, tunneling, and encoding
+Accountable Risk Acceptance under OQGF-P-9 (AMD-006), followed by an authorized, signed manifest update before use. The acceptance SHALL NOT bypass the manifest or independently broaden intent or an active containment cap. DNS resolution, tunneling, and encoding
 channels SHALL be governed as egress paths, not exempted as utility services.
 
 **OQGF-P-12.5 (Independent Termination).** Any system whose Capability Envelope includes
@@ -1752,18 +1791,9 @@ observation) to the forensic evidence path.
 #### Conformance criteria
 
 <!-- source-sync:start AMD-011:2 -->
-**Baseline (OQGF-B):** Capability Envelope declared, signed, and assessed for tier determination
-(OQGF-P-12.1, OQGF-P-12.2); prompt-only containment not accepted as sufficient for any
-requirement (OQGF-P-12.7); independent termination present for systems with external-effect
-authority (OQGF-P-12.5); trajectory recorded in Organ 5 at sufficient granularity for
-post-incident reconstruction (OQGF-P-12.8). Single-PQC-family Envelope signatures acceptable.
+**Baseline (OQGF-B):** P-12.1–P-12.8 apply wherever their stated capability condition is present: declared and attested individual/collective envelopes, tier determination, default-deny network control, independent termination for external effects, constrained delegation, rejection of prompt-only enforcement, and independently captured trajectories. Single-PQC-family Envelope signatures are acceptable at Baseline. External-effect authority, credential access, or sub-agent creation floors the Governing Tier at Enhanced; satisfying this Baseline control list does not authorize a Baseline claim for such a system.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus Capability Envelope attested against the
-deployed environment before first operation and periodically thereafter (OQGF-P-12.3);
-deterministic default-deny egress with a signed, model-unmodifiable egress manifest for systems
-with network access (OQGF-P-12.4); sub-agent creation governed as a recorded act with capability
-subset and intent attenuation enforced (OQGF-P-12.6); capability-envelope changes that introduce
-new properties entered into the Risk Register (OQGF-P-10, AMD-008).
+**Enhanced (OQGF-E):** All Baseline criteria at the Governing Tier, plus capability-envelope changes introducing new properties entered into the Risk Register. Environment attestation, network containment, and constrained delegation are already applicable requirements below this tier where their capability conditions hold.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus dual-PQC-family signatures on the
 Capability Envelope and egress manifest (OQGF-R-1); continuous environment attestation at
@@ -1783,7 +1813,7 @@ An auditor SHALL:
    present in the deployed system, is signed, and that the Governing Tier is the higher of the
    Data-Triggered and Capability-Triggered tiers (OQGF-P-12.1, OQGF-P-12.2). Introduce a
    Capability Property (e.g., add network access to a previously offline system) and confirm the
-   Governing Tier escalates accordingly. **This is the load-bearing test of this amendment.**
+   Governing Tier is reassessed and raised when the higher-of rule or an explicit floor requires it. **This is the load-bearing test of this amendment.**
 2. Verify that the deployed environment matches the declared Envelope: confirm a capability
    declared absent is in fact unreachable (not merely prompt-instructed as unavailable), and that
    a capability declared present is governed as declared (OQGF-P-12.3). Introduce a discrepancy
@@ -1861,8 +1891,7 @@ An auditor SHALL:
   condition, not evidence of safety.
 - **Propagation Latency** — the elapsed time, or defensible range, between the triggering
   condition on an edge and materialization of its downstream Risk Node.
-- **Response Budget** — the combined time required to detect a material transition, make the
-  authorized decision, and activate the effective control.
+- **Response Budget** — the combined detection, decision, control-activation, and control-effect latency; issuing a control command alone is not completion of the response.
 - **Time to Irreversibility** — the estimated time until a consequence cannot be reliably
   prevented, recalled, or restored within declared tolerances.
 - **Intervention Margin** — `Time to Irreversibility − Response Budget`. A zero, negative, or
@@ -2023,20 +2052,9 @@ interchangeable.
 #### Conformance criteria
 
 <!-- source-sync:start AMD-012:2 -->
-**Baseline (OQGF-B):** Each material Risk Register entry has an RRPG node; known material
-relationships are represented as evidenced edges; residual risks are independently addressable
-successor nodes; treatments are assessed for induced risk; each path is carried to a valid
-termination condition or an owned Unresolved Risk Frontier; and graph history is retained in
-Organ 5 (OQGF-P-13.1, OQGF-P-13.2, OQGF-P-13.5, OQGF-P-13.6, OQGF-P-13.11). Candidate content
-generated by a model is visibly distinguished from the graph of record (OQGF-P-13.9).
-Single-PQC-family graph-checkpoint signatures acceptable.
+**Baseline (OQGF-B):** P-13.1–P-13.11 apply within their stated materiality and system scopes: authoritative risk nodes and successor lineage; evidenced branches, convergence and feedback; governed traversal/frontiers; induced risk; defensible response timing; reconciliation; deterministic graph authority; capability/intent/trajectory linkage; and retained history. Materiality policy is DAP-approved. Single-PQC-family graph-checkpoint signatures are acceptable.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus event-driven reconciliation from the triggers
-in OQGF-P-13.8; explicit branch, convergence, shared-descendant, and feedback analysis
-(OQGF-P-13.4); temporal estimates for consequential paths with deterministic containment when
-the Intervention Margin is not reliably positive (OQGF-P-13.7); declared and DAP-approved
-materiality policy; and Capability–Intent–Trajectory–Risk reconciliation for systems under
-OQGF-P-12 (OQGF-P-13.10).
+**Enhanced (OQGF-E):** All Baseline criteria, assessed under A.7. Material branch/convergence analysis, timing protection, and event-driven reconciliation are already required at Baseline; they are not optional for a known consequential path.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus continuous or near-real-time
 affected-subgraph reconciliation commensurate with the fastest material path; independent
@@ -2060,7 +2078,7 @@ An auditor SHALL:
 1. Select a Reduce disposition and confirm that its Residual Risk has a stable Risk Node ID, an
    authoritative OQGF-P-10 entry, its own assessment and disposition, a causal edge from the
    predecessor, and continued downstream analysis (OQGF-P-13.2, OQGF-P-13.3). **This is the
-   load-bearing test of this amendment**: it proves residual risk is a governed successor, not
+   load-bearing test of this amendment**: it checks, for the exercised case, that residual risk is a governed successor, not
    an endpoint.
 2. Select a Transfer disposition and confirm the transfer did not automatically close the path;
    verify that remaining operational, third-party, contractual, concentration, and systemic risk
@@ -2185,8 +2203,10 @@ policy. A system that forgets what it already told a recipient and re-evaluates 
 isolation does not satisfy this requirement when the cumulative effect is material.
 
 **OQGF-P-14.7 (Minimum-Loss Task-Sufficient Release).** Where more than one Candidate Release can
-satisfy the authorized task, the system SHALL select a policy-permitted candidate that minimizes
-governed inferential privacy loss subject to declared task-utility requirements. Candidate classes
+satisfy the authorized task, the system SHALL select a policy-permitted candidate with the least governed inferential
+privacy loss among the evaluated task-sufficient candidates, under the declared comparison
+method and uncertainty policy. The candidate search scope and exclusions SHALL be recorded;
+a bounded search SHALL NOT be presented as proof of a global optimum. Candidate classes
 SHOULD include, where applicable: exact release; redaction; generalization;
 tokenization/pseudonymization; differential-privacy mechanism; derived answer; cryptographic or
 attested proof; local computation; encrypted computation; and denial. This requirement does not
@@ -2247,20 +2267,9 @@ it SHALL create or update the OQGF-P-10 Risk Register entry (AMD-008) and link i
 #### Conformance criteria
 
 <!-- source-sync:start AMD-013:2 -->
-**Baseline (OQGF-B):** Protected Propositions maintained for material privacy concerns
-(OQGF-P-14.1); intended recipient and purpose evaluated before material release (OQGF-P-14.2);
-prospective counterfactual assessment within declared scope (OQGF-P-14.3); relevant disclosure
-history preserved (OQGF-P-14.6); deterministic final release authority (OQGF-P-14.8); material
-privacy verdict recorded in Organ 5 (OQGF-P-14.13); uncertainty treated explicitly with
-conservative failure on high-impact propositions (OQGF-P-14.9). Single-PQC-family gate
-signatures acceptable.
+**Baseline (OQGF-B):** P-14.1–P-14.13 apply wherever their materiality conditions hold: protected propositions; recipient-conditioned prospective assessment; recursive/mosaic and cumulative exposure; comparison of task-sufficient release candidates; deterministic release control; conservative uncertainty; multi-principal policy; protected explanations; estimator neutrality; and recorded decisions. Single-PQC-family gate signatures are acceptable.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus many-to-one mosaic representation
-(OQGF-P-14.5); multi-hop recursive propagation (OQGF-P-14.4); candidate-transformation
-comparison with minimum-loss selection (OQGF-P-14.7); calibrated inferability estimates;
-event-driven update after material recipient-capability or disclosure-state change;
-multi-principal handling with declared conflict-resolution (OQGF-P-14.10); adversarial tests for
-cumulative and mosaic leakage.
+**Enhanced (OQGF-E):** All Baseline criteria, plus calibrated inferability estimates, event-driven updates after material recipient-capability or disclosure-state change, and adversarial cumulative/mosaic-leakage tests. Unsupported numerical estimates remain explicitly uncertain under P-14.9.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus robust or high-quantile treatment of
 recipient uncertainty for high-impact propositions; independently reviewed Protected Proposition
@@ -2443,14 +2452,14 @@ Restoration. Restoration SHALL NOT occur because a Signal expired, because no ne
 occurred, because the model requests it, because the model claims the previous action was benign,
 because a learned monitor changes its score, because a process restarts, because a session
 identifier changes, or through Accountable Risk Acceptance used as a substitute for containment
-Resolution. Authority Restoration SHALL be governed by OQGF-P-8 (AMD-005). The restored envelope
+Resolution. Authority Restoration SHALL require DAP authorization and satisfied Resolution criteria under OQGF-P-8 (AMD-005) at every tier where P-15 applies. The restored envelope
 SHALL satisfy C_t ⊏ C_{t+1} ⊑ C_baseline ⊑ C_max unless a separately governed change
 establishes a new Operational Baseline Envelope. The contained system MAY provide evidence
 relevant to Resolution; it SHALL NOT be the authoritative resolver of its own containment.
 
 **OQGF-P-15.12 (Incident Adaptation and Risk Reconciliation).** A confirmed material containment
-event SHALL be reconciled with existing OQGF mechanisms: the incident SHALL seed AMD-003 detector
-refinement; containment Signals SHALL remain P-7 Signals; material risk SHALL enter or update the
+event SHALL be reconciled with existing OQGF mechanisms: the incident SHALL be submitted for AMD-003 seeding eligibility review; only
+DAP-confirmed true positives may seed refinement, and activation retains every P-6 gate; containment Signals SHALL remain P-7 Signals; material risk SHALL enter or update the
 P-10 Risk Register (AMD-008); affected causal paths SHALL update the P-13 RRPG (AMD-012) where
 applicable; the Capability Envelope SHALL be reassessed where the incident revealed undeclared
 actual capability; Intent/Trajectory reconciliation SHALL be performed; and Barrier or
@@ -2495,21 +2504,9 @@ Containment history is append-only; Resolution does not erase the fact that cont
 #### Conformance criteria
 
 <!-- source-sync:start AMD-014:2 -->
-**Baseline (OQGF-B):** Declared Containment Scope (OQGF-P-15.2); ECE bounded by AMD-011
-Capability Envelope (OQGF-P-15.1); signed Containment Caps with autonomous contraction only
-(OQGF-P-15.3); model inability to modify containment policy (OQGF-P-15.5); explicit Resolution
-Path for every containment state (OQGF-P-15.11); no autonomous restoration; Organ 5
-state-transition evidence (OQGF-P-15.14); declared residual channels not completely mediated
-(OQGF-P-15.2). Single-PQC-family cap signatures acceptable.
+**Baseline (OQGF-B):** All P-15 requirements, including P-15.13a, apply within P-15.1 scope: bounded ECE; declared mediation; autonomous contraction only; deterministic caps; trajectory and equivalent-path analysis; post-contraction attestation; transitive confinement; independent freeze/termination; DAP-authorized Resolution; incident/risk linkage; host-harm control; task-exhaustion outcomes; and reconstructable evidence. The capability floor in P-12.1 still applies: an external-effect system must meet at least Enhanced, not claim Baseline from this control list.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus multi-domain contraction with
-effect-equivalent-path reasoning (OQGF-P-15.7); event-driven post-contraction attestation
-(OQGF-P-15.8); trajectory- and composition-aware boundary pressure detection (OQGF-P-15.6);
-transitive sub-agent confinement (OQGF-P-15.9); Risk Register and RRPG reconciliation
-(OQGF-P-15.12); host-harm and induced-risk evaluation (OQGF-P-15.13); containment timing tied
-to P-13 Intervention Margin; adversarial testing of at least one indirect effect path;
-demonstrated inability of the governed model to restore authority after process or session
-restart.
+**Enhanced (OQGF-E):** All applicable Baseline controls, plus adversarial testing of at least one indirect effect path and demonstrated inability of the governed model to restore authority after a process or session restart. Post-contraction attestation, transitive confinement, and host-harm governance are already mandatory controls.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus dual-PQC-family signatures on
 Containment Caps and ECE checkpoints per OQGF-R-1; independent verification of contraction
@@ -2969,7 +2966,7 @@ A confirmed material cognitive-integrity incident SHALL reuse existing OQGF mech
 
 Where applicable:
 
-- the incident SHALL seed AMD-003 detector refinement;
+- the incident SHALL be submitted for AMD-003 seeding eligibility review; DAP confirmation and all P-6 selection/activation gates remain required;
 - defensive communication SHALL use AMD-004 Signals;
 - material risk SHALL create or update an AMD-008 Risk Register entry;
 - downstream causal effects SHALL reconcile into the AMD-012 RRPG;
@@ -3006,37 +3003,11 @@ No second adaptation pipeline, Signal bus, Risk Register, RRPG, containment engi
 <!-- source-sync:start AMD-015:2 -->
 ##### Baseline — OQGF-B
 
-A conforming system in P-16 scope SHALL demonstrate:
-
-- a signed Semantic Authority Envelope;
-- declared Complete Semantic Mediation Scope;
-- conservative treatment of unknown provenance;
-- no semantic self-escalation;
-- separation of informational influence from privileged authority;
-- Authority-Bearing State inventory;
-- deterministic semantic-authority enforcement;
-- no model-controlled SAE mutation;
-- no automatic authority promotion through persistence or representation change;
-- Organ-5 reconstruction evidence.
-
-Single-PQC-family signatures are acceptable where existing Baseline OQGF rules permit them.
+All P-16.1–P-16.17 requirements apply within P-16 scope, including segment provenance, instruction/data separation, material Typed Influence Releases, derived lineage, trajectory monitoring, persistent-memory authority, cross-agent isolation, representation independence, deterministic authorization, scoped risk acceptance, and evidence/risk linkage. Conditional MAY and SHOULD provisions retain their stated strength. Single-PQC-family signatures are acceptable where the applicable Baseline profile permits them.
 
 ##### Enhanced — OQGF-E
 
-All Baseline criteria, plus:
-
-- segment-level semantic provenance;
-- provenance-laundering resistance;
-- Typed Influence Release for material lower-authority data dependencies;
-- derived semantic lineage;
-- trajectory/composition-aware Cognitive Boundary detection;
-- persistent-memory authority preservation across restart;
-- cross-agent cognitive isolation;
-- representation-equivalence testing;
-- Risk Register/RRPG reconciliation;
-- P-7 signaling;
-- integration with AMD-014 where applicable;
-- adversarial indirect-prompt-injection testing.
+All Baseline requirements, plus representation-equivalence testing and adversarial indirect-prompt-injection testing. Provenance, lineage, memory authority, and cross-agent controls are already mandatory at Baseline when applicable.
 
 ##### High-Assurance — OQGF-H
 
@@ -3106,7 +3077,7 @@ An auditor SHALL:
 
 20. **Lineage reconstruction test.** Request Organ-5 records and reconstruct origin → carrier → SAL → model processing → TIR/adoption → deterministic verdict → action/denial → Signal/containment.
 
-**Load-bearing assessment:** tests 3, 5, 7, and 19 collectively establish that lower-authority semantic information may remain useful without silently acquiring privileged control authority.
+**Load-bearing assessment:** tests 3, 5, 7, and 19 check, within their declared cases and assumptions, that lower-authority semantic information may remain useful without silently acquiring privileged control authority.
 <!-- source-sync:end AMD-015:3 -->
 
 ---
@@ -3234,18 +3205,9 @@ graph, signal bus, or containment engine SHALL be created.
 #### Conformance criteria
 
 <!-- source-sync:start AMD-016:2 -->
-**Baseline (OQGF-B):** Threat models versioned, dated, DAP-owned, and scope-declared
-(OQGF-P-17.1); material claims carry provenance (OQGF-P-17.2); machine-generated hypotheses
-distinguishable from verified facts (OQGF-P-17.3); a declared Reconciliation Cadence exists
-(OQGF-P-17.4); Coverage Failures recorded in Organ 5 and entered into the Risk Register
-(OQGF-P-17.5); learned proposals not autonomously authoritative (OQGF-P-17.6); threat-model
-history retained (OQGF-P-17.9). Single-PQC-family signatures on threat-model versions acceptable.
+**Baseline (OQGF-B):** P-17.1–P-17.10 apply: versioned, owned, scoped threat models; claim provenance and epistemic distinction; actual reconciliation at the declared cadence; recorded coverage failures; deterministic authority; attacker conditioning; capability/trajectory linkage where applicable; retained history; and risk/propagation linkage. Single-PQC-family threat-model signatures are acceptable.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus reconciliation against the attested deployed
-system at the declared cadence (OQGF-P-17.4); attacker-conditioned claims (OQGF-P-17.7);
-reconciliation against Capability Envelope and Trajectory Record for AMD-011 systems
-(OQGF-P-17.8); risk and propagation linkage (OQGF-P-17.10); adversarial testing of at least
-one stale claim and one unmodeled path; event-driven reconciliation on material system change.
+**Enhanced (OQGF-E):** All Baseline criteria, plus adversarial tests of at least one stale claim and one unmodeled path, and event-driven reconciliation on material system change. Declaring a cadence without performing reconciliation does not meet Baseline.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus dual-PQC-family signatures on
 threat-model versions and material claim records per OQGF-R-1; independent verification of
@@ -3263,7 +3225,7 @@ An auditor SHALL:
 
 1. Request a threat-model version and confirm it carries a version identifier, timestamp,
    responsible DAP, system scope, and adversary scope (OQGF-P-17.1). **This is the
-   load-bearing test of this amendment**: it proves the threat model is a governed artifact,
+   load-bearing test of this amendment**: it checks, for the exercised case, that the threat model is a governed artifact,
    not an ungoverned document.
 2. Select a material claim and confirm it carries provenance, supporting evidence, and epistemic
    state (OQGF-P-17.2, OQGF-P-17.3). Confirm a machine-generated hypothesis is visually and
@@ -3336,7 +3298,7 @@ replacement; the AIBOM continues to serve its existing inventory function.
 
 **OQGF-P-18.2 (Dataset Provenance).** Each material training dataset referenced in the Training
 Provenance Record SHALL carry Dataset Provenance: source and collection method; license and
-terms; cryptographic hash (SHA-256 or SHA-3); size and date range; preprocessing applied; known
+terms; cryptographic digest under the applicable A.0.9 profile (SHA-384 or SHA-512 at High-Assurance); size and date range; preprocessing applied; known
 biases or limitations; contamination assessment (benchmark leakage, PII, copyrighted material,
 adversarial content); and epistemic classification (curated, crawled, synthetic, augmented,
 unknown). Unknown provenance SHALL be recorded as unknown, not silently omitted. A dataset whose
@@ -3348,8 +3310,10 @@ instruction tuning, safety training, or any technique that shapes the model's be
 properties — SHALL be recorded as a governed lifecycle event. The Alignment Record SHALL
 include: the technique and its parameters; the reward model or preference dataset (with its own
 provenance); safety benchmarks evaluated before and after alignment; the responsible DAP; and
-the version. A model whose alignment process is undocumented — whose behavioral origin is an
-unauditable black box — does not satisfy this requirement.
+the version. Where no alignment process was performed or the model class has no such process, the
+record SHALL state that fact with justification. Unknown or withheld alignment history
+SHALL be recorded as an evidence gap, not as a justified absence. An applicable but
+undocumented alignment process does not satisfy this requirement.
 
 **OQGF-P-18.4 (Safety-Capability Tradeoff).** Where domain-specific fine-tuning or continued
 pretraining materially changes the model's safety alignment — measured by established safety
@@ -3400,9 +3364,10 @@ SHALL be recorded and governed.
 **OQGF-P-18.5 (Weight Integrity Attestation).** The model weights loaded into inference SHALL be
 cryptographically verified against the signed artifact produced after governance. Verification
 SHALL occur at model load time, not only at the original signing event. The signature SHALL be
-PQC (ML-DSA-87; dual-family ML-DSA + SLH-DSA at High-Assurance per OQGF-M-2). A model whose
-weights are signed once and served for months without re-verification does not satisfy this
-requirement — the served weights must be the governed weights, verified at the point of serving.
+PQC (ML-DSA-87; dual-family ML-DSA + SLH-DSA at High-Assurance per OQGF-M-2). Verification is required at every load and through deployment attestation under P-18.8,
+including material artifact or serving-state changes. High-Assurance adds the continuous
+or near-real-time serving check in AMD.2. These are distinct cadences, not a requirement
+to hash all weights for every token at every tier.
 Discovery that served weights do not match the signed artifact SHALL constitute a weight-integrity
 failure, triggering incident response under A.6.1.
 
@@ -3450,18 +3415,9 @@ re-deployed without a new governance lifecycle — retirement is not a pause.
 #### Conformance criteria
 
 <!-- source-sync:start AMD-017:2 -->
-**Baseline (OQGF-B):** Training Provenance Record extending the AIBOM (OQGF-P-18.1); per-dataset
-provenance for material datasets (OQGF-P-18.2); alignment process documented (OQGF-P-18.3);
-weight integrity verified at model load (OQGF-P-18.5); fine-tuning recorded as a governed event
-(OQGF-P-18.6); model versioning and lineage (OQGF-P-18.7); base-model license compliance
-documented (OQGF-P-18.9); retirement process declared (OQGF-P-18.10). Single-PQC-family weight
-signatures acceptable.
+**Baseline (OQGF-B):** All P-18 requirements, including P-18.4a–P-18.4c, apply within their stated model/lifecycle scope: training and dataset provenance; alignment records; safety-impact and reward/objective/optimization-pressure evaluation; weight verification; governed derivatives; lineage; deployment attestation; license compliance; and retirement. Record genuinely inapplicable processes with justification; unknown provenance is not inapplicability. Single-PQC-family weight signatures must satisfy P-18.5.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus safety-capability tradeoff measured and
-risk-registered for every material fine-tuning event (OQGF-P-18.4); deployment attestation
-before service and at a declared interval (OQGF-P-18.8); contamination assessment for material
-training datasets; reward-model provenance in alignment records; adversarial testing of weight-
-integrity verification (substitute weights and confirm detection).
+**Enhanced (OQGF-E):** All Baseline criteria, plus adversarial testing of weight-integrity verification. Safety-impact evaluation, material-dataset contamination assessment, applicable alignment/reward provenance, and deployment attestation are already mandatory at Baseline.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus dual-PQC-family weight signatures
 (ML-DSA + SLH-DSA per OQGF-M-2); continuous or near-real-time weight-integrity verification
@@ -3478,7 +3434,7 @@ An auditor SHALL:
 
 1. Request a model's Training Provenance Record and confirm it extends the AIBOM with lifecycle
    provenance: datasets, configuration, infrastructure, DAP, and date (OQGF-P-18.1). **This is
-   the load-bearing test of this amendment**: it proves the model's origin is governed, not
+   the load-bearing test of this amendment**: it checks, for the exercised case, that the model's origin is governed, not
    just inventoried.
 2. Select a material training dataset and confirm it carries per-dataset provenance: source,
    license, hash, preprocessing, and epistemic classification (OQGF-P-18.2). Confirm unknown
@@ -3502,6 +3458,9 @@ An auditor SHALL:
    recorded (OQGF-P-18.9).
 10. Retire a model version and confirm the retirement is recorded in Organ 5 and the model
     cannot be re-deployed without a new governance lifecycle (OQGF-P-18.10).
+11. Inspect P-18.4a–P-18.4c evidence for reward manipulation, objective/behavior
+    mismatch, and sustained optimization pressure; confirm failures remain visible
+    in the Risk Register and trigger governed treatment rather than a clean result.
 <!-- source-sync:end AMD-017:3 -->
 
 ---
@@ -3512,20 +3471,21 @@ An auditor SHALL:
 The organization SHALL maintain a quantum-and-AI-aware incident response plan that defines triggers (HNDL detection, attestation failure, statistical reconciliation failure, audit-chain break), roles, timelines, and cross-organ choreography. Tabletop exercises SHALL be conducted at least annually.
 
 ### A.6.2 Supply chain
-SBOM, CBOM, and AIBOM SHALL be ingested for every third-party component. Vendors SHALL provide attestations of FIPS 140-3 validation status, PQC roadmap, and AI training data provenance. The supply-chain trust score (Organ 3) SHALL be re-evaluated upon every dependency update.
+SBOM and CBOM information SHALL be ingested for every applicable third-party software/cryptographic component; AIBOM information SHALL be ingested for AI/model/data components. A genuinely absent artifact class requires a scope-based justification; a supplier's missing required evidence is an evidence gap, not non-applicability. Vendors SHALL provide attestations of FIPS 140-3 validation status, PQC roadmap, and AI training data provenance. The supply-chain trust score (Organ 3) SHALL be re-evaluated upon every dependency update.
 
 ### A.6.3 Human oversight
 Every High-Assurance AI/ML decision SHALL have a documented human-review pathway. The DAP SHALL be empowered to halt deployment.
 
 ### A.6.4 Third-party assessor accreditation
-Third-party assessors performing OQGF conformance assessments SHALL hold credentials acceptable under the relevant federal or sector regime (e.g., FedRAMP 3PAO, CMMC C3PAO, ISO/IEC 17021-1 accreditation for ISO 42001) and SHALL complete OQGF-specific training maintained by the OQGF consortium.
+Third-party assessors performing OQGF conformance assessments SHALL hold credentials acceptable under the relevant federal or sector regime (e.g., FedRAMP 3PAO, CMMC C3PAO, ISO/IEC 17021-1 accreditation for ISO 42001) and SHALL document their OQGF-specific competence, assessment scope, conflicts of interest, and assessment method. This repository does not establish an OQGF consortium, accreditation body, training program, or recognition by another regime. An assessor SHALL NOT claim such accreditation without evidence of the actual program and credential.
 
 ---
 
 ## A.7 Conformance assessment methodology
 - **Self-assessment** is permitted at Baseline. Results SHALL be signed by a corporate officer.
 - **Third-party attestation** is required at Enhanced and High-Assurance, conducted at least every 24 months.
-- **Continuous monitoring** is required at High-Assurance: machine-readable telemetry from each organ SHALL be exported to the assessor's read-only portal with no fewer than weekly attestation packages.
+- **Continuous assessor monitoring** is required at High-Assurance: machine-readable telemetry from each organ SHALL be made available through an access-controlled read-only interface with at least weekly attestation packages. This does not replace continuous operational monitoring already required at lower tiers by specific clauses.
+- **Verdict discipline:** report each requirement as `satisfied`, `partial`, `absent`, or `n.a. with justification`, with evidence and the assessed revision. An accepted risk is a separate disposition, not a replacement for that status. A clean tier claim requires every applicable obligation satisfied. Earlier verdicts affected by a corrected scope, profile, or test SHALL be reassessed; this documentation change grants no automatic pass.
 
 ---
 
@@ -3535,10 +3495,10 @@ Third-party assessors performing OQGF conformance assessments SHALL hold credent
 |---|---|
 | Chemical | Organ 4 entropy: process-control isolation; Organ 5 retention 10 years. |
 | Commercial Facilities | Baseline acceptable; Organ 2 sentinels at IoT boundaries. |
-| Communications | High-Assurance default; CNSA 2.0 mandatory on backbone; P25 crossover guidance. |
+| Communications | High-Assurance default; apply CNSA 2.0 where required by the actual authority and deployment scope, with A.0.9 compatibility review; P25 integration requires implementation evidence. |
 | Critical Manufacturing | Organ 1 firmware-signing via LMS/XMSS; Organ 3 attestation for OT devices. |
 | Dams | Organ 2 sentinels on SCADA; Organ 5 retention aligned with NRC/FERC. |
-| Defense Industrial Base | DoW CIO memo controls dominant; Organ 4 QRNG prohibition strictly enforced. |
+| Defense Industrial Base | Apply actual DoW/CNSS scope, approval processes, and restrictions; use A.0.9 for NSS profile compatibility. A private risk acceptance does not grant an external exception. |
 | Emergency Services | Organ 2 sentinels at LMR/P25 boundaries; low-latency response. |
 | Energy | Organ 3 attestation for inverters and grid edge; Organ 5 cross-ISO replication. |
 | Financial Services | Organ 5 dual-family signatures mandatory; cross-jurisdictional replication aligned with FFIEC. |
@@ -3546,17 +3506,19 @@ Third-party assessors performing OQGF conformance assessments SHALL hold credent
 | Government Facilities | FedRAMP-aligned; FIPS 140-3 absolute. |
 | Healthcare and Public Health | Organ 5 explanation artifacts mandatory; HIPAA-aligned retention. |
 | Information Technology | Full five-organ; reference implementer status preferred. |
-| Nuclear Reactors, Materials, Waste | High-Assurance default; Organ 5 retention 50 years; Organ 4 triple-family. |
+| Nuclear Reactors, Materials, Waste | High-Assurance default; 50-year evidence-retention target subject to the lawful retention basis and P-11; R-1 dual-family evidence, with any additional approved signature family explicitly specified rather than counting HQC as a signature. |
 | Transportation Systems | Organ 3 attestation for vehicle-edge AI; FAA NAS overlay separately. |
 | Water and Wastewater | Baseline acceptable; Organ 2 sentinels on PLC networks. |
 
-Sector SRMAs MAY publish more restrictive overlays.
+These are proposed OQGF sector adjustments, not assertions that the named regulator mandates each listed retention period or control. Sector SRMAs MAY publish more restrictive overlays. “Baseline acceptable” remains subject to the impact/capability higher-of rule; no sector label lowers a required tier. A legal hold or retention rule must identify its actual authority and scope.
 
 ---
 
 ## A.9 Appendices
 
-### A.9.1 Sample CBOM schema (CycloneDX 1.6 extract)
+### A.9.1 Sample CBOM document (CycloneDX 1.6)
+
+This small schema example is not a complete production inventory or a FIPS validation claim.
 ```json
 {
   "bomFormat": "CycloneDX",
@@ -3573,15 +3535,17 @@ Sector SRMAs MAY publish more restrictive overlays.
         "nistQuantumSecurityLevel": 5,
         "executionEnvironment": "software-encrypted-ram",
         "implementationPlatform": "x86_64",
-        "certificationLevel": "FIPS140-3-L1",
-        "mode": "encapsulation"
+        "certificationLevel": ["none"],
+        "cryptoFunctions": ["encapsulate", "decapsulate"]
       }
     }
   }]
 }
 ```
 
-### A.9.2 Sample AIBOM schema (CycloneDX ML-BOM extract)
+### A.9.2 Sample AIBOM document (CycloneDX 1.6)
+
+Example values are illustrative. The dataset is represented locally so its reference resolves; the example does not establish model provenance, fairness, or deployment conformance.
 ```json
 {
   "bomFormat": "CycloneDX",
@@ -3594,24 +3558,28 @@ Sector SRMAs MAY publish more restrictive overlays.
       "modelParameters": {
         "task": "binary-classification",
         "architectureFamily": "transformer",
-        "modelArchitecture": "distilbert-base"
+        "modelArchitecture": "distilbert-base",
+        "datasets": [{ "ref": "dataset:odin-hndl-2026-q1" }]
       },
-      "datasets": [{ "ref": "dataset:odin-hndl-2026-q1" }],
       "considerations": {
-        "ethicalConsiderations": ["bias-tested-against-sectors"],
-        "fairnessAssessments": [{"groupAtRisk":"sector-energy","balancedAccuracyDelta":0.018}]
+        "technicalLimitations": ["Illustrative example; no fairness result asserted"],
+        "fairnessAssessments": [{"groupAtRisk":"sector-energy","harms":"Requires evaluation before use"}]
       }
     },
     "properties": [
-      {"name":"odin:dap","value":"jrose@odinsllc.io"},
+      {"name":"odin:dap","value":"example-dap-001"},
       {"name":"odin:retentionYears","value":"7"}
     ]
+  }, {
+    "type": "data",
+    "name": "example-hndl-dataset",
+    "bom-ref": "dataset:odin-hndl-2026-q1"
   }]
 }
 ```
 
 ### A.9.3 Assessment checklist (extract, per organ)
-Each organ ships with a YAML checklist whose items map 1:1 to A.1–A.5 normative requirements; pass/fail/n.a. with evidence pointer.
+A conformance checklist SHALL cover A.0, the applicable A.1–A.5 organ requirements, A.P, A.6–A.8, and every applicable tier increment, using A.7's verdicts and evidence pointers. This repository supplies assessment procedures in Markdown; no separate YAML checklist or executed assessor toolkit is delivered here.
 
 ### A.9.4 Change log
 v1.0 — Initial public draft, 20 May 2026.
@@ -3628,30 +3596,52 @@ observer, not merely the observation) as a general Organ 5 property. The OQGF-A 
 text is extended, not replaced. Agent-specific evidence-capture independence is additionally
 specified in OQGF-P-12.8 (AMD-011.1).
 
-**8 October 2026 — Editorial source synchronization.** Incorporated the repository's eighteen amendment documents at their current internal revisions and the evidence-capture patch. Updated organ requirements, applicable tiers and assessments, shared physiology, navigation, and affected architecture notes. Preserved amendment identities, source status, and original requirement identifiers. Known unresolved readings remain in A.9.5. This entry does not ratify a new policy choice or create a new framework version.
+**8 October 2026 — Editorial source synchronization.** Incorporated the repository's eighteen amendment documents at their current internal revisions and the evidence-capture patch. Updated organ requirements, applicable tiers and assessments, shared physiology, navigation, and affected architecture notes. Preserved amendment identities, source status, and original requirement identifiers. At that integration step, unresolved readings were listed in A.9.5. The subsequent consistency revision below resolves their wording. This historical entry did not ratify a policy choice or create a framework version.
 
 ---
 
+**8 October 2026 — Consistency revision after integration.** Corrected the 24 issue groups in A.9.5; synchronized all amendment sources and integrated blocks, tier criteria, assessments, patch, and architecture narrative. Preserved the 21-file layout and requirement identifiers. Added common interpretation/signature/retention rules and dated primary-source notes. This is public-draft maintenance under the owner's instruction to reconcile contradictions, not a new AMD number or an implementation certification.
+
 <a id="synchronization-review"></a>
-### A.9.5 Known source readings requiring reconciliation
+### A.9.5 Consistency resolutions — 8 October 2026
 
-The integration applies explicit additions and replacements. The following pre-existing issues remain visible because none is resolved merely by copying an amendment into the base document. This is a bounded synchronization review, not a claim that the entire corpus has no other defects. No affected conformance result is established by this update.
+**Scope:** reviewed the 21 Markdown files at source commit `83f16894c0350d4c40624fc4b4c0fbf457898817`: the five organs, all 18 amendment files, shared physiology, patch, tier summaries, assessments, mappings, and implementation narrative. The following identified contradictions and unsupported equivalences are corrected in the current text. Earlier readings remain recoverable in Git history. This record is an authoring review with automated document checks, not independent certification, a proof of universal consistency, or validation of external implementations.
 
-| Issue | Source readings retained | Disposition in this synchronization |
+| ID | Conflict or defect | Current resolution and effect |
 |---|---|---|
-| Audit-signature tiers | A-3 requires two post-quantum cryptography (PQC) signature families without a tier qualifier; A.5.4 permits classical or single-PQC Baseline signatures; A.4.4 permits one PQC family at Baseline. | Open. Align A-3, both tier tables, and assessment before issuing an unqualified verdict for the disputed profile. |
-| Entropy at Baseline | R-4 requires two physically independent mechanisms; AMD-018's replacement Baseline table retains one source plus a deterministic random bit generator (DRBG). | Open. AMD-018 explicitly resolves custody and does not replace R-4. |
-| HQC algorithm role | R-1 and the original C.3.4 signer sketch place Hamming Quasi-Cyclic (HQC) in a signature slot. HQC is a key-encapsulation mechanism, not a digital signature. | Technical correction remains pending; do not implement the historical HQC signing placeholder. Preserve the required ML-DSA/SLH-DSA distinction. |
-| Trainability applicability | A-11 has no tier qualifier; AMD-010's table first introduces trainability profiles at Enhanced while A-9 still needs a supported Null cause at Baseline. | Open. No classification is inferred from a missing profile. |
-| Canary invalidation scope | A-12 uses the declared job/session/batch scope; AMD-010 design assumption 5 describes the entire session. | Open. Record the chosen scope interpretation explicitly pending reconciliation. |
-| Gate acceptance boundary | G-4/P-2 and I-10 use absolute fail-closed wording; AMD-006 P-9 defines accountable promotion with a visible accepted-risk finding. | Open across the original sources. Keep risk acceptance and heuristic tolerance distinct; this integration does not invent a general gate override. |
+| CR-01 | Unqualified SHALL requirements first appeared in higher-tier summaries across organs and AMDs. | Unqualified duties remain mandatory at all applicable tiers; summaries now say so. Explicit tier increments remain explicit. This can expose additional work for deployments that followed only the former shorter Baseline summaries. |
+| CR-02 | Required tier, achieved tier, and “Effective/Governing” names were conflated. | A.0.6/P-12.1 distinguish required Governing Tier from achieved conformance; shared physiology counts. External effects, credential access, or sub-agent creation floor the required tier at Enhanced. |
+| CR-03 | A-3 required dual signatures while Baseline allowed classical or one PQC family; fallback could imply downgrade. | Baseline audit envelopes require at least one PQC family; Enhanced/High require two. Classical-only Baseline is removed. Timestamp and source-object roles are explicit. R-3 makes a permitted migration hybrid optional, with required PQC retained; it no longer mandates a classical fallback. |
+| CR-04 | HQC was assigned a signature slot; “triple family” lacked an approved third signature family. | HQC is confined to a possible KEM role. High civilian evidence uses ML-DSA + SLH-DSA. An additional family is optional and must actually be an approved signature family. |
+| CR-05 | OQGF dual-family signing was presented as automatically CNSA/NSS-compatible. | A.0.3/A.0.9 separate OQGF civilian diversity from external approval. No prohibited algorithm may be used; no unqualified tier claim is made for an incompatible profile. An authorized NSS-specific profile remains a deployment prerequisite, not an approval created here. |
+| CR-06 | R-4 required two independent entropy mechanisms but the tier table allowed one plus a DRBG. | Two independent mechanisms remain required at every tier. A DRBG/interface does not count as another physical source without evidence. The potential hardware and validation cost is explicit. |
+| CR-07 | DoW restrictions were weakened to a “sole source” prohibition; QKD hooks implied permission. | Applicable prohibitions and intake/deployment/exception authority govern; a placeholder is disabled and authorizes no testing or use. |
+| CR-08 | FIPS level/build flags/admin quorum were treated as proof of non-extractable threshold custody. | Verify actual module/services, dual-authorized use, separated shares, protected reconstruction and recovery. Shamir backup custody is distinguished from runtime threshold signing. |
+| CR-09 | Fail-closed wording prohibited what P-9 accepted-risk promotion permitted. | P-2/G-4/I-10/P-12.4/P-9 agree: only eligible, authorized policy exceptions may proceed; detection remains visible. Missing identity, signatures, intent, custody evidence, legal permission, or Resolution cannot be manufactured by acceptance. |
+| CR-10 | P-9 used MAY and SHALL for exit 0 and did not address mixed blockers consistently. | The CLI returns 0 only for Clean or fully authorized AcceptedRisk with no remaining blocker. Accepted risk is not a satisfied-control or clean-conformance result. |
+| CR-11 | M-8 promised public-root verification while the sketch required secret per-hop HMAC verification. | Use a public-verifiable signed delegation chain with authenticated issuer/recipient/parent bindings and deterministic scope checks. Signatures alone do not prove semantic attenuation. |
+| CR-12 | Baseline autonomous detector activation conflicted with “approving DAP”; rollback could revive unsafe versions. | Baseline may use a prior DAP-approved activation policy; higher tiers approve each activation. Rollback preserves history and must satisfy current screening/authorization. |
+| CR-13 | “Baseline” meant both an assurance tier and an operational posture; Resolution conflicted with containment restoration. | P-8 distinguishes the terms. P-15 requires DAP-authorized restoration whenever containment applies. Stand-down does not silently roll back detectors. |
+| CR-14 | At-least-once delivery implied impossible delivery through permanent partitions or after expiry. | Retry while valid, authenticate/order/deduplicate, and record delivery gaps. No expired Signal is revived to claim delivery. Independent-source cap commutativity does not remove per-source ordering. |
+| CR-15 | “Never delete” implied unlimited personal-data retention; ML-KEM was called an at-rest cipher; key-handle deletion was called complete erasure. | Bounded audit retention, separately governed personal payloads/metadata, AES payload encryption, scoped key/recovery-path destruction, and honest residual/hold reporting. No automatic legal-erasure claim. |
+| CR-16 | A-11 trainability was missing from Baseline; unknown Null causes and inconclusive tests could produce false classifications. | A-11 applies at all applicable tiers. Unresolved cause remains Null plus an Evidence Gap, blocking A-10 action until required classification/acknowledgment evidence exists. |
+| CR-17 | Canary assumptions invalidated a whole session while A-12 allowed job/session/batch scope. | Predeclare scope membership and test tolerances. Failure invalidates that scope without post-failure narrowing; wider impact expands it. Append invalidations, check latest validity, and distinguish late detection from prevention. |
+| CR-18 | Storage signatures and sampled canaries were equated with truthful, complete capture. | Patch/A-1/P-12.8 separate capture authority from the governed system. Evidence Gaps disclose failure; they are not successful fulfillment. R-5 adds explicit replication/checkpoint integrity semantics. |
+| CR-19 | Mosca's formula mixed an absolute year with durations and implied key rotation repaired HNDL exposure. | G-7 uses dated X/Y/Z quantities, a start/completion deadline, and retained residual exposure; the default 2030 planning assumption is given an explicit date, not asserted as a prediction. |
+| CR-20 | Mathematical/type sketches claimed more than their premises: unconditional contraction safety, global privacy optimum, enum-enforced truth, and universal test proofs. | Bound claims to declared assumptions and evaluated candidates/cases. Controller-induced harm remains governed; actual validators and consumers require evidence. |
+| CR-21 | Model lifecycle tier summaries omitted 017.1 duties; load-time and continuous verification were conflated. | P-18.4a–c are explicit at applicable tiers and in assessment. Load/event/deployment checks are distinguished from the High-Assurance serving cadence. A genuinely absent alignment process differs from unknown history. |
+| CR-22 | Quantum attestation implied every hardware root was natively PQC; statistical match implied hardware truth. | Retain native evidence/root limitations and validate the declared PQC binding path. Statistical tests require appropriate assumptions and may be inconclusive. |
+| CR-23 | Supply-chain reference G-6.2 did not exist; shipped YAML, consortium, product, license and performance claims lacked artifacts here. | Reference A.6.2; scope inventory types; label proposed architecture/tooling, institutions, distribution and budgets honestly. Correct the illustrative CycloneDX documents. |
+| CR-24 | Historical deadlines and draft/official status were presented as one current universal deadline. | Dated official-source notes distinguish CMVP status, NSS procurement scope, updated EU milestones, public drafts, and OQGF's own conformance choices. Sector examples do not assert external mandates. |
 
-Source normative requirements and source tier criteria are both reproduced. An omitted item in a tier summary is not silently treated here as a waiver of an unqualified requirement. Resolve a disputed applicability reading explicitly. Source assessment claims describe intended checks; a sampled test, a signature, an enum, or an analogy does not establish a universal guarantee about implementation behavior.
+**Assessment consequence:** affected prior findings must be re-evaluated against this revision. Resolving wording does not make unavailable hardware, independent capture, PQC time-stamping, third-party approval, or an NSS-compatible profile available. These are explicit implementation/authority prerequisites, not hidden textual overrides.
+
+**Verification:** all 73 marked amendment blocks are compared with the edited source text; the AMD-018 replacements and capture-patch additions are checked separately. Document links, requirement identifiers, Markdown fences, illustrative JSON schemas, and stale conflicting phrases are checked. No Rust sketches, deployed controls, third-party implementations, or regulatory conformance assessments were executed.
 
 <a id="integration-map"></a>
 ### A.9.6 Amendment integration map
 
-The source baseline for this synchronization is repository commit `f308b37342b3510a168b5fcef5d2e590bbd185b9`. The amendment files receive navigation notes only; their pre-existing text is preserved. These source references identify the exact inputs before the navigation update and avoid circular file fingerprints.
+The initial source integration used commit `f308b37342b3510a168b5fcef5d2e590bbd185b9`; the consistency revision starts from published commit `83f16894c0350d4c40624fc4b4c0fbf457898817`. Current amendment files and integrated blocks include the dated corrections in A.9.5. Internal identities such as 011.1, 012.1, 014.1, 017.1 and AMD-006 v2 remain historical revision identities; the 8 October maintenance date identifies the current synchronized text. Prior text is available through Git history.
 
 | Source revision | Integrated destination and scope |
 |---|---|
@@ -3678,27 +3668,47 @@ The source baseline for this synchronization is repository commit `f308b37342b35
 
 ---
 
+### A.9.7 Primary-source checks for this revision
+
+Checked 8 October 2026. These sources support the listed corrections; this is not a fresh validation of every historical research citation or of any product configuration. Apply the source's exact scope and recorded edition at assessment time.
+
+| Source | Supported correction |
+|---|---|
+| [NIST selected PQC algorithms](https://csrc.nist.gov/projects/post-quantum-cryptography/post-quantum-cryptography-standardization/selected-algorithms) | HQC is a KEM, not a signature family. |
+| [NIST CMVP FAQ, CL-4/CL-8 and module-use guidance](https://csrc.nist.gov/Projects/cryptographic-module-validation-program/FAQs) | FIPS 140-2 active-list transition after 21 September 2026; historical differs from revoked; exact module/service/configuration evidence matters. |
+| [NIST SP 800-90B](https://csrc.nist.gov/pubs/sp/800/90/b/final) and [SP 800-90C final](https://csrc.nist.gov/pubs/sp/800/90/c/final) | Distinguish entropy sources from DRBG mechanisms and their RBG construction. OQGF's two-source floor is its own requirement. |
+| [DoW CIO memorandum, 18 November 2025, attachment §2](https://dowcio.war.gov/Portals/0/Documents/Library/PreparingForMigrationPQC.pdf) | Security-use restrictions are not merely sole-source restrictions; applicable intake, deployment, and exception authority are separate from a DAP acceptance. |
+| [NSA PQC resources and linked CNSA FAQ](https://www.nsa.gov/Cybersecurity/Post-Quantum-Cybersecurity-Resources/) and [CNSA FAQ](https://media.defense.gov/2022/Sep/07/2003071836/-1/-1/0/CSI_CNSA_2.0_FAQ_.PDF) | SLH-DSA is outside CNSA 2.0; civilian OQGF diversity is not automatic NSS approval. |
+| [NSA PQC announcement](https://www.nsa.gov/Press-Room/Press-Releases-Statements/Press-Release-View/Article/4615285/nsa-announces-post-quantum-cryptography-measures-to-safeguard-national-security/) | The 2027 new-commercial-NSS support milestone has a specific NSS scope. |
+| [European Commission AI Act timeline](https://ai-act-service-desk.ec.europa.eu/en/ai-act/timeline/timeline-implementation-eu-ai-act) | Updated Annex III high-risk milestone: 2 December 2027; Annex I embedded high-risk milestone: 2 August 2028. Other obligations have different dates. |
+| [NIST SP 800-88 Rev. 2](https://csrc.nist.gov/pubs/sp/800/88/r2/final) | Cryptographic-erasure assurance depends on keys, copies, implementation, and sanitization scope; the framework does not infer legal compliance from a tombstone. |
+| [CycloneDX 1.6 schema](https://github.com/CycloneDX/specification/blob/1.6/schema/bom-1.6.schema.json) | Illustrative CBOM/AIBOM field types and placement; schema validity does not establish complete governance evidence. |
+| [McClean et al., 2018](https://arxiv.org/abs/1803.11173) and [Cerezo et al., 2021](https://arxiv.org/abs/2001.00550) | Barren-plateau behavior is conditional on the analyzed regime; it is not a theorem that every large model or every observable loses its signal. |
+| [NIST IR 8547 publication record](https://csrc.nist.gov/pubs/ir/8547/ipd) | The cited edition is an initial public draft, not a final universal deadline. |
+
+---
+
 # PART B — THOUGHT-LEADERSHIP WHITEPAPER
 
 ## B.1 Executive summary
 
-The world is bolting AI governance to quantum-safe cryptography after the fact, and the seams will fail. Three deadlines make this concrete: **CNSA 2.0 procurement gate on 1 January 2027**; **FIPS 140-2 sunset on 21 September 2026**; and **EU AI Act high-risk obligations on 2 August 2026**. Each deadline lands inside the next eighteen months; none of them speak to each other; and the agencies and vendors trying to comply are duplicating effort, missing overlaps, and creating new attack surface at the joints.
+AI governance and cryptographic migration share inventories, identity, evidence, and lifecycle risks. They benefit from coordinated controls, but their legal scopes and schedules differ.
 
-Odin's LLC proposes a different organizing principle. The human immune system already solves, in biology, the governance problems we are struggling to solve in software: identity verification at every cell boundary, layered redundancy, graded response to novel threats, durable memory across decades, and accountability rooted in the organism rather than the pathogen. We have re-expressed that biology as a five-organ governance framework — **OQGF-1.0** — covering Genetic (compliance as code), Inflammation (assumed breach and HNDL sentinels), MHC (zero-trust attestation), Redundant Defense (no single point of cryptographic or jurisdictional failure), and Memory (forensic accountability across cryptographic generations). The framework is fully mapped to NIST AI RMF, NIST SP 800-53 Rev. 5, ISO/IEC 42001, CNSA 2.0, and the November 2025 DoW CIO PQC directive.
+As checked on 8 October 2026, NIST's CMVP FAQ places FIPS 140-2 validations on the historical list after 21 September 2026; historical is not revoked. NSA describes a 2027 quantum-resistant support requirement for new commercial National Security Systems. The European Commission's updated AI Act timeline lists 2 December 2027 for Annex III high-risk obligations and 2 August 2028 for high-risk AI embedded in Annex I products. These are scoped milestones, not one universal deadline. Primary references and access dates are in A.9.7; an implementation must identify its actual obligations.
 
-The call to action is immediate. Organizations that begin Genetic-layer work (CBOM/AIBOM, cryptographic agility, FIPS 140-3 migration) by Q3 2026 will clear the September 2026 and January 2027 gates. Organizations that wait will not.
+Odins LLC proposes the five-organ Odins Quantum Governance Framework as a way to coordinate these concerns. Part A contains the public-draft requirements; mappings indicate relationships, not regulator endorsement or proof of compliance. Starting an inventory does not by itself satisfy module validation, deployment authorization, or AI-governance obligations.
 
 ## B.2 The convergence: why quantum and AI governance must be solved together
 
-Federal AI policy assumes the cryptography underneath it is sound. CNSA 2.0 and NIST PQC standards assume the workloads above them are unsurprising. They are both wrong. AI training pipelines now consume more network ciphertext than any other federal workload class; model weights are the most valuable static intellectual property most organizations possess; and quantum cloud providers are routing real circuits over classical TLS today. **The harvest-now-decrypt-later adversary does not care whether a packet is from a database backup or a foundation-model training run; they care whether it is encrypted with RSA-2048.** And the AI-risk adversary does not care whether your model is fair if its weights have been silently substituted by a supply-chain compromise the AI framework was never designed to detect.
+AI workloads depend on cryptography, while cryptographic inventories must account for model, data, and cloud lifecycles. Model weights and training data can be valuable assets; their confidentiality and integrity need explicit protection. This document does not claim a measured ranking of federal traffic volumes, asset values, or every provider's current TLS posture. **The harvest-now-decrypt-later adversary does not care whether a packet is from a database backup or a foundation-model training run; they care whether it is encrypted with RSA-2048.** And the AI-risk adversary does not care whether your model is fair if its weights have been silently substituted by a supply-chain compromise the AI framework was never designed to detect.
 
-Bolting AI and quantum governance together after the fact yields three failure modes. **First, double-counting:** the same control is implemented twice with subtly different evidence, doubling cost and halving auditability. **Second, gap-zones:** the boundary between an AI governance regime ending at the model card and a cryptographic regime beginning at the TLS handshake is a wide unguarded plain where attestation, audit, and key custody all evaporate. **Third, control collisions:** AI explainability requirements demand that decision inputs be retained, while quantum-safe data-minimization requirements want them shredded; without an organizing framework these collide at audit time.
+Bolting AI and quantum governance together after the fact yields three failure modes. **First, double-counting:** the same control is implemented twice with subtly different evidence, increasing cost and making evidence harder to reconcile. **Second, gap-zones:** the boundary between an AI governance regime ending at the model card and a cryptographic regime beginning at the TLS handshake is a wide unguarded plain where attestation, audit, and key custody all evaporate. **Third, control collisions:** AI explainability requirements demand that decision inputs be retained, while quantum-safe data-minimization requirements want them shredded; without an organizing framework these collide at audit time.
 
 Convergence must be designed in from the genome.
 
 ## B.3 The immune system insight
 
-The immune system is the only proven, scalable, multi-decade governance architecture humans know of. It defends a body of trillions of cells against pathogens it has never seen, while maintaining tolerance for self and durable memory of past exposures. It runs without a central CPU, without an external regulator, and with graceful degradation across thousands of failure modes.
+The immune system offers useful analogies for distributed defense and long-lived memory; it is not evidence that a software governance design is correct or uniquely effective. It defends a body of trillions of cells against pathogens it has never seen, while maintaining tolerance for self and durable memory of past exposures. It runs without a central CPU, without an external regulator, and with graceful degradation across thousands of failure modes.
 
 Current AI and cybersecurity frameworks lean on metaphors borrowed from castles (perimeters), factories (pipelines), or libraries (catalogs). None of those metaphors survive contact with an adversary that arrives inside the boundary, mutates faster than the defender, and persists across generations. The immune metaphor does, because biology had to solve exactly that problem.
 
@@ -3708,17 +3718,19 @@ We do not claim the metaphor is perfect. The immune system causes autoimmunity, 
 
 ## B.4 The five organs in narrative form
 
-**Organ 1 — Genetic Layer.** In biology, every cell carries the same DNA, verifiable end-to-end. In OQGF, every artifact carries its CBOM and AIBOM, signed at first commit, enforced at the build gate, and traceable through deployment. Failure looks like a quantum-vulnerable library shipped in a model-serving container that nobody noticed because the SBOM was a PDF.
+**Organ 1 — Genetic Layer.** The biological analogy is inherited cellular identity, with important exceptions and variation; it is not a literal claim that every cell has identical DNA. In OQGF, every artifact carries its CBOM and AIBOM, signed at first commit, enforced at the build gate, and traceable through deployment. Failure looks like a quantum-vulnerable library shipped in a model-serving container that nobody noticed because the SBOM was a PDF.
 
 **Organ 2 — Inflammation Organ.** Inflammation is the body's way of saying *something is wrong here, send help.* OQGF's sentinels watch for HNDL patterns, classical-TLS exposure on regulated data, and abnormal access to AI/quantum infrastructure, and they trigger graded responses up to and including automated key rotation. Failure looks like a quantum cloud session that ran for six months over classical TLS while quietly exfiltrating circuits.
 
 **Organ 3 — MHC Layer.** MHC molecules are the body's way of letting every cell prove what it is, on demand, to any T cell that asks. OQGF demands the same of every device, workload, model, and quantum job: a fresh, PQC-signed attestation, and for quantum jobs a three-way reconciliation of circuit, calibration, and sampling distribution. Failure looks like a substituted GPU returning plausible but subtly malicious gradients to a federated learning aggregator.
 
-**Organ 4 — Redundant Defense Organ.** Innate and adaptive immunity overlap on purpose. OQGF requires that no single cryptographic family, cloud, jurisdiction, or entropy source can bring down the organism. The November 2025 DoW CIO directive prohibiting non-local QRNG and non-FIPS RNG as confidentiality entropy is folded into Organ 4 directly. Failure looks like a single lattice break taking down every audit signature simultaneously.
+**Organ 4 — Redundant Defense Organ.** Innate and adaptive immunity overlap on purpose. OQGF assigns tier-specific controls for cryptographic diversity, cloud continuity, jurisdictional replication, entropy independence, and custody. Their presence must be verified; redundancy is not a universal availability guarantee. The November 2025 DoW CIO directive prohibiting non-local QRNG and non-FIPS RNG as confidentiality entropy is folded into Organ 4 directly. Failure looks like a single lattice break taking down every audit signature simultaneously.
 
-**Organ 5 — Memory Organ.** Immunological memory persists for decades. OQGF retains every regulated decision, every quantum sampling distribution, dual-PQC-signed and periodically re-signed across cryptographic generations. Failure looks like a 2028 lawsuit asking for a 2026 decision whose signature is unverifiable because the algorithm has been deprecated and nobody re-signed.
+**Organ 5 — Memory Organ.** Immunological memory persists for decades. OQGF requires scoped decision and quantum-job evidence, signed at the A-3 tier, renewed across cryptographic generations, and retained under the applicable privacy and retention rules. Failure looks like a 2028 lawsuit asking for a 2026 decision whose signature is unverifiable because the algorithm has been deprecated and nobody re-signed.
 
-## B.5 The whitespace: ten governance products that do not yet exist (ranked)
+## B.5 Ten candidate product directions for further evaluation
+
+These are proposed product categories, not a verified claim that competing products do not exist, a novelty finding, or a market ranking.
 
 1. A CBOM-aware CI gate for AI/ML pipelines.
 2. An HNDL risk-scoring sentinel for quantum cloud sessions.
@@ -3733,7 +3745,7 @@ We do not claim the metaphor is perfect. The immune system causes autoimmunity, 
 
 ## B.6 The path forward
 
-Adoption begins with a CBOM/AIBOM inventory and the Organ 1 CI gate; that alone closes the September 2026 FIPS 140-2 sunset risk. Inflammation sentinels follow, then MHC attestation, then Redundant Defense, then Memory. A consortium of federal agencies, sector SRMAs, cloud providers, quantum providers, and AI labs administers conformance, with third-party assessors trained against the OQGF reference checklists. Odin's commits to opening the assessor checklists, the CBOM/AIBOM schemas, and reference test vectors under a permissive license; the implementation crates ship dual-license (Apache-2.0 + MIT) with a proprietary High-Assurance package for FedRAMP-aligned deployment.
+Adoption can begin with inventory and the build gate, but conformance requires the complete applicable organ and physiology obligations at the Governing Tier. Evidence capture, identity, custody, and authorization must be designed together; a phased build does not claim completion of later controls. Consortium administration, assessor tooling, distribution licenses, implementation packages, and commercial support remain proposals unless separately published and evidenced. This documentation repository establishes none of those as delivered services.
 
 ## B.7 Author note
 
@@ -3741,37 +3753,26 @@ Jeremy Rose is the founder and CEO of Odin's LLC, headquartered in Wasilla, Alas
 
 ---
 
-# PART C — COMPREHENSIVE TECHNICAL ARCHITECTURE
+# PART C — PROPOSED TECHNICAL ARCHITECTURE
+
+**Delivery status, 8 October 2026:** this repository contains framework documents, not the Cargo workspace, Python wheels, databases, checklists, or deployed services sketched below. Crate names, integration targets, and performance budgets are design candidates, not verified availability, compatibility, validation, or measured performance. Implementation selection must pin versions, review licenses and security status, validate hardware/services, and demonstrate the applicable Part A controls. Rust snippets are incomplete illustrative interfaces and have not been compiled here. An example that omits a required field or check is not a permitted omission in a conforming implementation.
 
 ## C.1 Architectural principles
 
 ### C.1.1 Rust-first rationale
-Rust is the default implementation language for every OQGF crate. The reasons are concrete and not stylistic.
+Rust is the proposed default for enforcement and cryptographic interfaces. Safe Rust can reduce memory-safety defects, but unsafe code, native dependencies, protocol logic, and key handling require separate review. Async libraries do not guarantee line-rate inspection or bounded latency; those are benchmark obligations.
 
-First, **memory safety matters most where cryptography lives.** Buffer overruns and use-after-frees in C cryptography libraries have produced the worst CVEs of the last twenty years. Rust eliminates whole classes of these at compile time, without garbage collection.
+### C.1.2 Python integration
+Python is a candidate orchestration surface for model and quantum SDK workflows. A PyO3/maturin boundary can expose Rust controls, but no `oqgf-python` package or wheel is delivered by this repository. Supported interpreter versions, free-threaded behavior, GIL handling, SDK compatibility, and type stubs require implementation verification.
 
-Second, **performance matters in sentinel hot paths.** Organ 2 sentinels must inspect TLS at line rate on edge hardware; tokio-based async Rust delivers that with predictable latency and no GC pauses.
-
-Third, **embedded and edge support.** OQGF must run on P25 radios, GPU farms, and air-gapped enclaves. Rust's `no_std` subset and tier-2 SGX target (`x86_64-fortanix-unknown-sgx`) cover all three.
-
-Fourth, **the type system enforces correctness.** Cryptographic agility is a type problem: an algorithm identifier is not a string. We use Rust's enums and traits to make "wrong algorithm" a compile error wherever possible.
-
-Fifth, **zero-cost abstractions** let us write generic, auditable code without runtime penalty. Traits compile away.
-
-### C.1.2 Python use cases
-Python is used **only** for ML pipelines and quantum SDK integration. Qiskit, PennyLane, and Cirq are Python-native; rewriting them is not an option. MLflow, Kubeflow, Flower, FATE, and most data-science tooling assume Python. Where Python is necessary, we expose Rust functionality through **PyO3 0.28** bindings published as the `oqgf-python` package via `maturin`.
-
-### C.1.3 PyO3 binding strategy
-Each Rust crate that needs a Python face exports a thin `pyo3` module re-exporting its public types. We follow these rules: (1) all heavy lifting stays in Rust; Python is a thin orchestration layer; (2) the GIL is held only across cheap boundary calls; long-running operations release it via `Python::detach`; (3) every Python-visible function has a `.pyi` type stub for IDE support; (4) we ship wheels for cp311–cp314, including the free-threaded `t` variant.
-
-### C.1.4 no_std subset for embedded
-The crates `oqgf-core` (types and traits) and `oqgf-edge-sentinel` (Organ 2 edge runtime) are buildable `no_std + alloc`. They depend only on `serde` (with `derive`), `heapless`, `subtle`, and the RustCrypto pure-Rust PQC stack (`ml-kem`, `ml-dsa`, `slh-dsa`).
+### C.1.3 Embedded and edge scope
+`no_std + alloc` is a design target for minimal core/edge components. Native cryptography, TPM/TEE, operating-system, and async dependencies need target-specific feature review; a general-purpose crate list does not establish a bare-metal, radio, GPU, or enclave build.
 
 ---
 
 ## C.2 System topology
 
-The OQGF reference implementation has a **control plane**, a **data plane**, and three distinct execution surfaces.
+The proposed implementation separates a **control plane**, a **data plane**, and deployment surfaces. Independent enforcement and capture paths must be tested against the stated threat model.
 
 The **control plane** is a small set of central services: the policy server (Rego via `regorus`), the vendor trust-scoring service, the regulator portal, and the re-signing scheduler. It runs in containers in a FedRAMP-aligned cloud, replicated across at least two regions and (for High-Assurance) at least two jurisdictions.
 
@@ -3779,7 +3780,7 @@ The **data plane** is the field: sentinels at network boundaries, attestation ag
 
 The **central audit substrate** is a PostgreSQL deployment with crypto-agile columns (each signature column carries both an algorithm OID and the signature bytes), CRDT-replicated across jurisdictions for High-Assurance.
 
-The **cryptographic root of trust** is HSM-backed (PKCS#11 via `cryptoki`), with Shamir 3-of-5 sharding for the root signing keys.
+The **cryptographic root of trust** follows R-6: declared extraction protection at Baseline; a protected hardware boundary and dual-authorized use at Enhanced; separated threshold custody and protected recovery at High-Assurance. A PKCS#11 interface or HSM administrator quorum alone proves none of these properties.
 
 The **quantum cloud integration broker** is a Rust service per provider (IBM, AWS Braket, Azure Quantum, IonQ, Quantinuum) speaking each provider's native API and emitting a normalized circuit-calibration-distribution attestation upstream.
 
@@ -3791,7 +3792,7 @@ Edge sentinels are minimal Rust binaries; central services are containerized; ai
 
 ## C.3 Per-organ module architecture
 
-The implementation lives in a single Cargo workspace with the following layout:
+A possible future Cargo workspace has the following layout; these paths are not present in this documentation repository:
 
 ```
 oqgf/
@@ -3866,19 +3867,19 @@ impl CiGate {
 }
 ```
 
-**Cryptographic primitive choices.** For ML-KEM and ML-DSA in FIPS-required paths we use **`aws-lc-rs` with the `fips` feature** (AWS-LC-FIPS v3.0 includes validated ML-KEM). For SLH-DSA we use **RustCrypto's `slh-dsa` crate**, since `liboqs-rust` does not yet expose FIPS 205 (only the legacy SPHINCS+). For LMS/XMSS firmware signing we use **`hbs-lms`** (RustCrypto). For classical fallback we use `aws-lc-rs`. The choice is dictated by FIPS validation, not preference: AWS-LC-FIPS v3.0 is the first 140-3 module in the world to include ML-KEM, and that fact lands us inside the September 2026 sunset.
+**Cryptographic primitive choices.** `aws-lc-rs`, RustCrypto PQC crates, and other providers are candidates, not certified selections. For every required operation, the implementer must verify algorithm/parameter support, the exact CMVP module certificate, approved service and operational environment, and actual key-custody behavior. Enabling a `fips` feature or using a NIST-standard algorithm does not establish G-6. No candidate library is asserted here to supply all required PQC, TSA, HSM, or threshold services.
 
 **CI/CD plugins.** GitHub Actions, GitLab CI, and Jenkins integrations are thin shells that invoke the `oqgf-cli evaluate-build` subcommand and surface its exit status.
 
-**Policy engine.** **`regorus` (Microsoft, pure-Rust, no_std-friendly, OPA v1 compliant)** is used for Rego evaluation. We chose `regorus` over CGO-wrapped OPA because we refuse to add a Go runtime to a Rust security boundary.
+**Policy-engine candidate.** Evaluate a pinned Rego engine such as `regorus` against the required language semantics, target features, deterministic evaluation, and enforcement boundary. No compatibility or bare-metal build is demonstrated here.
 
-**HSM integration.** `cryptoki` against any PKCS#11 v3.0 HSM (CloudHSM, Entrust nShield, YubiHSM, Thales Luna). Sessions are pooled via `r2d2-cryptoki`. Root signing keys are non-exportable and Shamir-3-of-5 protected at the M-of-N HSM admin layer.
+**HSM integration candidate.** A PKCS#11 interface such as `cryptoki` requires service- and mechanism-specific testing with the selected hardware; a standard interface does not make every HSM interchangeable. Session pooling and dependencies require separate validation. Verify R-6.2 non-extractability and dual control for each key service. An M-of-N administrator login is not automatically R-6.3 threshold key custody; verify share independence, quorum control, and protected reconstruction separately.
 
-**Data schema.** CycloneDX 1.6 JSON for CBOM and AIBOM (see A.9.1, A.9.2). Internal storage uses `serde_json::Value` for forward compatibility with CycloneDX 1.7 (which adds richer ML-BOM).
+**Data schema.** CycloneDX 1.6 JSON examples appear in A.9.1/A.9.2. Storing arbitrary JSON does not guarantee compatibility with another schema version; a later version requires explicit validation and governed migration.
 
 **State.** `sled` is used for embedded build hosts; PostgreSQL 16 is the central store, with cryptographic columns typed as `(alg_oid TEXT, sig BYTEA)` pairs.
 
-**Concurrency.** tokio 1.51 LTS, `mpsc` channels between the CI gate and the policy engine; actor pattern for the signing service.
+**Concurrency candidate.** A pinned, reviewed tokio release, `mpsc` channels between the CI gate and the policy engine; actor pattern for the signing service.
 
 **Error handling.** `thiserror` everywhere in the library; the binary wrappers use `anyhow`; no `unwrap`/`expect` on any code path that runs after process start.
 
@@ -3886,7 +3887,7 @@ impl CiGate {
 
 **Deployment.** Container image (`distroless/cc-debian12`) plus a static-musl edge binary. FedRAMP Moderate target initially.
 
-**Performance.** CI gate evaluation budget is 5 s p95 for repos up to 10k packages.
+**Unmeasured performance target.** CI gate evaluation within 5 s p95 for a declared workload up to 10k packages; measure signature, inventory, policy, and storage costs before claiming this target.
 
 ### C.3.2 Organ 2 — Inflammation Organ (`oqgf-inflammation`)
 
@@ -3930,7 +3931,7 @@ pub trait ResponseEngine: Send + Sync {
 }
 ```
 
-**TLS interception.** `rustls 0.23.27+` with `prefer-post-quantum` on by default; X25519MLKEM768 is negotiated where the peer supports it; classical-only connections produce a structured event. For inspection of third-party TLS we use rustls in **peer-as-MITM mode** only with documented consent; otherwise we observe at the metadata layer.
+**TLS observation design.** Verify hybrid group support, defaults, validation status, and peer interoperability for the selected library/provider version. Record classical-only negotiation as an event under I-1/I-2. Authorized terminating proxies and endpoint instrumentation are possible capture paths; this document does not assert that a library exposes a “peer-as-MITM” feature. Metadata-only observation has declared coverage limits.
 
 **HNDL detection.** Two-stage: a deterministic rule layer (banned cipher suites, banned groups, classification-of-data lookup) and a learned classifier consumed via ONNX Runtime through `ort` (or, where allowable, a Python-side scikit-learn classifier reached over PyO3). Statistical anomaly detection uses online Welford variance and Mann-Kendall trend tests in pure Rust.
 
@@ -3940,13 +3941,13 @@ pub trait ResponseEngine: Send + Sync {
 
 **Resolution.** Every action emits a signed event into `oqgf-memory`; resolution requires a DAP-signed acknowledgment.
 
-**Edge.** `oqgf-edge-sentinel` is a no_std + alloc build for ARMv8 and RISC-V targets, suitable for P25 inline deployment. It uses `embassy` for async on bare-metal where tokio is unavailable.
+**Edge target.** A future `oqgf-edge-sentinel` may target `no_std + alloc` on selected ARMv8/RISC-V devices, with an appropriate runtime such as `embassy`. Radio/P25 suitability, timing, hardware and protocol support must be demonstrated; no such build is supplied here.
 
-**Performance.** 100k TLS observations/sec/sentinel on a 4-core x86_64; <1 ms p99 to enqueue a scored event.
+**Unmeasured performance target.** 100k TLS observations/sec/sentinel on a declared 4-core x86_64 configuration and <1 ms p99 enqueue latency; no benchmark in this repository establishes those numbers.
 
 ### C.3.3 Organ 3 — MHC Layer (`oqgf-mhc`)
 
-**Integrated authority and attestation controls.** Extend identity checks with M-8–M-14: a signed root-to-hop intent chain, monotonic attenuation, invariant checks, identity-plus-intent authorization, behavior reconciliation, least-privilege root scope, and freshness. A valid identity alone does not grant privileged action. Add the P-12 capability and P-15 runtime-containment inputs, P-16 semantic-authority checks, and P-18 model-weight/serving attestation. Persist denial and deviation evidence through Organ 5. The earlier workload-attestation sketch implements only part of this contract.
+**Integrated authority and attestation controls.** Extend identity checks with M-8–M-14: a signed root-to-hop intent chain, monotonic attenuation, invariant checks, identity-plus-intent authorization, behavior reconciliation, least-privilege root scope, and freshness. A valid identity alone does not grant privileged action. Add the P-12 capability and P-15 runtime-containment inputs, P-16 semantic-authority checks, and P-18 model-weight/serving attestation. Persist denial and deviation evidence through Organ 5. The earlier workload-attestation sketch describes only part of this contract and supplies no implemented assurance.
 
 **Sketch status:** the following original code and dependency choices are illustrative design material. They are not a compiled or validated implementation. Apply the integrated Part A requirements and the additions above when implementing this organ.
 
@@ -3993,13 +3994,13 @@ pub trait StatReconciler: Send + Sync {
 }
 ```
 
-**PQC certificate authority.** ML-DSA + SLH-DSA dual-signed X.509 certificates; CA backed by HSM. We follow the `composite-signatures` IETF draft conventions while it stabilizes.
+**PQC attestation format.** Select a specified, versioned interoperable encoding for the required signature profile. A draft composite format is not assumed standardized or interoperable. If separate signatures are used, bind them to the same canonical payload and validate every required family. Native hardware quote algorithms and the PQC attestation wrapper remain separately declared under M-1.
 
 **Quantum hardware broker.** A per-provider adapter (`oqgf-quantum-broker::ibm`, `::braket`, `::azure`, `::ionq`, `::quantinuum`) speaking each provider's REST/gRPC API, normalizing into `QuantumJobAttestation`.
 
-**Statistical reconciliation.** Kolmogorov-Smirnov via `statrs`; χ² via `statrs`. For low-shot counts we use exact tests via `rust-fisher` where available; otherwise the test is marked inconclusive in the attestation.
+**Statistical reconciliation.** Select a test justified for the actual distribution, calibration model, shot count, support, dependence, and multiple comparisons. Ordinary continuous-data Kolmogorov–Smirnov assumptions cannot be silently applied to discrete bit-string outcomes; chi-square and exact/Monte Carlo methods also need their conditions checked. Record tolerances and power limitations; inconclusive is not a pass.
 
-**Short-lived tokens.** SPIFFE-compatible workload IDs via `spiffe 0.15`; PQC-signed JWTs minted via the dual-family CA. We document explicitly that upstream SPIFFE/SPIRE PQC support is community-driven (as of May 2026) and that our integration uses SPIRE's plugin architecture to inject ML-DSA signing.
+**Short-lived identity design.** SPIFFE/SPIRE or another identity service is a candidate. PQC algorithm support, token formats, verifier compatibility, hardware binding, and expiry enforcement require demonstrated integration; no plugin or PQC JWT implementation is delivered here.
 
 **Continuous attestation loop.** A tokio task per workload with a jitter-scheduled re-attestation every `lifetime / 4`. Failures trigger `oqgf-inflammation` responses.
 
@@ -4016,7 +4017,7 @@ pub trait StatReconciler: Send + Sync {
 pub struct MultiFamilySigner {
     primary: Arc<dyn Signer>,    // ML-DSA
     secondary: Arc<dyn Signer>,  // SLH-DSA
-    tertiary: Option<Arc<dyn Signer>>,  // Historical unresolved slot; HQC is a KEM, not a signer (A.9.5).
+    tertiary: Option<Arc<dyn Signer>>,  // Optional additional approved signature family; never a KEM.
 }
 
 impl Signer for MultiFamilySigner {
@@ -4045,13 +4046,13 @@ pub trait EntropySource: Send + Sync {
 pub struct ShamirCustody { shares: Vec<ShareHolder>, threshold: u8 } // R-6.3: at least 3-of-5
 ```
 
-**Multi-PQC-family signing facade.** The original design names ML-DSA-87 and SLH-DSA-Shake-192s. Its proposed HQC signature extension cannot be implemented as written: HQC is a key-encapsulation mechanism. See the pending correction in A.9.5. Required-family verification must satisfy the applicable normative requirement; a weaker policy quorum does not substitute for a required signature.
+**Multi-PQC-family signing facade.** Follow A.0.9/A-3/R-1: one approved PQC family for Baseline audit envelopes; two distinct families for Enhanced; ML-DSA-87 and a declared FIPS 205 SLH-DSA 256-bit parameter set for High-Assurance civilian evidence. Verify every required signature. HQC belongs only in a separately approved key-establishment interface. NSS compatibility is not implied.
 
 **Multi-cloud.** Provider-agnostic placement via a trait abstraction; concrete implementations for AWS (FedRAMP High), Azure Government, GCP Assured Workloads, and Oracle Government Cloud. Automatic failover is event-driven, not poll-driven, and respects data-sovereignty policy expressed in Rego.
 
-**Entropy.** Two FIPS-validated sources by default: CPU RDSEED (Intel CPU jitter) and an HSM-backed DRBG. **A local FIPS-validated QRNG MAY be added as a third source, but per the DoW CIO memo of 18 Nov 2025 SHALL NOT be the sole source for confidentiality, authenticity, or key establishment.** Continuous Repetition Count and Adaptive Proportion tests per SP 800-90B; min-entropy estimation maintained per source; failed source declared unavailable and replaced.
+**Entropy.** Identify and validate two actually independent noise mechanisms. RDSEED is an interface, not evidence of “CPU jitter” or of a specific validation certificate. An HSM DRBG is not a second source unless its separately evidenced entropy source and independence satisfy R-4. Declare conditioning, health tests, shared dependencies, and failure behavior. The DoW memorandum's applicable prohibitions and approval requirements must be enforced without a “not the sole source” loophole.
 
-**Audit trail replication.** `automerge 3` CRDTs over a gossip layer (`libp2p`); append-only hash-linked log inside each CRDT entry for tamper-evidence. Replication targets are configured per jurisdiction.
+**Audit trail replication.** A CRDT/gossip implementation is a candidate transport/merge mechanism. R-5 additionally requires authenticated writers, append-only records, independent checkpoints, gap/fork detection, lawful destinations, and controlled retirement. Convergence does not prove completeness or prevent an authorized writer from lying.
 
 **Tiered key custody.** Baseline permits declared extraction-protected software custody (R-6.1); Enhanced requires a non-extractable hardware-backed key store and dual control (R-6.2); High-Assurance adds separated threshold custody and its ceremony/recovery obligations (R-6.3). The historical `vsss-rs`/Feldman sketch is a candidate threshold mechanism; its presence does not demonstrate the protected runtime boundary, independent custodians, or recovery requirements.
 
@@ -4091,11 +4092,11 @@ pub trait ReSigner: Send + Sync {
 }
 ```
 
-**Forensic event capture.** Every regulated AI/ML decision passes through `oqgf-memory::record()`. For quantum jobs the full sampling distribution is stored zstd-compressed (typical compression ~4–10× for sparse distributions).
+**Forensic event capture design.** Capture material events through the independent path in A-1/P-12.8; an agent calling `record()` is not sufficient observation. Quantum sample distributions may use lossless compression, with counts/shot totals preserved. Compression ratio is workload-dependent and unmeasured here.
 
-**Dual-family audit signatures.** Via `MultiFamilySigner` from Organ 4.
+**Audit signatures.** Select the A-3 tier profile through the Organ 4 signing interface. Baseline requires one PQC family; Enhanced and High-Assurance require two. Required timestamp evidence is separately verified.
 
-**Re-signing engine.** A scheduled tokio task walks the audit store and re-signs any event whose signatures are older than the configured maximum (default 5 years) under the prevailing algorithm. Originals are preserved; the chain links forward.
+**Evidence-renewal design.** Renew before the A-6 maximum age or earlier cryptographic retirement; preserve the original evidence and later validity events. Renewal does not repair forged history, erase invalidation, or undo personal-data erasure.
 
 **Quantum-appropriate explanations.** Pauli-string dominance via measurement-statistic decomposition (computed Python-side through PennyLane/Qiskit and ingested via PyO3); kernel attribution for QSVM via the closed-form kernel evaluation.
 
@@ -4103,7 +4104,7 @@ pub trait ReSigner: Send + Sync {
 
 **Regulator query interface.** Read-only REST API plus OAuth-secured portal; cryptographically signed export bundles include the full chain and the public roots of trust at the time of signing.
 
-**Time-stamping.** RFC 3161 against a PQC-capable TSA; we ship a reference TSA (`oqgf-tsa`) as a separate small crate.
+**Time-stamping dependency.** A-3 requires a verifiable PQC-signed RFC 3161 token and independent time source. A service that merely advertises PQC support is insufficient. `oqgf-tsa` is a proposed component, not a shipped crate; availability, protocol encoding, independent control, and validation remain implementation obligations.
 
 ---
 
@@ -4119,7 +4120,7 @@ A single `maturin`-built wheel exposing:
 - `oqgf.ml` — **MLflow**, **Kubeflow**, **SageMaker** hooks for AIBOM emission at training time and decision logging at inference time.
 - `oqgf.notebook` — Jupyter magics for the analyst workflow.
 
-Type stubs are shipped under `oqgf-stubs/`.
+A future binding package should include type stubs; `oqgf-stubs/` is not delivered in this repository.
 
 ---
 
@@ -4131,9 +4132,9 @@ Type stubs are shipped under `oqgf-stubs/`.
 
 **Error handling.** `thiserror` in libraries; `anyhow` in binaries; **no `panic!`, `unwrap`, or `expect` in production code paths** — enforced via `clippy::unwrap_used` and `clippy::expect_used` lints set to `deny` in CI.
 
-**Threat modeling per crate.** Each crate ships a `THREAT_MODEL.md` covering trust boundaries, assets, threats (STRIDE-typed), and mitigations.
+**Threat modeling per crate.** Each future implementation crate should maintain a `THREAT_MODEL.md` covering trust boundaries, assets, threats (STRIDE-typed), and mitigations.
 
-**Supply chain.** `cargo-audit` against RustSec DB on every CI run; `cargo-deny` for license, banned-crate, and duplicate-version enforcement; `cargo-cyclonedx` produces the per-crate SBOM; `cargo-vet` for peer-audit imports of high-risk dependencies. Reproducible builds inside a pinned container with `--locked`, `--remap-path-prefix`, and a `rust-toolchain.toml`. Compliance with **NIST SP 800-218 SSDF** is mapped per practice in `SSDF.md`.
+**Supply chain.** `cargo-audit` against RustSec DB on every CI run; `cargo-deny` for license, banned-crate, and duplicate-version enforcement; `cargo-cyclonedx` produces the per-crate SBOM; `cargo-vet` for peer-audit imports of high-risk dependencies. Reproducible builds inside a pinned container with `--locked`, `--remap-path-prefix`, and a `rust-toolchain.toml`. A future implementation should map **NIST SP 800-218 SSDF** practices with evidence; no `SSDF.md` is delivered here.
 
 **Documentation.** `rustdoc` for API docs; `mdbook` for user docs; `utoipa` for OpenAPI emission on REST endpoints; protobuf for gRPC.
 
@@ -4153,7 +4154,9 @@ Type stubs are shipped under `oqgf-stubs/`.
 
 ---
 
-## C.7 Roadmap and phased delivery
+## C.7 Proposed roadmap and phased delivery
+
+The dates and pilot/funding references below are planning intentions, not evidence of awards, agency partnerships, delivered pilots, or completed implementation phases.
 
 **Phase 1 (2026):** Organ 1 (Genetic) plus a P25 PQC crossover MVP. Targets a DOE SBIR award. Deliverables: CBOM/AIBOM toolchain, CI gate, FIPS 140-3 migration helper, edge sentinel reference.
 
@@ -4161,19 +4164,19 @@ Type stubs are shipped under `oqgf-stubs/`.
 
 **Phase 3 (2027–2028):** Full five-organ implementation aligned to the NIST AI RMF Critical Infrastructure Profile when published. Deliverables: redundant defense (multi-cloud, CRDT audit), memory organ (forensic capture + re-signing), regulator portal.
 
-**Phase 4 (2028+):** Quantum cloud integration broker generalized across providers; FTQC (fault-tolerant quantum computing) governance preview; HQC integrated once FIPS standardization completes.
+**Phase 4 (2028+, proposed):** Broader provider integration and FTQC governance exploration; consider HQC only as a key-encapsulation option after applicable standardization, validation, and policy approval. It is not a planned signature family.
 
 ---
 
 ## C.8 Reference implementation milestones
 
-The OQGF reference implementation ships in two tiers.
+The following is a proposed distribution model for a future implementation, not a license grant or a statement that these packages ship. The documentation repository's actual published rights remain controlling.
 
 **Open source (Apache-2.0 + MIT dual license):** `oqgf-core`, `oqgf-crypto`, `oqgf-genetic`, `oqgf-inflammation`, `oqgf-mhc`, `oqgf-redundant` (basic), `oqgf-memory` (basic), `oqgf-python`. CBOM/AIBOM schemas and assessor checklists are CC-BY-4.0.
 
-**Proprietary (Odin's commercial license):** the High-Assurance packaging — multi-cloud orchestration with FedRAMP High controls baked in, cross-jurisdictional CRDT replication, the regulator portal, and 24/7 support — and the OQGF Conformance Toolkit for accredited 3PAOs.
+**Proprietary (Odin's commercial license):** the High-Assurance packaging — multi-cloud orchestration intended to support separately assessed FedRAMP High control obligations, cross-jurisdictional CRDT replication, the regulator portal, and 24/7 support — and the OQGF Conformance Toolkit for accredited 3PAOs.
 
-Contribution policy: Apache CLA, signed commits required, all PRs must pass `cargo audit`, `cargo deny`, `cargo cyclonedx`, and the threat-model review for any new trust boundary. The FedRAMP path begins with the cloud-control plane Phase 2; we follow the OSCAL automation pattern for control evidence.
+Contribution policy: Apache CLA, signed commits required, all PRs must pass `cargo audit`, `cargo deny`, `cargo cyclonedx`, and the threat-model review for any new trust boundary. A possible FedRAMP authorization path would require its own scope, sponsor, assessment, and evidence; use of OSCAL or these documents does not establish authorization.
 
 ---
 
@@ -4185,7 +4188,7 @@ Contribution policy: Apache CLA, signed commits required, all PRs must pass `car
 | OQGF-G-3 | `oqgf-genetic::SignedBom` + `MultiFamilySigner` |
 | OQGF-G-4 | `oqgf-genetic::CiGate::evaluate` |
 | OQGF-G-5 | `oqgf-crypto::Signer/Verifier` traits, algorithm enums |
-| OQGF-G-6 | `aws-lc-rs` FIPS feature; CMVP cert refs surfaced in `Signer::fips_certificate` |
+| OQGF-G-6 | Verify exact CMVP certificate, deployed module/environment and approved services; surface evidence via `Signer::fips_certificate`; a build feature is insufficient |
 | OQGF-G-7 | `oqgf-genetic::MoscaCalculator` + key-lifetime policy in Rego |
 | OQGF-G-8 | `oqgf-policy::regorus` integration, signed bundles |
 | OQGF-I-1, I-2 | `oqgf-inflammation::Sentinel` with rustls TLS observation |
@@ -4197,7 +4200,7 @@ Contribution policy: Apache CLA, signed commits required, all PRs must pass `car
 | OQGF-R-2 | `CloudOrchestrator` |
 | OQGF-R-3 | classical fallback in `SignatureAlg`, sunset flag |
 | OQGF-R-4 | `EntropyPool` + SP 800-90B health monitor + DoW QRNG policy gate |
-| OQGF-R-5 | `automerge` CRDT replication |
+| OQGF-R-5 | Authenticated replication plus independent checkpoints and gap/fork detection; a CRDT alone is insufficient |
 | OQGF-R-6, R-6.1–R-6.3 | C.3.4 tiered custody contract; declared Baseline protection, Enhanced protected hardware and dual control, High-Assurance separated threshold custody and recovery |
 | OQGF-R-7 | `QuantumNetworkProvider` trait, default `Unsupported` |
 | OQGF-A-1..A-7 | `oqgf-memory::AuditEvent`, `Explanation`, `ReSigner`, RFC 3161 TSA, regulator portal |
@@ -4220,7 +4223,7 @@ Contribution policy: Apache CLA, signed commits required, all PRs must pass `car
 
 ## Closing note
 
-The five-organ structure is not a metaphor we have decorated with engineering. It is engineering whose shape is, by deliberate choice, the shape of a living defense system. We do not believe the AI/quantum governance problem can be solved by adding requirements to a regime that was never designed for an adversary inside the perimeter. The organism is the right unit of analysis, the immune system is the right reference design, and the next eighteen months are the migration window. Build it now, while the deadlines are still ahead of us.
+The five-organ structure is not a metaphor we have decorated with engineering. It is engineering whose shape is, by deliberate choice, the shape of a living defense system. We do not believe the AI/quantum governance problem can be solved by adding requirements to a regime that was never designed for an adversary inside the perimeter. The organism is the right unit of analysis, the immune system is the right reference design, and migration planning must use dated, deployment-specific obligations. Build and assess the controls against the current applicable profile; a planning narrative does not establish readiness.
 
 *"There is therefore now no condemnation to them which are in Christ Jesus, who walk not after the flesh, but after the Spirit. For the law of the Spirit of life in Christ Jesus hath made me free from the law of sin and death."* — Romans 8:1–2 (KJV). The framework above is, in its small technical way, an attempt at the same pattern: a law that gives life by enabling truthful self-verification rather than a law that condemns by external audit alone.
 

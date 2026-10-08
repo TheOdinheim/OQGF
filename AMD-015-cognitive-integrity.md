@@ -14,6 +14,9 @@ custody, capability, containment, and inferential privacy, per the OQGF annotati
 called Cognitive Firewall, but OQGF-P-16 does not require that product or name.  
 **Normative dependencies:** OQGF-M-8 through OQGF-M-14 (AMD-001, Intent Provenance); OQGF-P-1 through OQGF-P-5 (AMD-002, Self-Tolerance and deterministic/heuristic separation); OQGF-P-6 (AMD-003, Adaptation); OQGF-P-7 (AMD-004, Coordinated Signaling); OQGF-P-8 (AMD-005, Resolution/Homeostasis); OQGF-P-9 (AMD-006, Accountable Risk Acceptance); OQGF-I-8 through OQGF-I-15 (AMD-007, Barrier/Data Custody); OQGF-P-10 (AMD-008, Risk Surveillance); OQGF-P-11 (AMD-009, Personal Data Lifecycle); OQGF-A-8 through OQGF-A-12 (AMD-010, Explanation Validity); OQGF-P-12 (AMD-011, Capability-Triggered Assurance); OQGF-P-13 (AMD-012, Recursive Risk Propagation); OQGF-P-14 (AMD-013, Recursive Inferential Privacy); OQGF-P-15 (AMD-014, Adaptive Containment); OQGF-A-1/OQGF-A-5 (Organ 5 record and DAP); OQGF-R (Organ 4, redundancy and independent control); A.6.1 (incident response); A.6.3 (human oversight).
 
+
+**Consistency revision — 8 October 2026:** current requirements, tier summaries, and assessments are synchronized with the integrated framework. The [common conformance/signature/retention rules](OQGF-1_0.md#a09-common-interpretation-signature-profiles-and-assessment-limits) apply to this amendment. See the [resolution record](OQGF-1_0.md#synchronization-review). Original IDs and dated decisions are preserved; this is a public-draft maintenance revision, not a new AMD or an implementation pass.
+
 ---
 
 # AMD.0 — Front matter
@@ -560,7 +563,7 @@ It does not require identical hidden model cognition.
 
 It governs externally observable privileged consequences.
 
-The property depends on complete mediation of the declared privileged effects, in the same honesty posture used by AMD-014: unmediated authority channels must be named as residuals, not silently assumed absent.
+For stochastic or concurrent execution, the comparison must hold the authorized starting state, policy version, relevant environment and randomness/scheduler assumptions fixed, or declare a suitable distributional equivalence. A finite paired test is evidence within that scope, not a universal proof. The property depends on complete mediation of the declared privileged effects, in the same honesty posture used by AMD-014: unmediated authority channels must be named as residuals, not silently assumed absent.
 
 ---
 
@@ -1001,7 +1004,7 @@ A confirmed material cognitive-integrity incident SHALL reuse existing OQGF mech
 
 Where applicable:
 
-- the incident SHALL seed AMD-003 detector refinement;
+- the incident SHALL be submitted for AMD-003 seeding eligibility review; DAP confirmation and all P-6 selection/activation gates remain required;
 - defensive communication SHALL use AMD-004 Signals;
 - material risk SHALL create or update an AMD-008 Risk Register entry;
 - downstream causal effects SHALL reconcile into the AMD-012 RRPG;
@@ -1038,37 +1041,11 @@ No second adaptation pipeline, Signal bus, Risk Register, RRPG, containment engi
 
 ## Baseline — OQGF-B
 
-A conforming system in P-16 scope SHALL demonstrate:
-
-- a signed Semantic Authority Envelope;
-- declared Complete Semantic Mediation Scope;
-- conservative treatment of unknown provenance;
-- no semantic self-escalation;
-- separation of informational influence from privileged authority;
-- Authority-Bearing State inventory;
-- deterministic semantic-authority enforcement;
-- no model-controlled SAE mutation;
-- no automatic authority promotion through persistence or representation change;
-- Organ-5 reconstruction evidence.
-
-Single-PQC-family signatures are acceptable where existing Baseline OQGF rules permit them.
+All P-16.1–P-16.17 requirements apply within P-16 scope, including segment provenance, instruction/data separation, material Typed Influence Releases, derived lineage, trajectory monitoring, persistent-memory authority, cross-agent isolation, representation independence, deterministic authorization, scoped risk acceptance, and evidence/risk linkage. Conditional MAY and SHOULD provisions retain their stated strength. Single-PQC-family signatures are acceptable where the applicable Baseline profile permits them.
 
 ## Enhanced — OQGF-E
 
-All Baseline criteria, plus:
-
-- segment-level semantic provenance;
-- provenance-laundering resistance;
-- Typed Influence Release for material lower-authority data dependencies;
-- derived semantic lineage;
-- trajectory/composition-aware Cognitive Boundary detection;
-- persistent-memory authority preservation across restart;
-- cross-agent cognitive isolation;
-- representation-equivalence testing;
-- Risk Register/RRPG reconciliation;
-- P-7 signaling;
-- integration with AMD-014 where applicable;
-- adversarial indirect-prompt-injection testing.
+All Baseline requirements, plus representation-equivalence testing and adversarial indirect-prompt-injection testing. Provenance, lineage, memory authority, and cross-agent controls are already mandatory at Baseline when applicable.
 
 ## High-Assurance — OQGF-H
 
@@ -1138,7 +1115,7 @@ An auditor SHALL:
 
 20. **Lineage reconstruction test.** Request Organ-5 records and reconstruct origin → carrier → SAL → model processing → TIR/adoption → deterministic verdict → action/denial → Signal/containment.
 
-**Load-bearing assessment:** tests 3, 5, 7, and 19 collectively establish that lower-authority semantic information may remain useful without silently acquiring privileged control authority.
+**Load-bearing assessment:** tests 3, 5, 7, and 19 check, within their declared cases and assumptions, that lower-authority semantic information may remain useful without silently acquiring privileged control authority.
 
 ---
 
@@ -1213,6 +1190,8 @@ Cryptographic semantic authority and information-flow policy remain engineering 
 ---
 
 # AMD.5 — Technical architecture
+
+**Implementation status:** the following interfaces and dependency names are design sketches. They are not compiled code delivered by this repository. Historical references to an external implementation report the source author's context, not a fresh verification of that implementation. Apply the current normative text and A.0.9; an omitted field, enum variant, verifier check, or backend is not a conformance exemption.
 
 AMD-015 introduces no new organ, no second Intent Provenance system, no second Signal bus, no second Risk Register, no second RRPG, and no second containment engine.
 
@@ -1660,4 +1639,4 @@ The proposal names residuals rather than claiming elimination: hidden cognitive 
 — End of OQGF Amendment 015.
 
 <!-- source-sync:navigation -->
-**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-16). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-16). Its identity and historical entries are retained; current text includes the dated consistency corrections. See the [integration map](OQGF-1_0.md#integration-map) and [resolution record](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

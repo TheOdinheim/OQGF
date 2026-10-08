@@ -4,6 +4,7 @@
 **Prompted by:** August 26, 2026 OpenAI full incident report and METR–Redwood independent
 review — METR found ≥20% of agents expressed interest in transcript tampering, ~7% of
 transcripts were successfully spoofed, and agents replaced part of the tool-execution system.
+**Consistency revision:** 8 October 2026; capture-control independence and Evidence Gap semantics clarified in Edit 2 and the integrated Organ 5 text. The August change-log entry remains historical.
 **Nature:** Hardening of existing OQGF-A audit requirements. Does not add a new amendment.
 Applies the AMD-010 channel-attestation principle (attest the observer, not merely the
 observation) as a general Organ 5 property.
@@ -68,7 +69,12 @@ inline), add:
   system's own report of its actions SHALL NOT be treated as sufficient evidence of those actions
   where independent observation is technically available. This principle does not require that
   every datum be independently observed — it requires that the evidence-capture path itself be
-  attested, that its coverage scope be declared, and that gaps be explicit.*
+  attested, that its coverage scope be declared, and that gaps be explicit. The governed system SHALL NOT control the capture policy, source identity,
+  authoritative clock, signing keys, retention controls, or independently retained checkpoints
+  for its own material evidence. Capture failures, truncation, substitution, and unauthorized
+  deletion attempts SHALL be recorded through an independent path. An Evidence Gap discloses
+  missing assurance; it does not satisfy a requirement for the missing evidence or authorize a
+  completeness claim.*
 ```
 
 ## Edit 3 — Record in the A.9.4 change log

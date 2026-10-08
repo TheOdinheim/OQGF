@@ -17,6 +17,9 @@ Classification vocabulary; OQGF-G-2 (AIBOM) and OQGF-G-7 (Mosca's inequality, ke
 OQGF-R-6 (threshold key custody); OQGF-P-9 and OQGF-P-10 (a personal-data risk is a risk, dispositioned
 in the Register); CNSA 2.0 for the quantum-safe encryption on which erasure durability rests.
 
+
+**Consistency revision — 8 October 2026:** current requirements, tier summaries, and assessments are synchronized with the integrated framework. The [common conformance/signature/retention rules](OQGF-1_0.md#a09-common-interpretation-signature-profiles-and-assessment-limits) apply to this amendment. See the [resolution record](OQGF-1_0.md#synchronization-review). Original IDs and dated decisions are preserved; this is a public-draft maintenance revision, not a new AMD or an implementation pass.
+
 ---
 
 ## AMD.0 Front matter
@@ -125,8 +128,9 @@ without ever breaking the append-only record.
 - **Retention Period** — the declared span, tied to the Purpose, for which personal data may be
   held before erasure (OQGF-P-11.4).
 - **Crypto-Shredding (Cryptographic Erasure)** — erasure performed by destroying the quantum-safe
-  key under which personal data is encrypted at rest, rendering the ciphertext irrecoverable while
-  the record itself is preserved in the append-only store (OQGF-P-11.5). The apoptosis analog.
+  keys and recovery paths for the covered encrypted payload, subject to the inventory,
+  residual-copy, and verification conditions of P-11.5. A minimized, lawfully retained
+  audit record remains; a deleted key handle alone does not prove irrecoverability.
 - **Erasure Tombstone** — the signed, append-only record that an erasure occurred: the record
   reference, the classification, the time, and the acting DAP. The audit skeleton that survives
   clearance.
@@ -138,12 +142,7 @@ without ever breaking the append-only record.
 The AMD-007 boundary is reaffirmed: OQGF requires personal-data lifecycle governance as a property
 of a conforming system. It does not mandate any particular privacy-management product, consent
 platform, or data-subject-request tool; an operator MAY use such tooling to satisfy these
-requirements, and conformance is assessed against the requirements here. This amendment does not
-weaken OQGF-A: the append-only store is never made deletable. It adds a mechanism — crypto-shredding
-— by which the *content* of a personal-data record can be made irrecoverable while the *record*
-remains, so the erasure obligation is met without the store ever deleting anything. Where privacy
-law and the accountability record are in genuine tension, this amendment resolves that tension
-explicitly (AMD.0.6 assumption 1 and its stated residual) rather than leaving it implicit.
+requirements, and conformance is assessed against the requirements here. The append-only audit history is preserved during its applicable retention period. Personal payloads are separately encrypted so governed key destruction can make the covered ciphertext inaccessible while retaining a minimized event record. This is a technical erasure mechanism with explicit assumptions, not proof that every jurisdiction's erasure obligations have been fulfilled. Residual plaintext, key copies, backups, metadata, and inference risk must be assessed.
 
 This amendment does not claim conformance with any specific privacy statute. Where it cites GDPR,
 CCPA/CPRA, or other regimes, it does so as **lineage** — the requirements are consistent with the
@@ -155,19 +154,9 @@ jurisdiction-specific facts the framework cannot assess.
 This amendment makes the following design calls. Each is the fail-safe default; flag any you wish
 to change. Assumption 1 is load-bearing and should be ratified explicitly.
 
-1. **Erasure is by crypto-shredding, not record deletion.** Personal data whose erasure may be
-   required SHALL be encrypted at rest under a quantum-safe key; erasure destroys the key; the
-   append-only record and its audit skeleton are preserved; a signed tombstone records the erasure.
-   Assumed because it is the only construction that satisfies both the erasure obligation and the
-   OQGF-A append-only / never-delete principle at once. The alternative — deleting the record —
-   would break the append-only chain and the accountability guarantee that the whole framework
-   rests on, to satisfy an obligation that key destruction already satisfies. **This is the
-   decision that reconciles privacy with accountability, and it is yours to ratify.**
-2. **Crypto-shredding requires quantum-safe encryption.** The key protecting erasable personal data
-   SHALL be quantum-safe (CNSA 2.0). Assumed because a quantum-vulnerable cipher makes "erased"
-   ciphertext recoverable by a future CRQC — harvest-now-decrypt-later applies to erased data
-   exactly as to any other data (OQGF-G-7). Erasure that a future machine can undo is not erasure;
-   in a post-quantum framework, only post-quantum crypto-shredding is durable.
+1. **Crypto-shredding is the framework's payload-erasure mechanism.** The public draft retains this design choice, subject to P-11.5's key-copy, payload, and metadata conditions. It is not asserted to be the only possible legal or technical erasure construction. No historical ratification is inferred from this revision.
+2. **Use authenticated payload encryption with governed keys.** AES-256 protects the payload. ML-KEM establishes keying material where asymmetric key establishment is needed; it is not an at-rest payload cipher. Erasure depends on eliminating every usable decryption/recovery path within the claimed scope, not merely choosing an approved algorithm.
+
 3. **Personal-ness is a classification dimension, orthogonal to sensitivity tier.** A datum can be
    Personal and Public, or Personal and Secret; the Personal-Data Tag triggers lifecycle
    obligations regardless of tier. Assumed because privacy duties attach to personal data even when
@@ -219,29 +208,19 @@ fulfilled, whichever is earlier. An indefinite-retention default SHALL NOT satis
 The Retention Period is subject to any overriding legal-hold or sector-retention obligation, which,
 where it applies, SHALL itself be recorded as the basis for continued retention.
 
-**OQGF-P-11.5 (Erasure by Crypto-Shredding).** Erasure of Personal Data SHALL be performed by
-destroying the quantum-safe key under which it is encrypted at rest, and SHALL NOT be performed by
-deleting the record from the append-only store (Organ 5, OQGF-A). On erasure: the ciphertext and the
-audit skeleton — that a record existed, its timestamp, its classification, and the authority for
-erasure — SHALL be preserved; and a signed Erasure Tombstone SHALL be appended recording the erasure
-event, its time, and the acting DAP (dual-family signature at High-Assurance per OQGF-M-2). The key
-protecting erasable Personal Data SHALL be quantum-safe (CNSA 2.0: ML-KEM key establishment and/or
-AES-256), because erasure by key destruction is durable only if the cipher is not quantum-vulnerable
-(OQGF-G-7). This requirement reconciles the erasure obligation with the OQGF-A append-only and
-never-delete principles: the record is never deleted; its content is made cryptographically
-irrecoverable, and the fact and authority of erasure are themselves recorded.
+**OQGF-P-11.5 (Erasure by Crypto-Shredding).** Personal payloads subject to erasure SHALL be encrypted at rest using AES-256 in an approved authenticated construction with an appropriately scoped data-encryption key. Where asymmetric key establishment is used, an approved PQC KEM SHALL protect that establishment; ML-KEM is not a payload-encryption algorithm. Erasure SHALL destroy the keys and all usable copies, wrappers, recovery material, and threshold-share combinations capable of recovering the covered payload, including in replicas and backups within the declared scope. Residual plaintext and derived personal copies SHALL be erased or separately dispositioned under P-11.4.
+
+The ciphertext and minimized audit skeleton SHALL remain for their applicable lawful retention period without rewriting prior signed events. Personal fields within the skeleton, subject identifiers, low-entropy digests, and linkage metadata SHALL themselves satisfy P-11; hashing alone SHALL NOT be assumed to anonymize them. A signed Erasure Tombstone SHALL record the scope, time, DAP, verification evidence, and any residual or deferred erasure (dual-family at High-Assurance). Erasure SHALL NOT be reported complete while a known usable recovery path remains. The record SHALL distinguish verified destruction within the declared boundary from unverified third-party copies. A tombstone or algorithm name alone does not establish legal erasure compliance. Where retained content would violate an applicable obligation, the system SHALL record the conflict, restrict the affected processing, and resolve retention/design with the competent authority rather than claim both obligations satisfied.
 
 **OQGF-P-11.6 (Subject Rights).** A conforming system SHALL be able to answer, for an authenticated
 data subject: what Personal Data relating to them is held, its declared Purpose, and its Retention
 Period; and SHALL be able to execute erasure (OQGF-P-11.5) on a lawful request. These SHALL be served
 through the Organ 5 regulator query interface (OQGF-A-7), extended to authenticated data subjects,
-within that interface's declared response window. A subject's own personal data SHALL be
-reconstructable for disclosure and erasable on request through the same accountable interface that
-serves a lawful regulatory query.
+within that interface's declared response window. Access SHALL be limited to the authenticated subject's authorized data; this does not expose other subjects' data or the full regulator audit export. The default OQGF response window is 72 hours, subject to a stricter applicable deadline. A recorded legal hold or other applicable restriction SHALL be reported as a reason for non-erasure, not as completed erasure. Data already validly erased need not be reconstructed; the permitted tombstone/status is returned instead.
 
 **OQGF-P-11.7 (Personal Data in the Accountability Record).** Where Organ 5 records a regulated
-decision (OQGF-A-1), any Personal Data in the recorded input SHALL be stored either as a
-privacy-preserving derivative or under the crypto-shredding regime of OQGF-P-11.5, so that the
+decision (OQGF-A-1), any Personal Data in inputs, outputs, explanations, trajectories, identifiers, or metadata SHALL be stored either as a
+demonstrably non-personal derivative or under the crypto-shredding regime of OQGF-P-11.5, so that the
 accountability obligation (OQGF-A) and the erasure obligation (OQGF-P-11.5) do not conflict. This
 converts the "privacy-preserving derivative" hook already present in OQGF-A-1 into a specified
 obligation: the accountability record SHALL NOT become a store of un-erasable Personal Data, and the
@@ -252,20 +231,12 @@ re-signed record of erased Personal Data SHALL remain irrecoverable.
 
 ## AMD.2 Conformance criteria per level
 
-**Baseline (OQGF-B):** Personal Data identified and tagged across sensitivity tiers, the tag
-triggering lifecycle obligations even when the tier is Public (OQGF-P-11.1); a declared Purpose and
-Retention Period per datum (OQGF-P-11.3, OQGF-P-11.4); erasure by crypto-shredding under a
-quantum-safe key with the append-only record preserved and a signed tombstone (OQGF-P-11.5);
-personal data in the accountability record stored as a derivative or under crypto-shredding
-(OQGF-P-11.7). Single-PQC-family tombstone signatures acceptable; at-rest encryption quantum-safe
-per CNSA 2.0.
+**Baseline (OQGF-B):** P-11.1–P-11.7 apply wherever Personal Data is processed, including Public data: tagging, minimization, lawful declared purpose, bounded retention, scoped cryptographic erasure, subject access and lawful erasure requests, and protection of personal data throughout the accountability record. Single-PQC-family tombstone signatures are acceptable; at-rest payload encryption uses AES-256 with governed key management.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus minimization into Privileged Contexts
-(OQGF-P-11.2); purpose-limitation enforcement with a fresh DAP decision required on any material
-repurposing (OQGF-P-11.3); subject access answered through the Organ 5 interface (OQGF-P-11.6).
+**Enhanced (OQGF-E):** All Baseline criteria, assessed under A.7. Minimization, purpose enforcement, and subject rights are already mandatory at Baseline.
 
-**High-Assurance (OQGF-H):** All Enhanced criteria, plus subject erasure executed within the
-OQGF-A-7 response window (OQGF-P-11.6); dual-PQC-family signatures on Erasure Tombstones (ML-DSA +
+**High-Assurance (OQGF-H):** All Enhanced criteria; the subject-response window under
+P-11.6 already applies at every tier. Additional duties are dual-PQC-family signatures on Erasure Tombstones (ML-DSA +
 SLH-DSA per OQGF-M-2); DAP-reviewed Purpose declarations; **per-subject key granularity** so that
 erasure is subject-precise rather than purpose-coarse; threshold custody of erasable-data keys
 consistent with OQGF-R-6; and periodic minimization audits of Privileged Contexts.
@@ -279,12 +250,8 @@ An auditor SHALL:
 1. Identify a datum relating to an identifiable person whose sensitivity tier is Public, and confirm
    it is tagged Personal and that the tag triggers the lifecycle obligations despite the Public tier
    (OQGF-P-11.1).
-2. Request erasure of a Personal datum and confirm: the quantum-safe key is destroyed; the ciphertext
-   and audit skeleton remain in the append-only store; a signed Erasure Tombstone records the event,
-   its time, and the acting DAP; and the record is **not** deleted (OQGF-P-11.5). Then confirm the
-   at-rest key was quantum-safe (CNSA 2.0) such that the erased content is not recoverable by breaking
-   the cipher (OQGF-P-11.5, OQGF-G-7). **This is the load-bearing test of this amendment** — it proves
-   erasure and the append-only record coexist.
+2. Request erasure of a Personal datum and inspect the complete decryption/recovery-path inventory. Verify destruction of relevant keys, wrappers and reconstructable shares; inspect replica/backup handling and any plaintext residuals. Confirm a minimized audit skeleton and signed tombstone remain, and that incomplete coverage is reported as incomplete rather than passed (P-11.5). Attempt authorized recovery in an isolated test and check the declared result; finite testing does not prove universal irrecoverability or legal compliance.
+
 3. Confirm Personal Data carries a declared Purpose and Retention Period, then attempt to use it for a
    materially different purpose and confirm a fresh DAP decision is required and recorded, not a silent
    reuse (OQGF-P-11.3).
@@ -320,7 +287,7 @@ An auditor SHALL:
   minimization into Privileged Contexts; **ISO/IEC 27701** (privacy information management) and
   **ISO/IEC 29100** (privacy framework) lineage for the lifecycle obligations.
 - **EU AI Act:** Article 10 (data governance) for minimization and provenance into training data.
-- **CNSA 2.0:** ML-KEM-1024 and/or AES-256 for at-rest encryption of erasable Personal Data (the
+- **Cryptographic roles:** AES-256 for payload encryption and, where used, ML-KEM-1024 for key establishment under an applicable CNSA 2.0 profile (the
   durability basis of crypto-shredding); ML-DSA-87 (+ SLH-DSA at High-Assurance per OQGF-M-2) for
   Erasure Tombstones.
 - **Privacy-regime lineage (consistency, not certification):** GDPR Art. 5 (minimization, purpose
@@ -331,6 +298,8 @@ An auditor SHALL:
 ---
 
 ## AMD.5 Technical architecture (implementation hooks)
+
+**Implementation status:** the following interfaces and dependency names are design sketches. They are not compiled code delivered by this repository. Historical references to an external implementation report the source author's context, not a fresh verification of that implementation. Apply the current normative text and A.0.9; an omitted field, enum variant, verifier check, or backend is not a conformance exemption.
 
 The Personal-Data Tag is a classification *dimension* composing with the AMD-007 `DataClassification`,
 carried on the data descriptor and the Boundary Custody Record. Erasure reuses the existing key
@@ -384,12 +353,7 @@ pub struct ErasureTombstone {
 }
 ```
 
-The safety property is a key-management fact, not a store-deletion path: the append-only store has
-no delete operation, and `crypto_shred` never calls one — it destroys a `SubjectKeyRef` and appends a
-tombstone. Because the at-rest key is quantum-safe (CNSA 2.0), the ciphertext that remains is
-irrecoverable even against a future CRQC, so the erasure is durable in exactly the threat model the
-whole framework is built for. Erasure and append-only integrity are not traded off against each
-other; they are made compatible by moving the deletion from the record to the key.
+The sketch identifies a key reference and an erasure record. Actual erasure requires the P-11.5 inventory and verification of plaintext copies, key wrappers, replicas, backups, and recoverable share quorums. Deleting a handle is insufficient if another route can recover the key. Cryptographic erasure is conditional on the encryption, key lifecycle, threat model, and declared coverage; no code in this repository demonstrates those conditions.
 
 ### AMD.5.2 What this closes, and what it does not
 
@@ -398,11 +362,11 @@ This amendment **closes** the following:
 - **The absence of personal-data governance.** Personal data now has a classification dimension and a
   full lifecycle — minimization, purpose limitation, retention, erasure, and subject rights — where
   the framework previously governed only generic sensitive data (OQGF-P-11.1 through OQGF-P-11.6).
-- **The erasure-versus-append-only contradiction.** Crypto-shredding under a quantum-safe key
-  satisfies the right to erasure while the append-only store deletes nothing; the record and the
+- **The erasure-versus-append-only contradiction.** Verified crypto-shredding addresses payload access within its declared scope, subject to applicable law and residual-copy assessment, while the record and the
   authority for its erasure both survive (OQGF-P-11.5).
-- **The quantum durability gap in erasure.** Requiring the at-rest key to be quantum-safe closes the
-  hole in which "erased" data could be recovered by a future CRQC — the framework's own core threat
+- **The quantum durability gap in erasure.** The required payload-encryption and key-lifecycle
+  profile addresses the declared quantum threat under its assumptions; it does not prove
+  permanent irrecoverability against every future attack. This remains part of the core threat
   model, applied to erasure (OQGF-P-11.5, OQGF-G-7).
 - **Silent repurposing of personal data.** A material change of purpose is now a recorded,
   DAP-accountable decision, closing the personal-data half of the shadow-AI ingress problem AMD-007
@@ -419,13 +383,8 @@ This amendment **does not** fully close, and states so honestly:
   by itself guarantee no key copy persists anywhere; that is key-management hygiene, a governance and
   operational problem. This is the same shape as prior residuals, bounded by threshold custody
   (OQGF-R-6) and DAP accountability, and named rather than eliminated.
-- **Crypto-shredding erases content, not the fact of the record.** The append-only skeleton
-  necessarily preserves that a record existed, when, and under what classification. For most privacy
-  regimes this is acceptable and is often itself required by the audit obligation; but a regime that
-  demanded erasure of the *existence* of a record could not be satisfied without breaking append-only
-  integrity. The framework states this tension honestly and resolves it in favor of preserving the
-  audit skeleton, because an accountability framework that could erase the fact of its own records
-  could erase its own accountability. This is a deliberate boundary, not an oversight.
+- **The skeleton may itself be personal.** Identifiers, timestamps, classification and linkage can retain personal information. P-11.5 now requires minimization and separate treatment of those fields; it does not place an audit preference above an applicable erasure or retention obligation. Where the design cannot satisfy both, the system must disclose the unmet requirement and resolve its processing/retention design rather than report compliance.
+
 - **Identifiability is a judgment.** Whether a datum "relates to an identifiable person" — especially
   after pseudonymization or aggregation — is a governance judgment; mislabeling personal data as
   non-personal opens a hole in OQGF-P-11.1. This is the same shape as the AMD-007 classification-
@@ -473,4 +432,4 @@ the shape of a prior amendment's residual.
 — End of OQGF Amendment 009.
 
 <!-- source-sync:navigation -->
-**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-11). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-11). Its identity and historical entries are retained; current text includes the dated consistency corrections. See the [integration map](OQGF-1_0.md#integration-map) and [resolution record](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

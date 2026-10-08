@@ -2,6 +2,9 @@
 
 The Coordinated Signaling Requirement: Cytokine-Style Posture Coupling Without Central Command Amendment ID: OQGF-AMD-2026-004 Amends: OQGF-1.0, Section A.P (Physiology Layer). Supersedes the deferred OQGF-P-7 obligation introduced as a stub in AMD-002 with full normative content (OQGF-P-7.1 through OQGF-P-7.6). The AMD-002 P-7 stub SHALL be annotated as superseded by this amendment. Author: Jeremy Rose, CEO — Odin’s LLC, Wasilla, Alaska Date: 8 June 2026 Status: Public draft for NIST, sector regulators, and the Odin’s engineering team Normative dependencies: all five organs; OQGF-R (Organ 4, redundancy), OQGF-A (Organ 5); OQGF-P-5 (AMD-002, storm detection); OQGF-P-8 (AMD-005, resolution); interacts with AMD-001.
 
+
+**Consistency revision — 8 October 2026:** current requirements, tier summaries, and assessments are synchronized with the integrated framework. The [common conformance/signature/retention rules](OQGF-1_0.md#a09-common-interpretation-signature-profiles-and-assessment-limits) apply to this amendment. See the [resolution record](OQGF-1_0.md#synchronization-review). Original IDs and dated decisions are preserved; this is a public-draft maintenance revision, not a new AMD or an implementation pass.
+
 ## AMD.0 Front matter
 
 ### AMD.0.1 Purpose of this amendment
@@ -68,9 +71,9 @@ you wish to change.
 Signal envelope is mandated, along with a small set of canonical Signal classes; the
 full per-organ Signal catalog is left to implementation (OQGF-P-7.1). Assumed to
 give teeth without over-specifying.
-2. At-least-once, per-source-ordered, idempotent delivery. Signals are delivered
-at least once, ordered per source, with idempotent handlers; no global ordering is
-required. Assumed to match decentralized biology and survive partition.
+2. Per-source-ordered, idempotent delivery with retry while valid. At-least-once
+delivery is conditional on recovery before expiry; a permanent partition cannot be
+guaranteed away. Record delivery gaps under P-7.1. No global ordering is required.
 3. Raise-only autonomy. Autonomous Signals may only raise posture; de-escalation
 is resolution-gated (OQGF-P-7.4, with OQGF-P-8). Assumed because it makes a
 forged or replayed Signal incapable of standing the system down — the fail-safe
@@ -84,7 +87,11 @@ signed envelope carrying: the source organ, the Signal class, a severity, the in
 posture effect, a scope, a freshness nonce, and an expiry — signed under ML-DSA
 (dual-family at High-Assurance per OQGF-M-2). A Signal that is unsigned, malformed,
 or expired SHALL be ignored. An attacker SHALL NOT be able to drive organ posture by
-forging a Signal.
+forging a Signal. Receivers SHALL authenticate source authority, deduplicate nonces or
+sequence identifiers, and make repeated delivery idempotent. Delivery SHALL be retried
+while valid, ordered per source, with durable tracking of loss or expiry. At-least-once
+delivery is conditional on recovery within the validity window; a partition does not
+justify honoring an expired Signal or claiming that delivery occurred.
 OQGF-P-7.2 (Posture Coupling). A Signal of sufficient severity SHALL be able to
 change the posture of an organ other than the one that emitted it — for example, an
 Organ 2 (Inflammation) HNDL detection raising Organ 3 (MHC) attestation frequency
@@ -97,9 +104,10 @@ gracefully, not halt it. This requirement is assessed jointly with Organ 4 (OQGF
 the “no central command” guarantee.
 OQGF-P-7.4 (Raise-Only Autonomy). An autonomous Signal MAY only raise defensive
 posture. Lowering posture (de-escalation) SHALL NOT be performed in response to a
-raw Signal and SHALL be governed by Resolution (OQGF-P-8). Consequently a forged,
-replayed, or misleading Signal cannot stand the system down; at worst it can over-tighten, which is bounded by self-tolerance (OQGF-P-1, OQGF-P-5). This mirrors the
-monotonic, fail-safe spirit of AMD-001.
+raw Signal and SHALL be governed by Resolution (OQGF-P-8). Forged or replayed Signals SHALL be rejected under P-7.1. Raise-only behavior
+prevents direct autonomous de-escalation but does not by itself prove safety: excessive
+tightening can disrupt service. P-1, P-5, and applicable P-15 host-harm controls govern
+that induced risk; it SHALL NOT be dismissed as harmless merely because posture rose.
 OQGF-P-7.5 (Cascade Bound). Signal propagation SHALL be rate-limited and loop-bounded so that a Signal Cascade cannot itself threaten host availability. A cascade
 exceeding its declared bound SHALL be detected and raised as a Response Storm under
 OQGF-P-5. This is the cytokine-storm prevention, and it is the binding link to AMD-002.
@@ -110,15 +118,14 @@ Coordination SHALL be auditable after the fact.
 
 ## AMD.2 Conformance criteria per level
 
-Baseline (OQGF-B): Signed Signal envelope with expiry, forged/expired Signals ignored
-(OQGF-P-7.1); at least one declared, recorded cross-organ Posture Coupling (OQGF-P-7.2); raise-only autonomy (OQGF-P-7.4). Single-PQC-family Signal signatures
-acceptable.
-Enhanced (OQGF-E): All Baseline criteria, plus demonstrated decentralization —
-coordination survives loss of any one transport path (OQGF-P-7.3); cascade bounding
-with storm escalation (OQGF-P-7.5); Signal provenance recorded in Organ 5 (OQGF-P-7.6).
+**Baseline (OQGF-B):** P-7.1–P-7.6 apply: authenticated, fresh Signals; declared cross-organ coupling; resilient coordination; raise-only autonomous signaling; bounded cascades; and recorded material effects. Single-PQC-family Signal signatures are acceptable. Loss of one organ or transport path must not silence the surviving coordination paths.
+
+**Enhanced (OQGF-E):** All Baseline criteria, assessed by a third party under A.7. Decentralization, cascade bounding, and provenance are already mandatory at Baseline.
+
 High-Assurance (OQGF-H): All Enhanced criteria, plus dual-PQC-family Signal
-signatures (ML-DSA + SLH-DSA); demonstrated graceful degradation under loss of any
-one organ; and a declared, reviewed full coupling matrix across all five organs.
+signatures (ML-DSA + SLH-DSA); independent review of the graceful-degradation
+evidence already required for applicable failure cases; and a declared, reviewed full
+coupling matrix across all five organs.
 
 ## AMD.3 Assessment procedures
 
@@ -151,7 +158,11 @@ Cross-discipline lineage: consistent with event-driven architecture,
 gossip/epidemic propagation (decentralized, partition-tolerant), and the
 immunological “danger model” (context, not mere foreignness, drives the response).
 
+**Mapping boundary:** CNSA references do not make SLH-DSA an NSS-approved algorithm. The dual-family rule is an additional OQGF profile requirement; A.0.9 governs compatibility, algorithm parameters, and evidence roles. A mapping is not external certification.
+
 ## AMD.5 Technical architecture (implementation hooks)
+
+**Implementation status:** the following interfaces and dependency names are design sketches. They are not compiled code delivered by this repository. Historical references to an external implementation report the source author's context, not a fresh verification of that implementation. Apply the current normative text and A.0.9; an omitted field, enum variant, verifier check, or backend is not a conformance exemption.
 
 The Signal envelope is a core type ( oqgf-core ); the transport is a trait ( oqgf-signal::SignalBus ) with decentralized, gossip-capable implementations — a trait, not a
 mandated product, per AMD.0.4. Each organ implements an idempotent handler. The
@@ -230,4 +241,4 @@ product. Generalizes AMD-001’s point-to-point emission into a system-wide prop
 — End of OQGF Amendment 004.
 
 <!-- source-sync:navigation -->
-**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-7). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-7). Its identity and historical entries are retained; current text includes the dated consistency corrections. See the [integration map](OQGF-1_0.md#integration-map) and [resolution record](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

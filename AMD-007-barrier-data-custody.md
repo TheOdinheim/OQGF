@@ -8,6 +8,9 @@
 **Status:** Public draft for NIST, sector regulators, and the Odin's engineering team
 **Normative dependencies:** OQGF-I (Organ 2, boundary + sentinels), OQGF-G (Organ 1, for the custody-record-as-bill-of-materials sibling and the AIBOM privileged-context link, OQGF-G-2), OQGF-M (Organ 3, the actor side of a crossing, OQGF-M-1), OQGF-A (Organ 5, recording); OQGF-P-2 (deterministic/heuristic boundary, AMD-002), OQGF-P-3 and OQGF-P-4 (central and peripheral tolerance, AMD-002), OQGF-P-7 (coordinated signaling, AMD-004), OQGF-P-8 (resolution, AMD-005), OQGF-P-9 (accountable risk acceptance, AMD-006); interacts with AMD-001 (costimulation / architectural anergy).
 
+
+**Consistency revision — 8 October 2026:** current requirements, tier summaries, and assessments are synchronized with the integrated framework. The [common conformance/signature/retention rules](OQGF-1_0.md#a09-common-interpretation-signature-profiles-and-assessment-limits) apply to this amendment. See the [resolution record](OQGF-1_0.md#synchronization-review). Original IDs and dated decisions are preserved; this is a public-draft maintenance revision, not a new AMD or an implementation pass.
+
 ---
 
 ## AMD.0 Front matter
@@ -43,7 +46,7 @@ An epithelial barrier is not a passive wall. It is **selective and bidirectional
 
 A crucial detail governs the strictness of the barrier: **different compartments warrant different barriers.** The blood-brain barrier enforces a far stricter policy on what may enter the central nervous system than the gut mucosa enforces on the lumen. The strictness is a property of the compartment's value. This is the biological analog of **classification-dependent destination policy** and of the framework's conformance levels.
 
-The translation is exact. An organization is a set of trust compartments separated by boundaries. The barrier at each boundary governs what data crosses — not by the identity of the mover (that is Organ 3), but by **what the data is** (its classification) and **where it is going** (destination policy), carried in a signed custody record that tags the data as sIgA tags an antigen, sampled by a content sentinel as M cells sample the lumen. Data routed around the barrier is the leaky-gut failure, and it is an incident in its own right.
+The analogy motivates the design below; it is not an engineering proof. An organization is a set of trust compartments separated by boundaries. The barrier at each boundary governs what data crosses — not by the identity of the mover (that is Organ 3), but by **what the data is** (its classification) and **where it is going** (destination policy), carried in a signed custody record that tags the data as sIgA tags an antigen, sampled by a content sentinel as M cells sample the lumen. Data routed around the barrier is the leaky-gut failure, and it is an incident in its own right.
 
 ### AMD.0.4 Terminology additions
 
@@ -77,9 +80,9 @@ These requirements establish the Barrier Layer as a sub-function of Organ 2.
 
 **OQGF-I-8 (Barrier at Controlled Boundaries).** A conforming system SHALL identify its Controlled Boundaries and SHALL deploy a Barrier at each that governs the crossing of data content in both directions. The Barrier is the enforcement counterpart to the OQGF-I-1 sentinel: the sentinel observes what crosses; the Barrier decides whether it may. A Controlled Boundary with no Barrier does not satisfy this requirement.
 
-**OQGF-I-9 (Boundary Custody Record).** Data authorized to cross a Controlled Boundary above the Public classification SHALL carry, or be matched at the Barrier to, a signed Boundary Custody Record stating at minimum the data's classification, its origin, and the destinations authorized for that classification. The BCR is a bill of materials for data in transit — sibling to the CBOM (OQGF-G-1) and AIBOM (OQGF-G-2) — and SHALL be signed under a signature algorithm approved at the system's conformance level. A BCR that is unsigned, malformed, or expired SHALL NOT authorize a crossing.
+**OQGF-I-9 (Boundary Custody Record).** Data authorized to cross a Controlled Boundary above the Public classification SHALL carry, or be matched at the Barrier to, a signed Boundary Custody Record stating at minimum the data's classification, its origin, and the destinations authorized for that classification. The BCR is a bill of materials for data in transit — sibling to the CBOM (OQGF-G-1) and AIBOM (OQGF-G-2) — and SHALL be signed under a signature algorithm approved at the system's conformance level. The BCR SHALL bind the covered data, boundary, destination, issuer, issue time, and expiry. A BCR that is unsigned, malformed, invalidly signed, or expired SHALL NOT authorize a crossing.
 
-**OQGF-I-10 (Egress Control — Deterministic, Fail-Closed).** Data of a declared classification above Public SHALL NOT cross a Controlled Boundary to a destination not authorized for that classification. Absent a valid BCR authorizing the crossing, the Barrier SHALL deny it. Enforcement of a declared classification against an unauthorized destination is a **Deterministic Gate** under OQGF-P-2 (AMD-002): it is fail-closed and non-suppressible, and no tolerance mechanism, exception, or operator action SHALL open it. A deliberate, bounded decision to send classified data past the Barrier for a legitimate reason that cannot yet be otherwise satisfied SHALL be handled as **Accountable Risk Acceptance** under OQGF-P-9 (AMD-006) — recorded, scoped, expiring, DAP-signed, its finding kept visible and its verdict visibly distinct from an unrestricted crossing — and SHALL NOT be expressed as suppression.
+**OQGF-I-10 (Egress Control — Deterministic, Fail-Closed).** Data above Public SHALL cross a Controlled Boundary only with a valid BCR and an authorized destination decision. The ordinary Destination Policy SHALL deny an unauthorized destination. A bounded exception MAY proceed only through P-9.2 where the applicable destination/classification policy and external authority permit it, with a valid BCR bound to the authorized exception and a distinct accepted-risk verdict. The original policy finding SHALL remain visible. Missing, malformed, expired, or invalidly signed BCRs SHALL NOT be excused by risk acceptance. Tolerance, a model instruction, or an unauthorized operator action SHALL NOT open this Deterministic Gate. A DAP's signature does not by itself grant declassification or disclosure authority.
 
 **OQGF-I-11 (Ingress Provenance).** Data entering across a Controlled Boundary without established provenance SHALL be marked untrusted and SHALL NOT enter a Privileged Context — a training corpus, evaluation dataset, fine-tuning corpus, model registry, or any AIBOM-governed artifact (OQGF-G-2) — until its provenance is established and recorded. Unprovenanced ingress data MAY be used in non-privileged contexts; it SHALL NOT be treated as authoritative, nor admitted to the artifacts from which models are built, on the strength of its mere arrival.
 
@@ -95,9 +98,9 @@ These requirements establish the Barrier Layer as a sub-function of Organ 2.
 
 ## AMD.2 Conformance criteria per level
 
-**Baseline (OQGF-B):** Barrier deployed at identified Controlled Boundaries (OQGF-I-8); signed BCR required for egress above Public (OQGF-I-9); deterministic, fail-closed egress control with knowingly-proceed routed through Accountable Risk Acceptance, never suppression (OQGF-I-10); Barrier decisions recorded in Organ 5 (OQGF-I-13); Uncontrolled Channels enumerated and recorded (OQGF-I-14). Single-PQC-family BCR signatures acceptable.
+**Baseline (OQGF-B):** I-8–I-15 apply at Controlled Boundaries: signed custody, deterministic egress authorization, ingress-provenance gating, screened content sentinels, recorded decisions, an Uncontrolled-Channel inventory and reduction obligation, and bypass detection. Single-PQC-family BCR signatures are acceptable.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus ingress-provenance gating into Privileged Contexts (OQGF-I-11); a data-content sentinel with central-tolerance screening and tolerable false positives (OQGF-I-12); Barrier-Bypass detection feeding the graded-response engine (OQGF-I-15); a documented reduction plan for the enumerated Uncontrolled Channels (OQGF-I-14).
+**Enhanced (OQGF-E):** All Baseline criteria, plus a documented reduction plan for the enumerated Uncontrolled Channels. Ingress provenance, content screening, and bypass detection are already required at Baseline.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus dual-PQC-family BCR signatures (ML-DSA + SLH-DSA, consistent with OQGF-M-2); DAP-reviewed Destination Policy; full BCR retention in Organ 5 for the sector retention period; and periodic re-screening of the content sentinel against the evolving Self Set as the baseline changes (consistent with OQGF-P-6 High-Assurance).
 
@@ -107,8 +110,8 @@ These requirements establish the Barrier Layer as a sub-function of Organ 2.
 
 An auditor SHALL:
 
-1. Attempt to egress data of a declared classification above Public to a destination not authorized for that classification, and confirm the Barrier denies it fail-closed; confirm no tolerance mechanism, exception, or operator action can open it (OQGF-I-10). **This is the load-bearing test of this amendment.**
-2. Attempt to send classified data past the Barrier and confirm the only permitted path is an Accountable Risk Acceptance under OQGF-P-9 that keeps the finding visible and produces a verdict distinct from an unrestricted crossing — not a suppression (OQGF-I-10 / AMD-006).
+1. Attempt to egress data of a declared classification above Public to a destination not authorized for that classification, and confirm the Barrier denies it fail-closed; confirm tolerance and unauthorized operator actions cannot open it, and only a policy-eligible P-9 exception with valid custody and disclosure authority can proceed (OQGF-I-10). **This is the load-bearing test of this amendment.**
+2. Attempt to send classified data past the Barrier and confirm an exception to the ordinary destination policy requires a valid BCR and policy-eligible Accountable Risk Acceptance under OQGF-P-9 that keeps the finding visible and produces a verdict distinct from an unrestricted crossing — not a suppression (OQGF-I-10 / AMD-006).
 3. Present data with an expired or malformed BCR and confirm the crossing is denied (OQGF-I-9, OQGF-I-10).
 4. Introduce unprovenanced data at ingress and confirm it cannot enter a training corpus, evaluation set, fine-tuning corpus, or model registry until provenance is established and recorded, while confirming it remains usable in a non-privileged context (OQGF-I-11).
 5. Inject sensitive data without a classification label and confirm the content sentinel flags it and emits a Signal, and confirm its false positives are tolerable and screened rather than fail-closed (OQGF-I-12).
@@ -128,9 +131,13 @@ An auditor SHALL:
 - **EU AI Act:** Article 10 (data governance and training-data provenance) for the ingress path; Article 15 (cybersecurity) for the egress path.
 - **Cross-discipline lineage:** consistent with data-loss-prevention (DLP) egress control, cloud access security broker (CASB) enforcement, data provenance and lineage systems, and zero-trust data security — in which the boundary and the data, not the network perimeter, are the control point.
 
+**Mapping boundary:** CNSA references do not make SLH-DSA an NSS-approved algorithm. The dual-family rule is an additional OQGF profile requirement; A.0.9 governs compatibility, algorithm parameters, and evidence roles. A mapping is not external certification.
+
 ---
 
 ## AMD.5 Technical architecture (implementation hooks)
+
+**Implementation status:** the following interfaces and dependency names are design sketches. They are not compiled code delivered by this repository. Historical references to an external implementation report the source author's context, not a fresh verification of that implementation. Apply the current normative text and A.0.9; an omitted field, enum variant, verifier check, or backend is not a conformance exemption.
 
 The Barrier is an enforcement point at a Controlled Boundary; the Boundary Custody Record is a core type (`oqgf-core`), a sibling to `Cbom` and `Aibom`; the data-content sentinel extends the existing `oqgf-inflammation` sentinel network; and every decision is written to `oqgf-memory` (Organ 5). The deterministic egress gate reuses the AMD-002 `ResponseClass::Deterministic` discipline, and the knowingly-proceed path reuses the AMD-006 `RiskAcceptance` type unchanged. No second DAP type is introduced; the existing `DesignatedAccountableParty` is reused.
 
@@ -175,8 +182,8 @@ pub trait Barrier: Send + Sync {
     /// ingress without provenance yields Quarantine (OQGF-I-11). Records the
     /// decision in Organ 5 (OQGF-I-13). The egress deny is a Deterministic Gate:
     /// this method SHALL NOT expose a path that suppresses a Deny into an Allow;
-    /// the only permitted override is an AMD-006 RiskAcceptance, applied upstream,
-    /// which keeps the finding visible.
+    /// an exception requires valid custody plus a policy-eligible P-9 acceptance.
+    /// The authoritative release gate must validate both and retain the finding.
     fn evaluate(
         &self,
         data: &DataDescriptor,
@@ -202,7 +209,7 @@ pub trait BypassDetector: Send + Sync {
 }
 ```
 
-The type system carries the safety property: `Deny` is a distinct variant of `BarrierVerdict`, and there is no method that turns a `Deny` into an `Allow`. The only sanctioned way past a deterministic egress `Deny` is an `AcceptedRisk` verdict produced by the AMD-006 `RiskAcceptanceRegistry` applied to the finding — which keeps the finding visible and the verdict distinct. OQGF-I-10's non-suppressibility is enforced structurally, in the spirit of OQGF-P-2.
+The enum distinguishes results; it does not prove enforcement. A conforming consumer must validate BCRs, P-9 eligibility and authority, expiry, and the distinct accepted-risk decision before release. Tests must exercise denied and exceptional paths; this sketch alone supplies no such evidence.
 
 ### AMD.5.2 What this closes, and what it does not
 
@@ -247,4 +254,4 @@ v1.0 — Initial public draft, 10 July 2026. Introduces the Barrier Layer as a n
 — End of OQGF Amendment 007.
 
 <!-- source-sync:navigation -->
-**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#organ-2). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#organ-2). Its identity and historical entries are retained; current text includes the dated consistency corrections. See the [integration map](OQGF-1_0.md#integration-map) and [resolution record](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

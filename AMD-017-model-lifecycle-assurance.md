@@ -23,6 +23,9 @@ OQGF-P-16 (AMD-015, Cognitive Integrity — alignment as the origin of the model
 authority behavior); OQGF-P-2 (AMD-002, deterministic/heuristic boundary); OQGF-A-1/OQGF-A-5
 (Organ 5 recording and the DAP); OQGF-M-2 (dual-PQC-family signatures); CNSA 2.0.
 
+
+**Consistency revision — 8 October 2026:** current requirements, tier summaries, and assessments are synchronized with the integrated framework. The [common conformance/signature/retention rules](OQGF-1_0.md#a09-common-interpretation-signature-profiles-and-assessment-limits) apply to this amendment. See the [resolution record](OQGF-1_0.md#synchronization-review). Original IDs and dated decisions are preserved; this is a public-draft maintenance revision, not a new AMD or an implementation pass.
+
 ---
 
 ## AMD.0 Front matter
@@ -177,7 +180,7 @@ replacement; the AIBOM continues to serve its existing inventory function.
 
 **OQGF-P-18.2 (Dataset Provenance).** Each material training dataset referenced in the Training
 Provenance Record SHALL carry Dataset Provenance: source and collection method; license and
-terms; cryptographic hash (SHA-256 or SHA-3); size and date range; preprocessing applied; known
+terms; cryptographic digest under the applicable A.0.9 profile (SHA-384 or SHA-512 at High-Assurance); size and date range; preprocessing applied; known
 biases or limitations; contamination assessment (benchmark leakage, PII, copyrighted material,
 adversarial content); and epistemic classification (curated, crawled, synthetic, augmented,
 unknown). Unknown provenance SHALL be recorded as unknown, not silently omitted. A dataset whose
@@ -189,8 +192,10 @@ instruction tuning, safety training, or any technique that shapes the model's be
 properties — SHALL be recorded as a governed lifecycle event. The Alignment Record SHALL
 include: the technique and its parameters; the reward model or preference dataset (with its own
 provenance); safety benchmarks evaluated before and after alignment; the responsible DAP; and
-the version. A model whose alignment process is undocumented — whose behavioral origin is an
-unauditable black box — does not satisfy this requirement.
+the version. Where no alignment process was performed or the model class has no such process, the
+record SHALL state that fact with justification. Unknown or withheld alignment history
+SHALL be recorded as an evidence gap, not as a justified absence. An applicable but
+undocumented alignment process does not satisfy this requirement.
 
 **OQGF-P-18.4 (Safety-Capability Tradeoff).** Where domain-specific fine-tuning or continued
 pretraining materially changes the model's safety alignment — measured by established safety
@@ -241,9 +246,10 @@ SHALL be recorded and governed.
 **OQGF-P-18.5 (Weight Integrity Attestation).** The model weights loaded into inference SHALL be
 cryptographically verified against the signed artifact produced after governance. Verification
 SHALL occur at model load time, not only at the original signing event. The signature SHALL be
-PQC (ML-DSA-87; dual-family ML-DSA + SLH-DSA at High-Assurance per OQGF-M-2). A model whose
-weights are signed once and served for months without re-verification does not satisfy this
-requirement — the served weights must be the governed weights, verified at the point of serving.
+PQC (ML-DSA-87; dual-family ML-DSA + SLH-DSA at High-Assurance per OQGF-M-2). Verification is required at every load and through deployment attestation under P-18.8,
+including material artifact or serving-state changes. High-Assurance adds the continuous
+or near-real-time serving check in AMD.2. These are distinct cadences, not a requirement
+to hash all weights for every token at every tier.
 Discovery that served weights do not match the signed artifact SHALL constitute a weight-integrity
 failure, triggering incident response under A.6.1.
 
@@ -291,18 +297,9 @@ re-deployed without a new governance lifecycle — retirement is not a pause.
 
 ## AMD.2 Conformance criteria per level
 
-**Baseline (OQGF-B):** Training Provenance Record extending the AIBOM (OQGF-P-18.1); per-dataset
-provenance for material datasets (OQGF-P-18.2); alignment process documented (OQGF-P-18.3);
-weight integrity verified at model load (OQGF-P-18.5); fine-tuning recorded as a governed event
-(OQGF-P-18.6); model versioning and lineage (OQGF-P-18.7); base-model license compliance
-documented (OQGF-P-18.9); retirement process declared (OQGF-P-18.10). Single-PQC-family weight
-signatures acceptable.
+**Baseline (OQGF-B):** All P-18 requirements, including P-18.4a–P-18.4c, apply within their stated model/lifecycle scope: training and dataset provenance; alignment records; safety-impact and reward/objective/optimization-pressure evaluation; weight verification; governed derivatives; lineage; deployment attestation; license compliance; and retirement. Record genuinely inapplicable processes with justification; unknown provenance is not inapplicability. Single-PQC-family weight signatures must satisfy P-18.5.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus safety-capability tradeoff measured and
-risk-registered for every material fine-tuning event (OQGF-P-18.4); deployment attestation
-before service and at a declared interval (OQGF-P-18.8); contamination assessment for material
-training datasets; reward-model provenance in alignment records; adversarial testing of weight-
-integrity verification (substitute weights and confirm detection).
+**Enhanced (OQGF-E):** All Baseline criteria, plus adversarial testing of weight-integrity verification. Safety-impact evaluation, material-dataset contamination assessment, applicable alignment/reward provenance, and deployment attestation are already mandatory at Baseline.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus dual-PQC-family weight signatures
 (ML-DSA + SLH-DSA per OQGF-M-2); continuous or near-real-time weight-integrity verification
@@ -319,7 +316,7 @@ An auditor SHALL:
 
 1. Request a model's Training Provenance Record and confirm it extends the AIBOM with lifecycle
    provenance: datasets, configuration, infrastructure, DAP, and date (OQGF-P-18.1). **This is
-   the load-bearing test of this amendment**: it proves the model's origin is governed, not
+   the load-bearing test of this amendment**: it checks, for the exercised case, that the model's origin is governed, not
    just inventoried.
 2. Select a material training dataset and confirm it carries per-dataset provenance: source,
    license, hash, preprocessing, and epistemic classification (OQGF-P-18.2). Confirm unknown
@@ -343,6 +340,9 @@ An auditor SHALL:
    recorded (OQGF-P-18.9).
 10. Retire a model version and confirm the retirement is recorded in Organ 5 and the model
     cannot be re-deployed without a new governance lifecycle (OQGF-P-18.10).
+11. Inspect P-18.4a–P-18.4c evidence for reward manipulation, objective/behavior
+    mismatch, and sustained optimization pressure; confirm failures remain visible
+    in the Risk Register and trigger governed treatment rather than a clean result.
 
 ---
 
@@ -370,9 +370,13 @@ An auditor SHALL:
   High-Assurance per OQGF-M-2. ML-KEM-1024 for protecting weights in transit (training
   pipeline to registry, registry to serving).
 
+**Mapping boundary:** CNSA references do not make SLH-DSA an NSS-approved algorithm. The dual-family rule is an additional OQGF profile requirement; A.0.9 governs compatibility, algorithm parameters, and evidence roles. A mapping is not external certification.
+
 ---
 
 ## AMD.5 Technical architecture (implementation hooks)
+
+**Implementation status:** the following interfaces and dependency names are design sketches. They are not compiled code delivered by this repository. Historical references to an external implementation report the source author's context, not a fresh verification of that implementation. Apply the current normative text and A.0.9; an omitted field, enum variant, verifier check, or backend is not a conformance exemption.
 
 AMD-017 introduces no new organ. It extends `oqgf-core` with lifecycle types and persists
 evidence in `oqgf-memory` (Organ 5). Weight-integrity verification uses the existing OQGF-G-3
@@ -580,4 +584,4 @@ under impossible objectives was the primary driver of boundary-crossing behavior
 — End of OQGF Amendment 017.1.
 
 <!-- source-sync:navigation -->
-**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-18). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-18). Its identity and historical entries are retained; current text includes the dated consistency corrections. See the [integration map](OQGF-1_0.md#integration-map) and [resolution record](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

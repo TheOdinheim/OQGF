@@ -8,6 +8,9 @@
 **Status:** Public draft for NIST, sector regulators, and the Odin's engineering team
 **Normative dependencies:** OQGF-M (Organ 3), OQGF-I (Organ 2), OQGF-A (Organ 5)
 
+
+**Consistency revision — 8 October 2026:** current requirements, tier summaries, and assessments are synchronized with the integrated framework. The [common conformance/signature/retention rules](OQGF-1_0.md#a09-common-interpretation-signature-profiles-and-assessment-limits) apply to this amendment. See the [resolution record](OQGF-1_0.md#synchronization-review). Original IDs and dated decisions are preserved; this is a public-draft maintenance revision, not a new AMD or an implementation pass.
+
 ---
 
 ## AMD.0 Front matter
@@ -94,8 +97,11 @@ using only declared public roots of trust.
 
 **OQGF-M-9 (Monotonic Intent Attenuation).** The authority expressed by an intent SHALL
 only narrow as it propagates. Each hop MAY add intent caveats; no hop SHALL be able to
-broaden the authority it received. The cryptographic construction SHALL make broadening
-computationally infeasible, not merely detectable. Where an actor at hop N requires
+broaden the authority it received. The chain SHALL cryptographically bind each delegation to its authenticated parent,
+recipient, scope, invariants, nonce, and expiry. The deterministic verifier SHALL reject
+a child scope that is not a subset of the authenticated parent scope before action.
+Forgery resistance protects those bindings; signatures alone do not prove attenuation
+or make it impossible for a malicious holder to propose an over-broad child. Where an actor at hop N requires
 authority broader than it received, it SHALL request a new Root Intent from an authorized
 principal rather than self-broadening.
 
@@ -136,14 +142,9 @@ credential lifetime of the actor at the current hop (per OQGF-M-4).
 
 ## AMD.2 Conformance criteria per level
 
-**Baseline (OQGF-B):** Intent Provenance Chain present and signed (OQGF-M-8); Costimulation
-Gate enforced for identity-plus-intent (OQGF-M-11); architectural anergy as default deny.
-Single-PQC-family chain signatures acceptable.
+**Baseline (OQGF-B):** M-8–M-14 apply to privileged multi-hop actions: signed complete intent provenance; deterministic attenuation and invariant checks; identity-plus-intent authorization; behavioral reconciliation; least-privilege root scope; nonce and expiry bounded by the current actor credential. Single-PQC-family chain signatures are acceptable.
 
-**Enhanced (OQGF-E):** All Baseline criteria, plus Monotonic Intent Attenuation
-cryptographically enforced (OQGF-M-9); Intent Invariant Enforcement at every hop
-(OQGF-M-10); Cross-Hop Behavioral Reconciliation feeding the graded response engine
-(OQGF-M-12); documented least-privilege Root Intent scoping (OQGF-M-13).
+**Enhanced (OQGF-E):** All Baseline criteria. Apply the Enhanced system assessment, audit-record signing, and key-custody requirements in A.7, A-3, and R-6.2; no M-8–M-14 duty first becomes mandatory at this tier.
 
 **High-Assurance (OQGF-H):** All Enhanced criteria, plus dual-PQC-family signatures on
 every chain entry (lattice and hash-based, consistent with OQGF-M-2); chain freshness
@@ -160,8 +161,9 @@ An auditor SHALL:
    Provenance Chain. Verify every signature back to the Root Intent using only declared
    public roots of trust.
 2. Attempt to broaden authority at an intermediate hop (inject a caveat removal or scope
-   expansion) and confirm that verification fails — that broadening is computationally
-   prevented, not merely flagged (OQGF-M-9).
+   expansion, including one correctly signed by a malicious child) and confirm rejection
+   before action (OQGF-M-9). Inspect the authenticated bindings and subset verifier; a
+   sampled rejection is not a proof of universal cryptographic security.
 3. Construct an action that satisfies the declared intent at the final hop but violates a
    Root Intent invariant, and confirm the Costimulation Gate denies it and the actor enters
    architectural anergy (OQGF-M-10, OQGF-M-11).
@@ -186,35 +188,24 @@ An auditor SHALL:
 - **Object-capability lineage:** consistent with the principle of attenuation in SPKI/SDSI
   and capability-based delegation models.
 
+**Mapping boundary:** CNSA references do not make SLH-DSA an NSS-approved algorithm. The dual-family rule is an additional OQGF profile requirement; A.0.9 governs compatibility, algorithm parameters, and evidence roles. A mapping is not external certification.
+
 ---
 
 ## AMD.5 Technical architecture (implementation hooks)
+
+**Implementation status:** the following interfaces and dependency names are design sketches. They are not compiled code delivered by this repository. Historical references to an external implementation report the source author's context, not a fresh verification of that implementation. Apply the current normative text and A.0.9; an omitted field, enum variant, verifier check, or backend is not a conformance exemption.
 
 This section maps the amendment to the OQGF reference implementation (Part C), extending
 the `oqgf-mhc` crate.
 
 ### AMD.5.1 Cryptographic construction
 
-The Intent Provenance Chain is constructed as a **PQC-signed, attenuating credential chain**
-combining two primitives, each chosen for a specific property:
+The reference construction is a **PQC-signed, hash-linked delegation chain**. Each signed parent authorizes a named next-hop subject and binds canonical scope, invariants, expiry, and freshness information. Each child binds that authenticated parent digest. A verifier checks the issuer's delegated authority, recipient identity, signature, freshness, accumulated restrictions, and deterministic subset relation before permitting the action.
 
-**Attenuation integrity — keyed hash chaining (post-quantum safe).** Each intent caveat is
-bound to the chain via an HMAC construction keyed on the prior chain state, in the manner of
-macaroons. Symmetric primitives are quantum-resistant: Grover's algorithm yields only a
-quadratic speedup, so HMAC-SHA-384 retains 192-bit security against a quantum adversary.
-The append-only construction makes caveat removal or reordering computationally infeasible —
-an attacker cannot recompute the chain HMAC without the per-hop keys. This delivers
-Monotonic Intent Attenuation (OQGF-M-9): authority can only narrow.
+All required chain verification uses declared public roots and public signed evidence, satisfying M-8. A secret HMAC is not required for this public verification path. The earlier HMAC sketch was inconsistent with that contract and is replaced here; Git history preserves it.
 
-**Non-repudiation — PQC signatures.** Keyed hashing proves the chain was not tampered with,
-but does not prove *who* authored each derivation. Each chain entry is therefore additionally
-signed under ML-DSA (dual-family with SLH-DSA at High-Assurance), binding the hop's attested
-identity (OQGF-M-1) to the intent derivation it produced. This delivers the per-hop
-non-repudiation required for Organ 5 forensic reconstruction and for AU-10.
-
-**Lineage — hash-linked entries.** Each entry references the digest of the prior entry,
-producing a tamper-evident chain back to the Root Intent. Any verifier can walk the chain
-and confirm each link.
+The scope and invariant language must have defined canonical encoding and decidable validation semantics. A free-form paraphrase is not a proof of scope inclusion. Unverifiable or ambiguous authority fails closed and requires a valid new Root Intent where broader authority is needed. Cryptographic security depends on the chosen algorithms, key custody, and complete enforcement; this design description is not a cryptographic proof.
 
 ### AMD.5.2 Core types (extending oqgf-mhc)
 
@@ -222,6 +213,7 @@ and confirm each link.
 /// The original authorized intent, issued by a DAP or authenticated principal.
 pub struct RootIntent {
     pub principal: SubjectId,          // who authorized this
+    pub delegated_to: SubjectId,       // first recipient authorized to use/delegate the root
     pub dap: Dap,                      // accountable natural person (OQGF-A-5)
     pub scope: IntentScope,            // least-privilege authority (OQGF-M-13)
     pub invariants: InvariantSet,      // hard constraints (OQGF-M-10)
@@ -237,7 +229,7 @@ pub struct IntentChainEntry {
     pub emitted_intent: IntentScope,   // MUST be subset of received (OQGF-M-9)
     pub added_caveats: Vec<Caveat>,    // append-only restrictions
     pub added_invariants: InvariantSet,// MAY add, SHALL NOT remove (OQGF-M-10)
-    pub chain_hmac: Hmac,              // attenuation integrity (post-quantum)
+    pub delegated_to: SubjectId,       // bind the next authorized recipient
     pub signature: DualSignature,      // non-repudiation (Signal 2 authorship)
 }
 
@@ -265,8 +257,10 @@ On every privileged action the Costimulation Gate SHALL:
 1. Verify the identity attestation (Signal 1) per OQGF-M-1.
 2. Verify the Root Intent signature and confirm the chain is not expired (OQGF-M-14).
 3. Walk the chain from root to current hop. For each entry: verify the hash link to the
-   prior entry, verify the chain HMAC, verify the PQC signature, and confirm
-   `emitted_intent ⊆ received_intent` (monotonic attenuation, OQGF-M-9).
+   prior entry, verify the authorized issuer and recipient bindings and PQC signature, and confirm
+   that `received_intent` matches the scope actually delegated by the authenticated parent,
+   then check `emitted_intent ⊆ received_intent` and accumulated caveats (OQGF-M-9).
+   A child cannot establish its authority by declaring a broader received scope.
 4. Confirm the proposed action lies within the current (most-attenuated) scope.
 5. Evaluate the action against the accumulated invariant set (OQGF-M-10).
 6. If all checks pass, grant. Otherwise return Anergy, emit a signed denial to Organ 2,
@@ -276,8 +270,7 @@ On every privileged action the Costimulation Gate SHALL:
 
 This amendment **closes** the following:
 
-- Intent broadening across hops — cryptographically prevented by monotonic attenuation
-  (OQGF-M-9), not merely detected.
+- Unauthorized intent broadening across hops — rejected before action by authenticated delegation and deterministic attenuation checks (OQGF-M-9).
 - Intent reframing that violates a hard constraint — caught at every hop by invariant
   enforcement (OQGF-M-10), regardless of how the intent was reworded.
 - Identity-only authorization — eliminated by the Costimulation Gate (OQGF-M-11);
@@ -303,7 +296,7 @@ This amendment **does not** fully close, and states so honestly:
 | Requirement | Implementation hook |
 | --- | --- |
 | OQGF-M-8  | `oqgf-mhc::IntentProvenanceChain`, hash-linked signed entries |
-| OQGF-M-9  | `IntentChainEntry` HMAC chaining + subset check on `emitted_intent` |
+| OQGF-M-9  | Authenticated parent/recipient bindings + deterministic subset check on `emitted_intent` |
 | OQGF-M-10 | `InvariantSet` evaluation at every hop in `CostimulationGate::authorize` |
 | OQGF-M-11 | `CostimulationGate` returning `Anergy` on Signal-1-only or violation |
 | OQGF-M-12 | Behavioral reconciliation feeding `oqgf-inflammation` graded response |
@@ -323,4 +316,4 @@ and human oversight.
 — End of OQGF Amendment 001.
 
 <!-- source-sync:navigation -->
-**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#organ-3). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#organ-3). Its identity and historical entries are retained; current text includes the dated consistency corrections. See the [integration map](OQGF-1_0.md#integration-map) and [resolution record](OQGF-1_0.md#synchronization-review). Future changes must update both views together.
