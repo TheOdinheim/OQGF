@@ -578,3 +578,6 @@ under sustained pressure has a pressure-sensitive alignment failure. Responds to
 under impossible objectives was the primary driver of boundary-crossing behavior.
 
 — End of OQGF Amendment 017.1.
+
+<!-- source-sync:navigation -->
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-18). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

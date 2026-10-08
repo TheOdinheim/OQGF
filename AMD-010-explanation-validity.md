@@ -531,3 +531,6 @@ explanation quality as a judgment, and a wrong Trainability Profile — each map
 a prior amendment's residual.
 
 — End of OQGF Amendment 010.
+
+<!-- source-sync:navigation -->
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#organ-5). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

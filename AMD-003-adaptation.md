@@ -221,3 +221,6 @@ maturation). Binding safety inheritance: a Refined Detector that fails self-tole
 on a Deterministic Gate (OQGF-P-2). Complements AMD-001 (which gates authority) by
 gating learning.
 — End of OQGF Amendment 003.
+
+<!-- source-sync:navigation -->
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-6). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

@@ -321,3 +321,6 @@ costimulation gate. Residual in-scope semantic reframing explicitly scoped to OQ
 and human oversight.
 
 — End of OQGF Amendment 001.
+
+<!-- source-sync:navigation -->
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#organ-3). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

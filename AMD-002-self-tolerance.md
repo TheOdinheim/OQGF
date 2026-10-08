@@ -379,3 +379,6 @@ original stub text is retained, struck through, and cross-referenced rather than
 or rewritten. The self-tolerance core (OQGF-P-1 through P-5) is unchanged. No
 normative requirement was removed.
 — End of OQGF Amendment 002.
+
+<!-- source-sync:navigation -->
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-1). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

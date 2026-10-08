@@ -108,3 +108,6 @@ specified in OQGF-P-12.8 (AMD-011.1).
 **The governed system shall not be the authority over its own evidence.**
 
 That is the Organ 5 principle this patch adds. Everything else is the mechanism that enforces it.
+
+<!-- source-sync:navigation -->
+**Application status — 8 October 2026:** the three edits above are incorporated in [Organ 5](OQGF-1_0.md#organ-5) and the framework change log. Retained here as the source patch; do not apply it a second time.

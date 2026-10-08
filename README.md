@@ -1,14 +1,29 @@
-# OQGF-1.0 — Odin's Quantum AI/ML Governance Framework
+# OQGF-1.0 — Odins Quantum AI/ML Governance Framework
 
 OQGF is an AI security and governance framework modeled on the human immune system, written for federal and critical-infrastructure environments preparing for the post-quantum transition. It is built around five organs — Genetic (compliance-as-code), Inflammation (assumed breach), MHC (zero trust), Redundant Defense, and Memory (360-degree accountability) — plus a cross-cutting Physiology Layer that states properties all five organs must collectively exhibit.
 
-The base document is an integrated deliverable: a formal specification (Part A), a thought-leadership whitepaper, and a technical architecture (Part C). Seven normative amendments extend it. The base document and the amendments together are the framework; read the base document first, then the amendments in numeric order.
+Start with [OQGF-1_0.md](OQGF-1_0.md). It contains the five organs, the shared Physiology Layer, and the integrated requirements, tier criteria, and assessments from all eighteen amendment documents and the Organ 5 evidence-capture patch. The separate amendment files remain in place for their rationale, research, source assumptions, and change history. You do not need to apply them separately to reconstruct the current normative reading.
+
+The framework remains a public draft. [Known source wording issues](OQGF-1_0.md#synchronization-review) are visible; integration does not silently resolve them or establish implementation conformance. [The integration map](OQGF-1_0.md#integration-map) records the revisions used, including AMD-011.1, 012.1, 014.1, 017.1, AMD-006 v2, and AMD-002 editorial v1.1.
+
+## Read by organ
+
+| Section | Current requirements |
+|---|---|
+| [Organ 1](OQGF-1_0.md#organ-1) | Genetic Layer / compliance as code, with shared lifecycle and governance connections |
+| [Organ 2](OQGF-1_0.md#organ-2) | Inflammation / assumed breach, including the Barrier Layer |
+| [Organ 3](OQGF-1_0.md#organ-3) | Identity, attestation, and intent provenance |
+| [Organ 4](OQGF-1_0.md#organ-4) | Redundant defense and tiered key custody |
+| [Organ 5](OQGF-1_0.md#organ-5) | Evidence, explanation validity, and independent capture |
+| [Shared physiology](OQGF-1_0.md#physiology) | Requirements that govern multiple organs together |
+
+For each future amendment, update its source file and the corresponding framework requirements, tiers, assessments, dependencies, and architecture notes in the same change. Preserve requirement identifiers and record the update in the framework change log.
 
 ## Documents
 
 | File | Title |
 |---|---|
-| [OQGF-1_0.md](OQGF-1_0.md) | Odin's Quantum AI/ML Governance Framework (OQGF-1.0) — Formal Specification, Whitepaper, and Technical Architecture |
+| [OQGF-1_0.md](OQGF-1_0.md) | Odins Quantum AI/ML Governance Framework (OQGF-1.0) — Formal Specification, Whitepaper, and Technical Architecture |
 | [AMD-001-intent-binding.md](AMD-001-intent-binding.md) | The Costimulation Requirement: Intent Provenance Binding for Multi-Hop Agentic Systems |
 | [AMD-002-self-tolerance.md](AMD-002-self-tolerance.md) | The Self-Tolerance Requirement: The Physiology Layer and the Bound on Host Harm |
 | [AMD-003-adaptation.md](AMD-003-adaptation.md) | The Adaptation Requirement: Affinity Maturation for Incident-Driven Detection |
@@ -43,6 +58,6 @@ Public draft for NIST, sector regulators, and practitioners. Amendments carry th
 
 ## Author
 
-Jeremy Rose, CEO — Odin's LLC, Wasilla, Alaska
+Jeremy Rose, CEO — Odins LLC, Wasilla, Alaska
 
-© 2026 Odin's LLC. All rights reserved.
+© 2026 Odins LLC. All rights reserved.

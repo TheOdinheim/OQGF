@@ -1658,3 +1658,6 @@ Biological alignment is deliberately composite: the blood-brain barrier supplies
 The proposal names residuals rather than claiming elimination: hidden cognitive influence, unknown provenance, incorrect semantic extraction, over-broad legitimate intent, poorly designed TIRs, covert channels, unmodeled Authority-Bearing State, human social engineering, control-plane compromise, and the absence of universal prompt-injection immunity.
 
 — End of OQGF Amendment 015.
+
+<!-- source-sync:navigation -->
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-16). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

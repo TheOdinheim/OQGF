@@ -160,3 +160,6 @@ The framework said two incompatible things about the same requirement, and an im
 The answer is that **key custody is tiered because the threats it defends against are tiered.** Hardware-backed custody with dual control defends the Enhanced threat model — key exfiltration and unilateral issuance — and it is testable, achievable, and now explicitly required where before it was absent. Threshold custody defends the High-Assurance threat model — custodian coercion, HSM single-point compromise, and custodian loss — and it belongs beside cross-jurisdictional replication, because both require the same thing: an organization distributed enough that no single point of trust remains.
 
 **Placing each control at the tier that can implement it honestly is stronger framework design than placing every control at the tier that sounds strongest.** A requirement no one can meet is a requirement everyone learns to explain away.
+
+<!-- source-sync:navigation -->
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#organ-4). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

@@ -228,3 +228,6 @@ bounding tied to storm detection (OQGF-P-5); and Signal provenance in Organ 5.
 Reaffirms the AEGIS boundary: OQGF requires coordinated signaling as a property, not a
 product. Generalizes AMD-001’s point-to-point emission into a system-wide property.
 — End of OQGF Amendment 004.
+
+<!-- source-sync:navigation -->
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-7). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.

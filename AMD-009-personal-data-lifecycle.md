@@ -471,3 +471,6 @@ fact versus the content, identifiability judgment, and over-broad purpose declar
 the shape of a prior amendment's residual.
 
 — End of OQGF Amendment 009.
+
+<!-- source-sync:navigation -->
+**Integrated reading — 8 October 2026:** this amendment's operative requirements, tier criteria, and assessments are incorporated in [the current framework](OQGF-1_0.md#oqgf-p-11). Its original identity and text are retained here. See the [integration map](OQGF-1_0.md#integration-map) and [unresolved source readings](OQGF-1_0.md#synchronization-review). Future changes must update both views together.
